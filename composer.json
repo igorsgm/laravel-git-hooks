@@ -1,0 +1,54 @@
+{
+    "name": "igorsgm/laravel-git-hooks",
+    "description": "Tools for managing git hooks in Laravel apps",
+    "keywords": [
+        "igorsgm",
+        "laravel-git-hooks"
+    ],
+    "homepage": "https://github.com/igorsgm/laravel-git-hooks",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Igor Moraes",
+            "email": "igor.sgm@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "illuminate/support": "^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Igorsgm\\LaravelGitHooks\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Igorsgm\\LaravelGitHooks\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Igorsgm\\LaravelGitHooks\\LaravelGitHooksServiceProvider"
+            ],
+            "aliases": {
+                "LaravelGitHooks": "Igorsgm\\LaravelGitHooks\\LaravelGitHooksFacade"
+            }
+        }
+    }
+}
