@@ -1,0 +1,3 @@
+#!/bin/sh
+
+php {path}/artisan {command} $@ >&2

@@ -21,7 +21,7 @@ class LaravelGitHooksServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('laravel-git-hooks.php'),
+                __DIR__.'/../config/git-hooks.php' => $this->app->configPath('git-hooks.php'),
             ], 'config');
 
             // Publishing the views.
@@ -50,11 +50,44 @@ class LaravelGitHooksServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-git-hooks');
+        $this->mergeConfigFrom(__DIR__.'/../config/git-hooks.php', 'git-hooks');
 
-        // Register the main class to use with the facade
-        $this->app->singleton('laravel-git-hooks', function () {
-            return new LaravelGitHooks;
-        });
+        if ($this->app->runningInConsole()) {
+            $this->app->singleton(Contracts\Configurator::class, function ($app) {
+                $hooks = [
+                    'pre-commit',
+                    'prepare-commit-msg',
+                    'commit-msg',
+                    'post-commit',
+                    'pre-push',
+                    'pre-rebase',
+                    'post-rewrite',
+                    'post-checkout',
+                    'post-merge',
+                ];
+
+                $config = $app['config']->get('git-hooks');
+
+                $hooks = array_filter($hooks, function ($hook) use ($config) {
+                    return ! empty($config[$hook]);
+                });
+
+                $storage = $app[Contracts\HookStorage::class];
+
+                return new Configurator($app, $storage, $hooks);
+            });
+
+            $this->app->bind(Contracts\HookStorage::class, HookStorage::class);
+            $this->app->bind(Contracts\CommitMessageStorage::class, CommitMessageStorage::class);
+
+            $this->commands([
+                \Igorsgm\LaravelGitHooks\Console\Commands\RegisterHooks::class,
+                \Igorsgm\LaravelGitHooks\Console\Commands\CommitMessage::class,
+                \Igorsgm\LaravelGitHooks\Console\Commands\PreCommit::class,
+                \Igorsgm\LaravelGitHooks\Console\Commands\PrepareCommitMessage::class,
+                \Igorsgm\LaravelGitHooks\Console\Commands\PostCommit::class,
+                \Igorsgm\LaravelGitHooks\Console\Commands\PrePush::class,
+            ]);
+        }
     }
 }
