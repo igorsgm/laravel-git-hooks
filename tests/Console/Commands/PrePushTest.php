@@ -19,7 +19,7 @@ class PrePushTest extends TestCase
         $config = $this->makeConfig();
         $command = new PrePush($config);
 
-        $this->assertEquals('git:pre-push', $command->getName());
+        $this->assertEquals('git-hooks:pre-push', $command->getName());
     }
 
     public function test_a_message_should_be_send_through_the_hook_pipes()

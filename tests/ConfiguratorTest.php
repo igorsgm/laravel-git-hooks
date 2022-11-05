@@ -20,7 +20,7 @@ class ConfiguratorTest extends TestCase
         $storage->allows('store')->with('.git/hooks/pre-commit', <<<'EOL'
 #!/bin/sh
 
-php /artisan git:pre-commit $@ >&2
+php /artisan git-hooks:pre-commit $@ >&2
 
 EOL
         );
@@ -28,7 +28,7 @@ EOL
         $storage->allows('store')->with('.git/hooks/post-commit', <<<'EOL'
 #!/bin/sh
 
-php /artisan git:post-commit $@ >&2
+php /artisan git-hooks:post-commit $@ >&2
 
 EOL
         );

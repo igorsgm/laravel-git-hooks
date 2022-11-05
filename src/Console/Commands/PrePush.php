@@ -19,7 +19,7 @@ class PrePush extends Command implements HookCommand
      *
      * @var string
      */
-    protected $signature = 'git:pre-push';
+    protected $signature = 'git-hooks:pre-push';
 
     /**
      * The console command description.

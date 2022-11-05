@@ -13,7 +13,7 @@ class RegisterHooksTest extends TestCase
     {
         $command = new RegisterHooks();
 
-        $this->assertEquals('git:register-hooks', $command->getName());
+        $this->assertEquals('git-hooks:register-hooks', $command->getName());
     }
 
     public function test_run_configurator()

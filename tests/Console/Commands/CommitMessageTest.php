@@ -22,7 +22,7 @@ class CommitMessageTest extends TestCase
 
         $command = new CommitMessage($config, $commitMessageStorage);
 
-        $this->assertEquals('git:commit-msg', $command->getName());
+        $this->assertEquals('git-hooks:commit-msg', $command->getName());
     }
 
     public function test_requires_file_argument()

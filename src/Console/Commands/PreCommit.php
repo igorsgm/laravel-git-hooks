@@ -19,7 +19,7 @@ class PreCommit extends Command implements HookCommand
      *
      * @var string
      */
-    protected $signature = 'git:pre-commit';
+    protected $signature = 'git-hooks:pre-commit';
 
     /**
      * The console command description.

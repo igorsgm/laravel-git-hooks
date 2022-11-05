@@ -41,7 +41,7 @@ class Configurator implements Contracts\Configurator
     {
         foreach ($this->hooksMap as $hook) {
             $hookStubPath = __DIR__.'/Console/Commands/stubs/hook';
-            $command = 'git:'.$hook;
+            $command = 'git-hooks:'.$hook;
 
             $hookPath = $this->app->basePath('.git/hooks/'.$hook);
 

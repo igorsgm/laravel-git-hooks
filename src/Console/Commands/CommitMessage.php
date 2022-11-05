@@ -17,7 +17,7 @@ class CommitMessage extends Command implements HookCommand
      *
      * @var string
      */
-    protected $signature = 'git:commit-msg {file}';
+    protected $signature = 'git-hooks:commit-msg {file}';
 
     /**
      * The console command description.

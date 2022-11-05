@@ -19,7 +19,7 @@ class PreCommitTest extends TestCase
         $config = $this->makeConfig();
         $command = new PreCommit($config);
 
-        $this->assertEquals('git:pre-commit', $command->getName());
+        $this->assertEquals('git-hooks:pre-commit', $command->getName());
     }
 
     public function test_a_message_should_be_send_through_the_hook_pipes()

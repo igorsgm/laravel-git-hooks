@@ -19,7 +19,7 @@ class PostCommit extends Command implements HookCommand
      *
      * @var string
      */
-    protected $signature = 'git:post-commit';
+    protected $signature = 'git-hooks:post-commit';
 
     /**
      * The console command description.

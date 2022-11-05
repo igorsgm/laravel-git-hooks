@@ -12,7 +12,7 @@ class RegisterHooks extends Command
      *
      * @var string
      */
-    protected $signature = 'git:register-hooks';
+    protected $signature = 'git-hooks:register-hooks';
 
     /**
      * The console command description.

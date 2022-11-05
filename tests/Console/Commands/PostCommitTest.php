@@ -19,7 +19,7 @@ class PostCommitTest extends TestCase
         $config = $this->makeConfig();
         $command = new PostCommit($config);
 
-        $this->assertEquals('git:post-commit', $command->getName());
+        $this->assertEquals('git-hooks:post-commit', $command->getName());
     }
 
     public function test_a_message_should_be_send_through_the_hook_pipes()

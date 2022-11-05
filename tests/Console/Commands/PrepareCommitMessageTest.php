@@ -22,7 +22,7 @@ class PrepareCommitMessageTest extends TestCase
 
         $command = new PrepareCommitMessage($config, $commitMessageStorage);
 
-        $this->assertEquals('git:prepare-commit-msg', $command->getName());
+        $this->assertEquals('git-hooks:prepare-commit-msg', $command->getName());
     }
 
     public function test_requires_file_argument()

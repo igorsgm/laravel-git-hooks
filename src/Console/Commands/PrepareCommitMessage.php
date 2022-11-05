@@ -17,7 +17,7 @@ class PrepareCommitMessage extends Command implements HookCommand
      *
      * @var string
      */
-    protected $signature = 'git:prepare-commit-msg {file}';
+    protected $signature = 'git-hooks:prepare-commit-msg {file}';
 
     /**
      * The console command description.
