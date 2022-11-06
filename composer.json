@@ -56,7 +56,10 @@
         "laravel": {
             "providers": [
                 "Igorsgm\\LaravelGitHooks\\LaravelGitHooksServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "LaravelGitHooks": "Igorsgm\\LaravelGitHooks\\LaravelGitHooksFacade"
+            }
         }
     },
     "minimum-stability": "dev",

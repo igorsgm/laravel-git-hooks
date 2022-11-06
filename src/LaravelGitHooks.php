@@ -5,7 +5,7 @@ namespace Igorsgm\LaravelGitHooks;
 use Igorsgm\LaravelGitHooks\Contracts\HookStorage;
 use Illuminate\Contracts\Foundation\Application;
 
-class Configurator implements Contracts\Configurator
+class LaravelGitHooks
 {
     /**
      * @var HookStorage

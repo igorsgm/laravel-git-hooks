@@ -53,7 +53,7 @@ class LaravelGitHooksServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/git-hooks.php', 'git-hooks');
 
         if ($this->app->runningInConsole()) {
-            $this->app->singleton(Contracts\Configurator::class, function ($app) {
+            $this->app->singleton('laravel-git-hooks', function ($app) {
                 $hooks = [
                     'pre-commit',
                     'prepare-commit-msg',
@@ -74,7 +74,7 @@ class LaravelGitHooksServiceProvider extends ServiceProvider
 
                 $storage = $app[Contracts\HookStorage::class];
 
-                return new Configurator($app, $storage, $hooks);
+                return new LaravelGitHooks($app, $storage, $hooks);
             });
 
             $this->app->bind(Contracts\HookStorage::class, HookStorage::class);

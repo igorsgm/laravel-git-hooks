@@ -16,11 +16,11 @@ class RegisterHooksTest extends TestCase
         $this->assertEquals('git-hooks:register-hooks', $command->getName());
     }
 
-    public function test_run_configurator()
+    public function test_run_laravel_git_hooks()
     {
-        $configurator = $this->makeConfigurator();
+        $laravelGitHooks = $this->makeLaravelGitHooks();
 
-        $configurator
+        $laravelGitHooks
             ->expects('run');
 
         $command = new RegisterHooks();
@@ -30,7 +30,7 @@ class RegisterHooksTest extends TestCase
         $output->expects('writeLn')
             ->with('<info>Git hooks have been successfully created</info>', 32);
 
-        $command->handle($configurator);
+        $command->handle($laravelGitHooks);
 
         $this->assertTrue(true);
     }
