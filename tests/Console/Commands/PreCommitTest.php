@@ -6,11 +6,10 @@ use Closure;
 use Igorsgm\GitHooks\Console\Commands\PreCommit;
 use Igorsgm\GitHooks\Contracts\PreCommitHook;
 use Igorsgm\GitHooks\Git\ChangedFiles;
-use Igorsgm\GitHooks\Git\GetListOfChangedFiles;
+use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Tests\TestCase;
 use Illuminate\Config\Repository;
 use Mockery;
-use Symfony\Component\Process\Process;
 
 class PreCommitTest extends TestCase
 {
@@ -53,13 +52,10 @@ class PreCommitTest extends TestCase
         $command = new PreCommit($config);
         $command->setLaravel($app);
 
-        $process = Mockery::mock(Process::class);
-        $process->expects('getOutput')->andReturns('AM src/ChangedFiles.php');
+        $gitHelper = Mockery::mock('alias:'.GitHelper::class);
+        $gitHelper->expects('getListOfChangedFiles')->andReturns('AM src/ChangedFiles.php');
 
-        $gitCommand = Mockery::mock(GetListOfChangedFiles::class);
-        $gitCommand->expects('exec')->andReturns($process);
-
-        $command->handle($gitCommand);
+        $command->handle();
 
         $this->assertTrue(true);
     }

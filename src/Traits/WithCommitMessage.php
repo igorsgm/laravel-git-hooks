@@ -7,7 +7,7 @@ use Igorsgm\GitHooks\Contracts\CommitMessageStorage;
 use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Git\CommitMessage;
-use Igorsgm\GitHooks\Git\GetListOfChangedFiles;
+use Igorsgm\GitHooks\Git\GitHelper;
 use Illuminate\Contracts\Config\Repository;
 
 trait WithCommitMessage
@@ -26,10 +26,8 @@ trait WithCommitMessage
 
     /**
      * Execute the console command.
-     *
-     * @param  GetListOfChangedFiles  $command
      */
-    public function handle(GetListOfChangedFiles $command)
+    public function handle()
     {
         $file = $this->argument('file');
 
@@ -42,7 +40,7 @@ trait WithCommitMessage
                 new CommitMessage(
                     $message,
                     new ChangedFiles(
-                        $command->exec()->getOutput()
+                        GitHelper::getListOfChangedFiles()
                     )
                 )
             );

@@ -17,7 +17,6 @@ M  src/Contracts/MessageHook.php
 AM src/Git/ChangedFile.php
 AM src/Git/ChangedFiles.php
 A  src/Git/CommitMessage.php
-A  src/Git/GetListOfChangedFiles.php
 M  tests/Console/Commands/CommitMessageTest.php
 M  tests/Console/Commands/PrepareCommitMessageTest.php
 AM tests/Git/ChangedFileTest.php
@@ -32,7 +31,6 @@ EOL
             'AM src/Git/ChangedFile.php',
             'AM src/Git/ChangedFiles.php',
             'A  src/Git/CommitMessage.php',
-            'A  src/Git/GetListOfChangedFiles.php',
             'M  tests/Console/Commands/CommitMessageTest.php',
             'M  tests/Console/Commands/PrepareCommitMessageTest.php',
             'AM tests/Git/ChangedFileTest.php',
@@ -47,12 +45,10 @@ EOL
 M  src/Console/Commands/CommitMessage.php
  M src/Console/Commands/PrepareCommitMessage.php
  A src/Traits/WithCommitMessage.php
- D src/Git/GetListOfChangedFiles.php
 M  src/Contracts/MessageHook.php
 AM src/Git/ChangedFile.php
 AM src/Git/ChangedFiles.php
 A  src/Git/CommitMessage.php
-A  src/Git/GetListOfChangedFiles.php
 M  tests/Console/Commands/CommitMessageTest.php
 M  tests/Console/Commands/PrepareCommitMessageTest.php
 AM tests/Git/ChangedFileTest.php
@@ -62,7 +58,6 @@ EOL
         );
 
         $this->assertEquals([
-            ' D src/Git/GetListOfChangedFiles.php',
             'D  tests/Git/CommitMessageTest.php',
         ], $files->getDeleted()->map->__toString()->values()->all());
     }
@@ -73,12 +68,10 @@ EOL
 M  src/Console/Commands/CommitMessage.php
  M src/Console/Commands/PrepareCommitMessage.php
  A src/Traits/WithCommitMessage.php
- D src/Git/GetListOfChangedFiles.php
 M  src/Contracts/MessageHook.php
 AM src/Git/ChangedFile.php
 AM src/Git/ChangedFiles.php
 A  src/Git/CommitMessage.php
-A  src/Git/GetListOfChangedFiles.php
 M  tests/Console/Commands/CommitMessageTest.php
 M  tests/Console/Commands/PrepareCommitMessageTest.php
 AM tests/Git/ChangedFileTest.php
@@ -91,12 +84,10 @@ EOL
             'M  src/Console/Commands/CommitMessage.php',
             ' M src/Console/Commands/PrepareCommitMessage.php',
             ' A src/Traits/WithCommitMessage.php',
-            ' D src/Git/GetListOfChangedFiles.php',
             'M  src/Contracts/MessageHook.php',
             'AM src/Git/ChangedFile.php',
             'AM src/Git/ChangedFiles.php',
             'A  src/Git/CommitMessage.php',
-            'A  src/Git/GetListOfChangedFiles.php',
             'M  tests/Console/Commands/CommitMessageTest.php',
             'M  tests/Console/Commands/PrepareCommitMessageTest.php',
             'AM tests/Git/ChangedFileTest.php',
@@ -111,12 +102,10 @@ EOL
 M  src/Console/Commands/CommitMessage.php
  M src/Console/Commands/PrepareCommitMessage.php
  A src/Traits/WithCommitMessage.php
- D src/Git/GetListOfChangedFiles.php
 ?? src/Contracts/MessageHook.php
 AM src/Git/ChangedFile.php
 AM src/Git/ChangedFiles.php
 ?? src/Git/CommitMessage.php
-A  src/Git/GetListOfChangedFiles.php
 M  tests/Console/Commands/CommitMessageTest.php
 M  tests/Console/Commands/PrepareCommitMessageTest.php
 AM tests/Git/ChangedFileTest.php

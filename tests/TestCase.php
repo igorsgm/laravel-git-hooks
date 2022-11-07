@@ -4,7 +4,7 @@ namespace Igorsgm\GitHooks\Tests;
 
 use Igorsgm\GitHooks\Contracts\CommitMessageStorage;
 use Igorsgm\GitHooks\GitHooks;
-use Igorsgm\GitHooks\Tests\Concerns\WithTmpFiles;
+use Igorsgm\GitHooks\Tests\Traits\WithTmpFiles;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Mockery;
