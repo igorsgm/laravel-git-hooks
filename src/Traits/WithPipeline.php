@@ -8,6 +8,7 @@ use Igorsgm\LaravelGitHooks\HooksPipeline;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Collection;
+use Throwable;
 
 trait WithPipeline
 {
@@ -34,7 +35,8 @@ trait WithPipeline
 
         return $pipeline
             ->through($this->getRegisteredHooks())
-            ->withCallback($this->showInfoAboutHook());
+            ->withCallback($this->showInfoAboutHook())
+            ->withExceptionCallback($this->showHookErrorAndExit());
     }
 
     /**
@@ -46,6 +48,22 @@ trait WithPipeline
     {
         return function (Hook $hook) {
             $this->info(sprintf('Hook: %s...', $hook->getName()));
+        };
+    }
+
+    /**
+     * Show Exception message and exit
+     *
+     * @return Closure
+     */
+    protected function showHookErrorAndExit(): Closure
+    {
+        return function (Throwable $e) {
+            $message = $e->getMessage() ? ' - '.$e->getMessage() : '';
+            $message = sprintf('%s failed%s.', $this->getHook(), $message);
+
+            $this->getOutput()->writeln('  <bg=red;fg=white> ERROR </> '.$message.PHP_EOL);
+            exit(1);
         };
     }
 
