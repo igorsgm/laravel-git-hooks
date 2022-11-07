@@ -5,12 +5,11 @@ namespace Igorsgm\GitHooks\Tests\Console\Commands;
 use Closure;
 use Igorsgm\GitHooks\Console\Commands\PrePush;
 use Igorsgm\GitHooks\Contracts\PrePushHook;
-use Igorsgm\GitHooks\Git\GetLasCommitFromLog;
+use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Git\Log;
 use Igorsgm\GitHooks\Tests\TestCase;
 use Illuminate\Config\Repository;
 use Mockery;
-use Symfony\Component\Process\Process;
 
 class PrePushTest extends TestCase
 {
@@ -53,10 +52,8 @@ class PrePushTest extends TestCase
         $command = new PrePush($config);
         $command->setLaravel($app);
 
-        $gitCommand = Mockery::mock(GetLasCommitFromLog::class);
-        $process = Mockery::mock(Process::class);
-
-        $process->expects('getOutput')
+        $gitHelper = Mockery::mock('alias:'.GitHelper::class);
+        $gitHelper->expects('getLastCommitFromLog')
             ->andReturns(<<<'EOL'
 commit bfdc6c406626223bf3cbb65b8d269f7b65ca0570
 Author: Igor Moraes <igor.sgm@gmail.com>
@@ -69,9 +66,8 @@ Date:   Tue Feb 18 12:01:15 2020 +0300
     fixed #2
 EOL
             );
-        $gitCommand->expects('exec')->andReturns($process);
 
-        $command->handle($gitCommand);
+        $command->handle();
 
         $this->assertTrue(true);
     }

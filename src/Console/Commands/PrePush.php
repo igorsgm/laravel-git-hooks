@@ -4,7 +4,7 @@ namespace Igorsgm\GitHooks\Console\Commands;
 
 use Igorsgm\GitHooks\Contracts\HookCommand;
 use Igorsgm\GitHooks\Exceptions\HookFailException;
-use Igorsgm\GitHooks\Git\GetLasCommitFromLog;
+use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Git\Log;
 use Igorsgm\GitHooks\Traits\WithPipeline;
 use Illuminate\Console\Command;
@@ -54,15 +54,14 @@ class PrePush extends Command implements HookCommand
     /**
      * Execute the console command.
      *
-     * @param  GetLasCommitFromLog  $command
      * @return mixed
      */
-    public function handle(GetLasCommitFromLog $command)
+    public function handle()
     {
         try {
             $this->sendLogCommitThroughHooks(
                 new Log(
-                    $command->exec()->getOutput()
+                    GitHelper::getLastCommitFromLog()
                 )
             );
         } catch (HookFailException $e) {

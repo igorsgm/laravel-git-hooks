@@ -6,12 +6,11 @@ use Closure;
 use Exception;
 use Igorsgm\GitHooks\Console\Commands\CommitMessage;
 use Igorsgm\GitHooks\Contracts\MessageHook;
-use Igorsgm\GitHooks\Git\GetListOfChangedFiles;
+use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Tests\TestCase;
 use Illuminate\Config\Repository;
 use Illuminate\Console\OutputStyle;
 use Mockery;
-use Symfony\Component\Process\Process;
 
 class CommitMessageTest extends TestCase
 {
@@ -85,12 +84,10 @@ class CommitMessageTest extends TestCase
         $command->setOutput($output);
         $command->setInput($input);
 
-        $gitCommand = Mockery::mock(GetListOfChangedFiles::class);
-        $process = Mockery::mock(Process::class);
-        $process->expects('getOutput')->andReturns('AM src/ChangedFiles.php');
-        $gitCommand->expects('exec')->andReturns($process);
+        $gitHelper = Mockery::mock('alias:'.GitHelper::class);
+        $gitHelper->expects('getListOfChangedFiles')->andReturns('AM src/ChangedFiles.php');
 
-        $this->assertEquals(0, $command->handle($gitCommand));
+        $this->assertEquals(0, $command->handle());
 
         $this->assertTrue(true);
     }
@@ -144,12 +141,10 @@ class CommitMessageTest extends TestCase
         $command->setOutput($output);
         $command->setInput($input);
 
-        $gitCommand = Mockery::mock(GetListOfChangedFiles::class);
-        $process = Mockery::mock(Process::class);
-        $process->expects('getOutput')->andReturns('AM src/ChangedFiles.php');
-        $gitCommand->expects('exec')->andReturns($process);
+        $gitHelper = Mockery::mock('alias:'.GitHelper::class);
+        $gitHelper->expects('getListOfChangedFiles')->andReturns('AM src/ChangedFiles.php');
 
-        $this->assertEquals(0, $command->handle($gitCommand));
+        $this->assertEquals(0, $command->handle());
 
         $this->assertTrue(true);
     }

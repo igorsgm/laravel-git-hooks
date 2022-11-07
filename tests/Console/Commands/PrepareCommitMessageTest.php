@@ -6,12 +6,11 @@ use Closure;
 use Exception;
 use Igorsgm\GitHooks\Console\Commands\PrepareCommitMessage;
 use Igorsgm\GitHooks\Contracts\MessageHook;
-use Igorsgm\GitHooks\Git\GetListOfChangedFiles;
+use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Tests\TestCase;
 use Illuminate\Config\Repository;
 use Illuminate\Console\OutputStyle;
 use Mockery;
-use Symfony\Component\Process\Process;
 
 class PrepareCommitMessageTest extends TestCase
 {
@@ -86,13 +85,10 @@ class PrepareCommitMessageTest extends TestCase
 
         $command->setOutput($output);
 
-        $process = Mockery::mock(Process::class);
-        $process->expects('getOutput')->andReturns('AM src/ChangedFiles.php');
+        $gitHelper = Mockery::mock('alias:'.GitHelper::class);
+        $gitHelper->expects('getListOfChangedFiles')->andReturns('AM src/ChangedFiles.php');
 
-        $gitCommand = Mockery::mock(GetListOfChangedFiles::class);
-        $gitCommand->expects('exec')->andReturns($process);
-
-        $this->assertEquals(0, $command->handle($gitCommand));
+        $this->assertEquals(0, $command->handle());
     }
 }
 

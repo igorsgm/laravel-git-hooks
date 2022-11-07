@@ -3,7 +3,7 @@
 namespace Igorsgm\GitHooks\Tests;
 
 use Igorsgm\GitHooks\CommitMessageStorage;
-use Igorsgm\GitHooks\Tests\Concerns\WithTmpFiles;
+use Igorsgm\GitHooks\Tests\Traits\WithTmpFiles;
 
 class CommitMessageStorageTest extends TestCase
 {

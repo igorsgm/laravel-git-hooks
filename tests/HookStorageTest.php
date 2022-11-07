@@ -3,7 +3,7 @@
 namespace Igorsgm\GitHooks\Tests;
 
 use Igorsgm\GitHooks\HookStorage;
-use Igorsgm\GitHooks\Tests\Concerns\WithTmpFiles;
+use Igorsgm\GitHooks\Tests\Traits\WithTmpFiles;
 
 class HookStorageTest extends TestCase
 {
