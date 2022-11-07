@@ -1,6 +1,6 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Git;
+namespace Igorsgm\GitHooks\Git;
 
 use Carbon\Carbon;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests\Git;
+namespace Igorsgm\GitHooks\Tests\Git;
 
-use Igorsgm\LaravelGitHooks\Git\Log;
-use Igorsgm\LaravelGitHooks\Tests\TestCase;
+use Igorsgm\GitHooks\Git\Log;
+use Igorsgm\GitHooks\Tests\TestCase;
 
 class LogTest extends TestCase
 {

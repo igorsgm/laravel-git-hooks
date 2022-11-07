@@ -37,12 +37,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Igorsgm\\LaravelGitHooks\\": "src"
+            "Igorsgm\\GitHooks\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Igorsgm\\LaravelGitHooks\\Tests\\": "tests"
+            "Igorsgm\\GitHooks\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -55,10 +55,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Igorsgm\\LaravelGitHooks\\LaravelGitHooksServiceProvider"
+                "Igorsgm\\GitHooks\\GitHooksServiceProvider"
             ],
             "aliases": {
-                "LaravelGitHooks": "Igorsgm\\LaravelGitHooks\\LaravelGitHooksFacade"
+                "GitHooks": "Igorsgm\\GitHooks\\GitHooksFacade"
             }
         }
     },

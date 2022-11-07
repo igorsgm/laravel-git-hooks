@@ -1,8 +1,8 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Git;
+namespace Igorsgm\GitHooks\Git;
 
-use Igorsgm\LaravelGitHooks\Contracts\GitCommand;
+use Igorsgm\GitHooks\Contracts\GitCommand;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 

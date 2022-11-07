@@ -1,10 +1,10 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Traits;
+namespace Igorsgm\GitHooks\Traits;
 
 use Closure;
-use Igorsgm\LaravelGitHooks\Contracts\Hook;
-use Igorsgm\LaravelGitHooks\HooksPipeline;
+use Igorsgm\GitHooks\Contracts\Hook;
+use Igorsgm\GitHooks\HooksPipeline;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Collection;

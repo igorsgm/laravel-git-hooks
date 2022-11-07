@@ -1,6 +1,6 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Contracts;
+namespace Igorsgm\GitHooks\Contracts;
 
 use Illuminate\Contracts\Config\Repository;
 

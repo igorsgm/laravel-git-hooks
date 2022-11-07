@@ -1,9 +1,9 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests\Console\Commands;
+namespace Igorsgm\GitHooks\Tests\Console\Commands;
 
-use Igorsgm\LaravelGitHooks\Console\Commands\RegisterHooks;
-use Igorsgm\LaravelGitHooks\Tests\TestCase;
+use Igorsgm\GitHooks\Console\Commands\RegisterHooks;
+use Igorsgm\GitHooks\Tests\TestCase;
 use Illuminate\Console\OutputStyle;
 use Mockery;
 
@@ -18,9 +18,9 @@ class RegisterHooksTest extends TestCase
 
     public function test_run_laravel_git_hooks()
     {
-        $laravelGitHooks = $this->makeLaravelGitHooks();
+        $gitHooks = $this->makeGitHooks();
 
-        $laravelGitHooks
+        $gitHooks
             ->expects('run');
 
         $command = new RegisterHooks();
@@ -30,7 +30,7 @@ class RegisterHooksTest extends TestCase
         $output->expects('writeLn')
             ->with('<info>Git hooks have been successfully created</info>', 32);
 
-        $command->handle($laravelGitHooks);
+        $command->handle($gitHooks);
 
         $this->assertTrue(true);
     }

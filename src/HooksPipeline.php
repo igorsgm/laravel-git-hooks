@@ -1,6 +1,6 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks;
+namespace Igorsgm\GitHooks;
 
 use Closure;
 use Exception;

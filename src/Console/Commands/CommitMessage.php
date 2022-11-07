@@ -1,10 +1,10 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Console\Commands;
+namespace Igorsgm\GitHooks\Console\Commands;
 
-use Igorsgm\LaravelGitHooks\Contracts\CommitMessageStorage;
-use Igorsgm\LaravelGitHooks\Contracts\HookCommand;
-use Igorsgm\LaravelGitHooks\Traits\WithCommitMessage;
+use Igorsgm\GitHooks\Contracts\CommitMessageStorage;
+use Igorsgm\GitHooks\Contracts\HookCommand;
+use Igorsgm\GitHooks\Traits\WithCommitMessage;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config\Repository;
 

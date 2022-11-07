@@ -1,9 +1,9 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Contracts;
+namespace Igorsgm\GitHooks\Contracts;
 
 use Closure;
-use Igorsgm\LaravelGitHooks\Git\Log;
+use Igorsgm\GitHooks\Git\Log;
 
 interface PostCommitHook extends Hook
 {

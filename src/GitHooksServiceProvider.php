@@ -1,10 +1,10 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks;
+namespace Igorsgm\GitHooks;
 
 use Illuminate\Support\ServiceProvider;
 
-class LaravelGitHooksServiceProvider extends ServiceProvider
+class GitHooksServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -18,12 +18,12 @@ class LaravelGitHooksServiceProvider extends ServiceProvider
 
             // Registering package commands.
             $this->commands([
-                \Igorsgm\LaravelGitHooks\Console\Commands\RegisterHooks::class,
-                \Igorsgm\LaravelGitHooks\Console\Commands\CommitMessage::class,
-                \Igorsgm\LaravelGitHooks\Console\Commands\PreCommit::class,
-                \Igorsgm\LaravelGitHooks\Console\Commands\PrepareCommitMessage::class,
-                \Igorsgm\LaravelGitHooks\Console\Commands\PostCommit::class,
-                \Igorsgm\LaravelGitHooks\Console\Commands\PrePush::class,
+                \Igorsgm\GitHooks\Console\Commands\RegisterHooks::class,
+                \Igorsgm\GitHooks\Console\Commands\CommitMessage::class,
+                \Igorsgm\GitHooks\Console\Commands\PreCommit::class,
+                \Igorsgm\GitHooks\Console\Commands\PrepareCommitMessage::class,
+                \Igorsgm\GitHooks\Console\Commands\PostCommit::class,
+                \Igorsgm\GitHooks\Console\Commands\PrePush::class,
             ]);
         }
     }
@@ -39,13 +39,13 @@ class LaravelGitHooksServiceProvider extends ServiceProvider
         $this->app->singleton('laravel-git-hooks', function ($app) {
             $config = $app['config']->get('git-hooks');
 
-            $hooks = array_filter(LaravelGitHooks::getSupportedHooks(), function ($hook) use ($config) {
+            $hooks = array_filter(GitHooks::getSupportedHooks(), function ($hook) use ($config) {
                 return ! empty($config[$hook]);
             });
 
             $storage = $app[Contracts\HookStorage::class];
 
-            return new LaravelGitHooks($app, $storage, $hooks);
+            return new GitHooks($app, $storage, $hooks);
         });
 
         $this->app->bind(Contracts\HookStorage::class, HookStorage::class);

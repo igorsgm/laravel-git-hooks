@@ -1,12 +1,12 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests;
+namespace Igorsgm\GitHooks\Tests;
 
-use Igorsgm\LaravelGitHooks\Contracts\HookStorage;
-use Igorsgm\LaravelGitHooks\LaravelGitHooks;
+use Igorsgm\GitHooks\Contracts\HookStorage;
+use Igorsgm\GitHooks\GitHooks;
 use Mockery;
 
-class LaravelGitHooksTest extends TestCase
+class GitHooksTest extends TestCase
 {
     public function test_files_for_hooks_should_be_created()
     {
@@ -33,12 +33,12 @@ php /artisan git-hooks:post-commit $@ >&2
 EOL
         );
 
-        $laravelGitHooks = new LaravelGitHooks($app, $storage, [
+        $gitHooks = new GitHooks($app, $storage, [
             'pre-commit',
             'post-commit',
         ]);
 
-        $laravelGitHooks->run();
+        $gitHooks->run();
 
         $this->assertTrue(true);
     }

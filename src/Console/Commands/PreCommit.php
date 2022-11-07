@@ -1,12 +1,12 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Console\Commands;
+namespace Igorsgm\GitHooks\Console\Commands;
 
-use Igorsgm\LaravelGitHooks\Contracts\HookCommand;
-use Igorsgm\LaravelGitHooks\Exceptions\HookFailException;
-use Igorsgm\LaravelGitHooks\Git\ChangedFiles;
-use Igorsgm\LaravelGitHooks\Git\GetListOfChangedFiles;
-use Igorsgm\LaravelGitHooks\Traits\WithPipeline;
+use Igorsgm\GitHooks\Contracts\HookCommand;
+use Igorsgm\GitHooks\Exceptions\HookFailException;
+use Igorsgm\GitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Git\GetListOfChangedFiles;
+use Igorsgm\GitHooks\Traits\WithPipeline;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config\Repository;
 

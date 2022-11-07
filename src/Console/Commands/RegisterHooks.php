@@ -1,8 +1,8 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Console\Commands;
+namespace Igorsgm\GitHooks\Console\Commands;
 
-use Igorsgm\LaravelGitHooks\LaravelGitHooks;
+use Igorsgm\GitHooks\GitHooks;
 use Illuminate\Console\Command;
 
 class RegisterHooks extends Command
@@ -24,11 +24,11 @@ class RegisterHooks extends Command
     /**
      * Execute the console command.
      *
-     * @param  LaravelGitHooks  $laravelGitHooks
+     * @param  GitHooks  $gitHooks
      */
-    public function handle(LaravelGitHooks $laravelGitHooks)
+    public function handle(GitHooks $gitHooks)
     {
-        $laravelGitHooks->run();
+        $gitHooks->run();
 
         $this->info('Git hooks have been successfully created');
     }

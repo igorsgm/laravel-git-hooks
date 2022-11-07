@@ -1,11 +1,11 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks;
+namespace Igorsgm\GitHooks;
 
-use Igorsgm\LaravelGitHooks\Contracts\HookStorage;
+use Igorsgm\GitHooks\Contracts\HookStorage;
 use Illuminate\Contracts\Foundation\Application;
 
-class LaravelGitHooks
+class GitHooks
 {
     /**
      * @var HookStorage

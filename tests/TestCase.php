@@ -1,10 +1,10 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests;
+namespace Igorsgm\GitHooks\Tests;
 
-use Igorsgm\LaravelGitHooks\Contracts\CommitMessageStorage;
-use Igorsgm\LaravelGitHooks\LaravelGitHooks;
-use Igorsgm\LaravelGitHooks\Tests\Concerns\WithTmpFiles;
+use Igorsgm\GitHooks\Contracts\CommitMessageStorage;
+use Igorsgm\GitHooks\GitHooks;
+use Igorsgm\GitHooks\Tests\Concerns\WithTmpFiles;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Mockery;
@@ -88,11 +88,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return LaravelGitHooks|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @return GitHooks|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
-    protected function makeLaravelGitHooks()
+    protected function makeGitHooks()
     {
-        return Mockery::mock(LaravelGitHooks::class);
+        return Mockery::mock(GitHooks::class);
     }
 
     /**

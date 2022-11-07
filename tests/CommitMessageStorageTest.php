@@ -1,9 +1,9 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests;
+namespace Igorsgm\GitHooks\Tests;
 
-use Igorsgm\LaravelGitHooks\CommitMessageStorage;
-use Igorsgm\LaravelGitHooks\Tests\Concerns\WithTmpFiles;
+use Igorsgm\GitHooks\CommitMessageStorage;
+use Igorsgm\GitHooks\Tests\Concerns\WithTmpFiles;
 
 class CommitMessageStorageTest extends TestCase
 {

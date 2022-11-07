@@ -1,9 +1,9 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Contracts;
+namespace Igorsgm\GitHooks\Contracts;
 
 use Closure;
-use Igorsgm\LaravelGitHooks\Git\CommitMessage;
+use Igorsgm\GitHooks\Git\CommitMessage;
 
 interface MessageHook extends Hook
 {

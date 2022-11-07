@@ -1,13 +1,13 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Traits;
+namespace Igorsgm\GitHooks\Traits;
 
 use Closure;
-use Igorsgm\LaravelGitHooks\Contracts\CommitMessageStorage;
-use Igorsgm\LaravelGitHooks\Exceptions\HookFailException;
-use Igorsgm\LaravelGitHooks\Git\ChangedFiles;
-use Igorsgm\LaravelGitHooks\Git\CommitMessage;
-use Igorsgm\LaravelGitHooks\Git\GetListOfChangedFiles;
+use Igorsgm\GitHooks\Contracts\CommitMessageStorage;
+use Igorsgm\GitHooks\Exceptions\HookFailException;
+use Igorsgm\GitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Git\CommitMessage;
+use Igorsgm\GitHooks\Git\GetListOfChangedFiles;
 use Illuminate\Contracts\Config\Repository;
 
 trait WithCommitMessage

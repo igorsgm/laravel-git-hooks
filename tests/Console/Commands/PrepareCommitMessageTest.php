@@ -1,13 +1,13 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests\Console\Commands;
+namespace Igorsgm\GitHooks\Tests\Console\Commands;
 
 use Closure;
 use Exception;
-use Igorsgm\LaravelGitHooks\Console\Commands\PrepareCommitMessage;
-use Igorsgm\LaravelGitHooks\Contracts\MessageHook;
-use Igorsgm\LaravelGitHooks\Git\GetListOfChangedFiles;
-use Igorsgm\LaravelGitHooks\Tests\TestCase;
+use Igorsgm\GitHooks\Console\Commands\PrepareCommitMessage;
+use Igorsgm\GitHooks\Contracts\MessageHook;
+use Igorsgm\GitHooks\Git\GetListOfChangedFiles;
+use Igorsgm\GitHooks\Tests\TestCase;
 use Illuminate\Config\Repository;
 use Illuminate\Console\OutputStyle;
 use Mockery;
@@ -101,7 +101,7 @@ class PrepareCommitMessageTestHook1 implements MessageHook
     /**
      * {@inheritDoc}
      */
-    public function handle(\Igorsgm\LaravelGitHooks\Git\CommitMessage $message, Closure $next)
+    public function handle(\Igorsgm\GitHooks\Git\CommitMessage $message, Closure $next)
     {
         $message->setMessage($message->getMessage().' hook1');
 
@@ -122,7 +122,7 @@ class PrepareCommitMessageTestHook2 implements MessageHook
     /**
      * {@inheritDoc}
      */
-    public function handle(\Igorsgm\LaravelGitHooks\Git\CommitMessage $message, Closure $next)
+    public function handle(\Igorsgm\GitHooks\Git\CommitMessage $message, Closure $next)
     {
         $message->setMessage($message->getMessage().' hook2');
 
@@ -143,7 +143,7 @@ class PrepareCommitMessageTestHook3 implements MessageHook
     /**
      * {@inheritDoc}
      */
-    public function handle(\Igorsgm\LaravelGitHooks\Git\CommitMessage $message, Closure $next)
+    public function handle(\Igorsgm\GitHooks\Git\CommitMessage $message, Closure $next)
     {
         $message->setMessage($message->getMessage().' hook2');
 

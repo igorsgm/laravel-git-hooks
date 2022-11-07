@@ -1,9 +1,9 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests;
+namespace Igorsgm\GitHooks\Tests;
 
-use Igorsgm\LaravelGitHooks\Contracts\Hook;
-use Igorsgm\LaravelGitHooks\HooksPipeline;
+use Igorsgm\GitHooks\Contracts\Hook;
+use Igorsgm\GitHooks\HooksPipeline;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 

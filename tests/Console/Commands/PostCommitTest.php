@@ -1,13 +1,13 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests\Console\Commands;
+namespace Igorsgm\GitHooks\Tests\Console\Commands;
 
 use Closure;
-use Igorsgm\LaravelGitHooks\Console\Commands\PostCommit;
-use Igorsgm\LaravelGitHooks\Contracts\PostCommitHook;
-use Igorsgm\LaravelGitHooks\Git\GetLasCommitFromLog;
-use Igorsgm\LaravelGitHooks\Git\Log;
-use Igorsgm\LaravelGitHooks\Tests\TestCase;
+use Igorsgm\GitHooks\Console\Commands\PostCommit;
+use Igorsgm\GitHooks\Contracts\PostCommitHook;
+use Igorsgm\GitHooks\Git\GetLasCommitFromLog;
+use Igorsgm\GitHooks\Git\Log;
+use Igorsgm\GitHooks\Tests\TestCase;
 use Illuminate\Config\Repository;
 use Mockery;
 use Symfony\Component\Process\Process;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests\Git;
+namespace Igorsgm\GitHooks\Tests\Git;
 
-use Igorsgm\LaravelGitHooks\Git\ChangedFiles;
-use Igorsgm\LaravelGitHooks\Tests\TestCase;
+use Igorsgm\GitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Tests\TestCase;
 
 class ChangedFilesTest extends TestCase
 {

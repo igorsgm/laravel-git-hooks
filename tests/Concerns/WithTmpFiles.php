@@ -1,6 +1,6 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests\Concerns;
+namespace Igorsgm\GitHooks\Tests\Concerns;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

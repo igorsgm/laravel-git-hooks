@@ -1,13 +1,13 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks;
+namespace Igorsgm\GitHooks;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Igorsgm\LaravelGitHooks\LaravelGitHooks
+ * @see \Igorsgm\GitHooks\GitHooks
  */
-class LaravelGitHooksFacade extends Facade
+class GitHooksFacade extends Facade
 {
     /**
      * Get the registered name of the component.

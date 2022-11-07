@@ -14,7 +14,7 @@ return [
     | equivalent), check for trailing whitespace (the default hook does exactly this), or check for appropriate
     | documentation on new methods.
     |
-    | These hooks must implement \Igorsgm\LaravelGitHooks\Contracts\PreCommitHook
+    | These hooks must implement \Igorsgm\GitHooks\Contracts\PreCommitHook
     |
     */
     'pre-commit' => [
@@ -34,7 +34,7 @@ return [
     | commits, and amended commits. You may use it in conjunction with a commit template to programmatically insert
     | information.
     |
-    | These hooks must implement \Igorsgm\LaravelGitHooks\Contracts\MessageHook
+    | These hooks must implement \Igorsgm\GitHooks\Contracts\MessageHook
     |
     */
     'prepare-commit-msg' => [
@@ -50,7 +50,7 @@ return [
     | message written by the developer. If this script exits non-zero, Git aborts the commit process, so you can use
     | it to validate your project state or commit message before allowing a commit to go through.
     |
-    | These hooks must implement \Igorsgm\LaravelGitHooks\Contracts\MessageHook
+    | These hooks must implement \Igorsgm\GitHooks\Contracts\MessageHook
     |
     */
     'commit-msg' => [
@@ -66,7 +66,7 @@ return [
     | but you can easily get the last commit by running git log -1 HEAD. Generally, this script is used for
     | notification or something similar.
     |
-    | These hooks must implement \Igorsgm\LaravelGitHooks\Contracts\PostCommitHook
+    | These hooks must implement \Igorsgm\GitHooks\Contracts\PostCommitHook
     |
     */
     'post-commit' => [
@@ -140,7 +140,7 @@ return [
     | refs through stdin. You can use it to validate a set of ref updates before a push occurs (a non-zero exit code
     | will abort the push).
     |
-    | These hooks must implement \Igorsgm\LaravelGitHooks\Contracts\PrePushHook
+    | These hooks must implement \Igorsgm\GitHooks\Contracts\PrePushHook
     |
     */
     'pre-push' => [

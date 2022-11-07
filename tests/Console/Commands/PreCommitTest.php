@@ -1,13 +1,13 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests\Console\Commands;
+namespace Igorsgm\GitHooks\Tests\Console\Commands;
 
 use Closure;
-use Igorsgm\LaravelGitHooks\Console\Commands\PreCommit;
-use Igorsgm\LaravelGitHooks\Contracts\PreCommitHook;
-use Igorsgm\LaravelGitHooks\Git\ChangedFiles;
-use Igorsgm\LaravelGitHooks\Git\GetListOfChangedFiles;
-use Igorsgm\LaravelGitHooks\Tests\TestCase;
+use Igorsgm\GitHooks\Console\Commands\PreCommit;
+use Igorsgm\GitHooks\Contracts\PreCommitHook;
+use Igorsgm\GitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Git\GetListOfChangedFiles;
+use Igorsgm\GitHooks\Tests\TestCase;
 use Illuminate\Config\Repository;
 use Mockery;
 use Symfony\Component\Process\Process;

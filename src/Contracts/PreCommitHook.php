@@ -1,9 +1,9 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Contracts;
+namespace Igorsgm\GitHooks\Contracts;
 
 use Closure;
-use Igorsgm\LaravelGitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Git\ChangedFiles;
 
 interface PreCommitHook extends Hook
 {

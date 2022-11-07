@@ -1,6 +1,6 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks;
+namespace Igorsgm\GitHooks;
 
 class HookStorage implements Contracts\HookStorage
 {

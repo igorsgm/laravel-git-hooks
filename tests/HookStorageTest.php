@@ -1,9 +1,9 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests;
+namespace Igorsgm\GitHooks\Tests;
 
-use Igorsgm\LaravelGitHooks\HookStorage;
-use Igorsgm\LaravelGitHooks\Tests\Concerns\WithTmpFiles;
+use Igorsgm\GitHooks\HookStorage;
+use Igorsgm\GitHooks\Tests\Concerns\WithTmpFiles;
 
 class HookStorageTest extends TestCase
 {

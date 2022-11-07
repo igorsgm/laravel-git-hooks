@@ -1,6 +1,6 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Exceptions;
+namespace Igorsgm\GitHooks\Exceptions;
 
 use RuntimeException;
 

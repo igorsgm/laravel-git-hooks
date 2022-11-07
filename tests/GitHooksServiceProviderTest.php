@@ -1,10 +1,10 @@
 <?php
 
-namespace Igorsgm\LaravelGitHooks\Tests;
+namespace Igorsgm\GitHooks\Tests;
 
-use Igorsgm\LaravelGitHooks\LaravelGitHooksServiceProvider;
+use Igorsgm\GitHooks\GitHooksServiceProvider;
 
-class LaravelGitHooksServiceProviderTest extends TestCase
+class GitHooksServiceProviderTest extends TestCase
 {
     public function test_config_file_should_be_published()
     {
@@ -15,16 +15,16 @@ class LaravelGitHooksServiceProviderTest extends TestCase
             ->with('git-hooks.php')
             ->andReturns('config/git-hooks.php');
 
-        $provider = new LaravelGitHooksServiceProvider($app);
+        $provider = new GitHooksServiceProvider($app);
 
         $provider->boot();
 
-        $configPath = key(LaravelGitHooksServiceProvider::$publishGroups['laravel-git-hooks']);
+        $configPath = key(GitHooksServiceProvider::$publishGroups['laravel-git-hooks']);
 
         $this->assertFileExists($configPath);
         $this->assertEquals(
             'config/git-hooks.php',
-            LaravelGitHooksServiceProvider::$publishGroups['laravel-git-hooks'][$configPath]
+            GitHooksServiceProvider::$publishGroups['laravel-git-hooks'][$configPath]
         );
     }
 }
