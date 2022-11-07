@@ -35,8 +35,23 @@ class LaravelGitHooks
     }
 
     /**
-     * {@inheritDoc}
+     * Get all supported git hooks
      */
+    public static function getSupportedHooks()
+    {
+        return [
+            'pre-commit',
+            'prepare-commit-msg',
+            'commit-msg',
+            'post-commit',
+            'pre-push',
+            'pre-rebase',
+            'post-rewrite',
+            'post-checkout',
+            'post-merge',
+        ];
+    }
+
     public function run(): void
     {
         foreach ($this->hooksMap as $hook) {

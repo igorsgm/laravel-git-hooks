@@ -17,6 +17,11 @@ class HooksPipeline extends Pipeline
     protected $callback;
 
     /**
+     * @var Closure
+     */
+    protected $exceptionCallback;
+
+    /**
      * @var Repository
      */
     protected $config;
@@ -45,6 +50,17 @@ class HooksPipeline extends Pipeline
     public function withCallback(Closure $callback)
     {
         $this->callback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param  Closure  $callback
+     * @return $this
+     */
+    public function withExceptionCallback(Closure $callback)
+    {
+        $this->exceptionCallback = $callback;
 
         return $this;
     }
@@ -103,6 +119,10 @@ class HooksPipeline extends Pipeline
      */
     protected function handleException($passable, $e)
     {
+        if ($this->exceptionCallback) {
+            return call_user_func_array($this->exceptionCallback, [$e]);
+        }
+
         throw $e;
     }
 }

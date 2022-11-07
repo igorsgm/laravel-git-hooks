@@ -2,8 +2,8 @@
 
 namespace Igorsgm\LaravelGitHooks\Tests;
 
-use Igorsgm\LaravelGitHooks\LaravelGitHooks;
 use Igorsgm\LaravelGitHooks\Contracts\HookStorage;
+use Igorsgm\LaravelGitHooks\LaravelGitHooks;
 use Mockery;
 
 class LaravelGitHooksTest extends TestCase

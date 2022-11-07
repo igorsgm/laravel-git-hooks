@@ -19,12 +19,12 @@ class LaravelGitHooksServiceProviderTest extends TestCase
 
         $provider->boot();
 
-        $configPath = key(LaravelGitHooksServiceProvider::$publishGroups['config']);
+        $configPath = key(LaravelGitHooksServiceProvider::$publishGroups['laravel-git-hooks']);
 
         $this->assertFileExists($configPath);
         $this->assertEquals(
             'config/git-hooks.php',
-            LaravelGitHooksServiceProvider::$publishGroups['config'][$configPath]
+            LaravelGitHooksServiceProvider::$publishGroups['laravel-git-hooks'][$configPath]
         );
     }
 }
