@@ -2,6 +2,8 @@
 
 namespace Igorsgm\GitHooks;
 
+use Exception;
+
 class GitHooks
 {
     /**
@@ -37,12 +39,14 @@ class GitHooks
     /**
      * Install git hook
      *
-     * @param  string  $hook
+     * @param  string  $hookName
+     * @return void
+     * @throws Exception
      */
     public function install($hookName)
     {
         if (! is_dir($this->getGitHooksDir())) {
-            throw new \Exception('Git not initialized in this project.');
+            throw new Exception('Git not initialized in this project.');
         }
 
         $command = 'git-hooks:'.$hookName;

@@ -3,7 +3,6 @@
 namespace Igorsgm\GitHooks;
 
 use Closure;
-use Exception;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Pipeline\Pipeline;
 use Throwable;
@@ -97,10 +96,8 @@ class HooksPipeline extends Pipeline
                                     : $pipe(...$parameters);
 
                     return $this->handleCarry($carry);
-                } catch (Exception $e) {
-                    $this->handleException($passable, $e);
                 } catch (Throwable $e) {
-                    $this->handleException($passable, $e);
+                    return $this->handleException($passable, $e);
                 }
             };
         };

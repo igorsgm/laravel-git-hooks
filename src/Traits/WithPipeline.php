@@ -21,8 +21,8 @@ trait WithPipeline
 
         return $pipeline
             ->through($this->getRegisteredHooks())
-            ->withCallback($this->showInfoAboutHook());
-//            ->withExceptionCallback($this->showHookErrorAndExit());
+            ->withCallback($this->showInfoAboutHook())
+            ->withExceptionCallback($this->showHookErrorAndExit());
     }
 
     /**
@@ -61,11 +61,7 @@ trait WithPipeline
         $hooks = collect((array) config('git-hooks.'.$this->getHook()));
 
         return $hooks->map(function ($hook, $i) {
-            if (is_int($i)) {
-                return $hook;
-            }
-
-            return $i;
+            return is_int($i) ? $hook : $i;
         })->all();
     }
 }

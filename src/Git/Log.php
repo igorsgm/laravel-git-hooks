@@ -56,7 +56,7 @@ class Log
      */
     private function parse(array $lines): void
     {
-        foreach ($lines as $key => $line) {
+        foreach ($lines as $line) {
             if (strpos($line, 'commit') === 0) {
                 preg_match('/(?<hash>[a-z0-9]{40})/', $line, $matches);
                 $this->hash = $matches['hash'] ?? null;
