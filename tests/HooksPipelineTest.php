@@ -4,8 +4,8 @@ namespace Igorsgm\GitHooks\Tests;
 
 use Igorsgm\GitHooks\Contracts\Hook;
 use Igorsgm\GitHooks\HooksPipeline;
-use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Config;
 
 class HooksPipelineTest extends TestCase
 {
@@ -18,18 +18,16 @@ class HooksPipelineTest extends TestCase
             HooksPipelineTestWithArgsHook::class,
         ];
 
-        $config = new Repository([
-            'git-hooks' => [
-                'pre-commit' => [
-                    HooksPipelineTestHook::class,
-                    HooksPipelineTestWithArgsHook::class => [
-                        'param' => 'Hook 2',
-                    ],
+        Config::set('git-hooks', [
+            'pre-commit' => [
+                HooksPipelineTestHook::class,
+                HooksPipelineTestWithArgsHook::class => [
+                    'param' => 'Hook 2',
                 ],
             ],
         ]);
 
-        $pipeline = new HooksPipeline($container, $config, 'pre-commit');
+        $pipeline = new HooksPipeline($container, 'pre-commit');
 
         $message = $pipeline->through($hooks)
             ->send('message')
@@ -64,11 +62,11 @@ class HooksPipelineTestWithArgsHook implements Hook
     /**
      * @var array
      */
-    private $config;
+    private $parameters;
 
-    public function __construct(array $config)
+    public function __construct(array $parameters)
     {
-        $this->config = $config;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -83,7 +81,7 @@ class HooksPipelineTestWithArgsHook implements Hook
 
     public function handle(string $message, $next)
     {
-        $message .= ' '.$this->config['param'];
+        $message .= ' '.$this->parameters['param'];
 
         return $next($message);
     }

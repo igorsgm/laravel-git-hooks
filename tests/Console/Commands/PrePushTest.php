@@ -8,15 +8,14 @@ use Igorsgm\GitHooks\Contracts\PrePushHook;
 use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Git\Log;
 use Igorsgm\GitHooks\Tests\TestCase;
-use Illuminate\Config\Repository;
+use Illuminate\Support\Facades\Config;
 use Mockery;
 
 class PrePushTest extends TestCase
 {
     public function test_get_command_name()
     {
-        $config = $this->makeConfig();
-        $command = new PrePush($config);
+        $command = new PrePush();
 
         $this->assertEquals('git-hooks:pre-push', $command->getName());
     }
@@ -39,17 +38,15 @@ class PrePushTest extends TestCase
                 return $closure($log);
             });
 
-        $config = new Repository([
-            'git-hooks' => [
-                'pre-push' => [
-                    $hook1,
-                    $hook2,
-                ],
+        Config::set('git-hooks', [
+            'pre-push' => [
+                $hook1,
+                $hook2,
             ],
         ]);
 
         $app = $this->makeApplication();
-        $command = new PrePush($config);
+        $command = new PrePush();
         $command->setLaravel($app);
 
         $gitHelper = Mockery::mock('alias:'.GitHelper::class);

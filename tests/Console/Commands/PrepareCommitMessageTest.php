@@ -8,28 +8,26 @@ use Igorsgm\GitHooks\Console\Commands\PrepareCommitMessage;
 use Igorsgm\GitHooks\Contracts\MessageHook;
 use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Tests\TestCase;
-use Illuminate\Config\Repository;
 use Illuminate\Console\OutputStyle;
+use Illuminate\Support\Facades\Config;
 use Mockery;
 
 class PrepareCommitMessageTest extends TestCase
 {
     public function test_get_command_name()
     {
-        $config = $this->makeConfig();
         $commitMessageStorage = $this->makeCommitMessageStorage();
 
-        $command = new PrepareCommitMessage($config, $commitMessageStorage);
+        $command = new PrepareCommitMessage($commitMessageStorage);
 
         $this->assertEquals('git-hooks:prepare-commit-msg', $command->getName());
     }
 
     public function test_requires_file_argument()
     {
-        $config = $this->makeConfig();
         $commitMessageStorage = $this->makeCommitMessageStorage();
 
-        $command = new PrepareCommitMessage($config, $commitMessageStorage);
+        $command = new PrepareCommitMessage($commitMessageStorage);
 
         $this->assertTrue($command->getDefinition()->hasArgument('file'));
     }
@@ -45,12 +43,10 @@ class PrepareCommitMessageTest extends TestCase
             return new $class;
         });
 
-        $config = new Repository([
-            'git-hooks' => [
-                'prepare-commit-msg' => [
-                    PrepareCommitMessageTestHook1::class,
-                    PrepareCommitMessageTestHook2::class,
-                ],
+        Config::set('git-hooks', [
+            'prepare-commit-msg' => [
+                PrepareCommitMessageTestHook1::class,
+                PrepareCommitMessageTestHook2::class,
             ],
         ]);
 
@@ -64,7 +60,7 @@ class PrepareCommitMessageTest extends TestCase
             ->expects('update')
             ->with('tmp/COMMIT_MESSAGE', 'Test commit hook1 hook2');
 
-        $command = new PrepareCommitMessage($config, $commitMessageStorage);
+        $command = new PrepareCommitMessage($commitMessageStorage);
 
         $input = Mockery::mock(\Symfony\Component\Console\Input\InputInterface::class);
         $input->expects('getArgument')

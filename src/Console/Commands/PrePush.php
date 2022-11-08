@@ -8,7 +8,6 @@ use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Git\Log;
 use Igorsgm\GitHooks\Traits\WithPipeline;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Config\Repository;
 
 class PrePush extends Command implements HookCommand
 {
@@ -27,21 +26,6 @@ class PrePush extends Command implements HookCommand
      * @var string
      */
     protected $description = 'Run hook pre-push';
-
-    /**
-     * @var Repository
-     */
-    protected $config;
-
-    /**
-     * @param  Repository  $config
-     */
-    public function __construct(Repository $config)
-    {
-        parent::__construct();
-
-        $this->config = $config;
-    }
 
     /**
      * {@inheritDoc}

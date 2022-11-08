@@ -8,7 +8,7 @@ use Igorsgm\GitHooks\Contracts\PreCommitHook;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Tests\TestCase;
-use Illuminate\Config\Repository;
+use Illuminate\Support\Facades\Config;
 use Mockery;
 
 class PreCommitTest extends TestCase
@@ -39,17 +39,15 @@ class PreCommitTest extends TestCase
                 return $closure($files);
             });
 
-        $config = new Repository([
-            'git-hooks' => [
-                'pre-commit' => [
-                    $hook1,
-                    $hook2,
-                ],
+        Config::set('git-hooks', [
+            'pre-commit' => [
+                $hook1,
+                $hook2,
             ],
         ]);
 
         $app = $this->makeApplication();
-        $command = new PreCommit($config);
+        $command = new PreCommit();
         $command->setLaravel($app);
 
         $gitHelper = Mockery::mock('alias:'.GitHelper::class);
