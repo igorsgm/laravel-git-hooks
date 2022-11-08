@@ -2,42 +2,12 @@
 
 namespace Igorsgm\GitHooks;
 
-use Igorsgm\GitHooks\Contracts\HookStorage;
-use Illuminate\Contracts\Foundation\Application;
-
 class GitHooks
 {
     /**
-     * @var HookStorage
-     */
-    protected $storage;
-
-    /**
-     * @var array
-     */
-    protected $hooksMap;
-
-    /**
-     * @var Application
-     */
-    protected $app;
-
-    /**
-     * @param  Application  $app
-     * @param  HookStorage  $storage
-     * @param  array  $hooksMap
-     */
-    public function __construct(Application $app, HookStorage $storage, array $hooksMap)
-    {
-        $this->storage = $storage;
-        $this->hooksMap = $hooksMap;
-        $this->app = $app;
-    }
-
-    /**
      * Get all supported git hooks
      */
-    public static function getSupportedHooks()
+    public function getSupportedHooks()
     {
         return [
             'pre-commit',
@@ -52,24 +22,61 @@ class GitHooks
         ];
     }
 
-    public function run(): void
+    /**
+     * Get all available git hooks being used
+     */
+    public function getAvailableHooks()
     {
-        foreach ($this->hooksMap as $hook) {
-            $hookStubPath = __DIR__.'/Console/Commands/stubs/hook';
-            $command = 'git-hooks:'.$hook;
+        $configGitHooks = config('git-hooks');
 
-            $hookPath = $this->app->basePath('.git/hooks/'.$hook);
+        return array_filter($this->getSupportedHooks(), function ($hook) use ($configGitHooks) {
+            return ! empty($configGitHooks[$hook]);
+        });
+    }
 
-            $hookScript = str_replace(
-                ['{command}', '{path}'],
-                [$command, $this->app->basePath()],
-                file_get_contents($hookStubPath)
-            );
-
-            $this->storage->store(
-                $hookPath,
-                $hookScript
-            );
+    /**
+     * Install git hook
+     *
+     * @param  string  $hook
+     */
+    public function install($hookName)
+    {
+        if (! is_dir($this->getGitHooksDir())) {
+            throw new \Exception('Git not initialized in this project.');
         }
+
+        $command = 'git-hooks:'.$hookName;
+
+        $hookPath = $this->getGitHooksDir().'/'.$hookName;
+        $hookScript = str_replace(
+            ['{command}', '{path}'],
+            [$command, base_path()],
+            $this->getHookStub()
+        );
+
+        file_put_contents($hookPath, $hookScript);
+        chmod($hookPath, 0777);
+    }
+
+    /**
+     * Returns the content of the git hook stub.
+     *
+     * @return false|string
+     */
+    public function getHookStub()
+    {
+        $hookStubPath = __DIR__.str_replace('/', DIRECTORY_SEPARATOR, '/Console/Commands/stubs/hook');
+
+        return file_get_contents($hookStubPath);
+    }
+
+    /**
+     * Returns the path to the git hooks directory.
+     *
+     * @return string
+     */
+    public function getGitHooksDir()
+    {
+        return base_path('.git'.DIRECTORY_SEPARATOR.'hooks');
     }
 }

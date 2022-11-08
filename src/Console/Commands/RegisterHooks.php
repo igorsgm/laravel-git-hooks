@@ -28,7 +28,11 @@ class RegisterHooks extends Command
      */
     public function handle(GitHooks $gitHooks)
     {
-        $gitHooks->run();
+        $availableHooks = $gitHooks->getAvailableHooks();
+
+        foreach ($availableHooks as $hook) {
+            $gitHooks->install($hook);
+        }
 
         $this->info('Git hooks have been successfully created');
     }

@@ -36,19 +36,10 @@ class GitHooksServiceProvider extends ServiceProvider
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/git-hooks.php', 'laravel-git-hooks');
 
-        $this->app->singleton('laravel-git-hooks', function ($app) {
-            $config = $app['config']->get('git-hooks');
-
-            $hooks = array_filter(GitHooks::getSupportedHooks(), function ($hook) use ($config) {
-                return ! empty($config[$hook]);
-            });
-
-            $storage = $app[Contracts\HookStorage::class];
-
-            return new GitHooks($app, $storage, $hooks);
+        $this->app->singleton('laravel-git-hooks', function () {
+            return new GitHooks;
         });
 
-        $this->app->bind(Contracts\HookStorage::class, HookStorage::class);
         $this->app->bind(Contracts\CommitMessageStorage::class, CommitMessageStorage::class);
     }
 }
