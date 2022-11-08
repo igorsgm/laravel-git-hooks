@@ -20,8 +20,9 @@ class RegisterHooksTest extends TestCase
     {
         $gitHooks = $this->makeGitHooks();
 
-        $gitHooks
-            ->expects('run');
+        $gitHooks->expects('install');
+        $gitHooks->expects('install');
+        $gitHooks->expects('getAvailableHooks')->andReturns(['pre-commit', 'post-commit']);
 
         $command = new RegisterHooks();
 

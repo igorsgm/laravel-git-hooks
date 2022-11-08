@@ -8,9 +8,12 @@ use Igorsgm\GitHooks\Tests\Traits\WithTmpFiles;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Mockery;
+use Orchestra\Testbench\Concerns\CreatesApplication;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
+    use CreatesApplication;
+
     /**
      * @var array
      */
@@ -27,9 +30,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->setUpTraits();
-
         parent::setUp();
+
+        $this->createApplication();
+        $this->setUpTraits();
     }
 
     /**
