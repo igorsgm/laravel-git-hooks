@@ -8,28 +8,26 @@ use Igorsgm\GitHooks\Console\Commands\CommitMessage;
 use Igorsgm\GitHooks\Contracts\MessageHook;
 use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Tests\TestCase;
-use Illuminate\Config\Repository;
 use Illuminate\Console\OutputStyle;
+use Illuminate\Support\Facades\Config;
 use Mockery;
 
 class CommitMessageTest extends TestCase
 {
     public function test_get_command_name()
     {
-        $config = $this->makeConfig();
         $commitMessageStorage = $this->makeCommitMessageStorage();
 
-        $command = new CommitMessage($config, $commitMessageStorage);
+        $command = new CommitMessage($commitMessageStorage);
 
         $this->assertEquals('git-hooks:commit-msg', $command->getName());
     }
 
     public function test_requires_file_argument()
     {
-        $config = $this->makeConfig();
         $commitMessageStorage = $this->makeCommitMessageStorage();
 
-        $command = new CommitMessage($config, $commitMessageStorage);
+        $command = new CommitMessage($commitMessageStorage);
 
         $this->assertTrue($command->getDefinition()->hasArgument('file'));
     }
@@ -45,12 +43,10 @@ class CommitMessageTest extends TestCase
             return new $class;
         });
 
-        $config = new Repository([
-            'git-hooks' => [
-                'commit-msg' => [
-                    CommitMessageTestHook1::class,
-                    CommitMessageTestHook2::class,
-                ],
+        Config::set('git-hooks', [
+            'commit-msg' => [
+                CommitMessageTestHook1::class,
+                CommitMessageTestHook2::class,
             ],
         ]);
 
@@ -64,7 +60,7 @@ class CommitMessageTest extends TestCase
             ->expects('update')
             ->with('tmp/COMMIT_MESSAGE', 'Test commit hook1 hook2');
 
-        $command = new CommitMessage($config, $commitMessageStorage);
+        $command = new CommitMessage($commitMessageStorage);
 
         $command->setLaravel($app);
 
@@ -103,13 +99,11 @@ class CommitMessageTest extends TestCase
             return $path;
         });
 
-        $config = new Repository([
-            'git-hooks' => [
-                'commit-msg' => [
-                    CommitMessageTestHook4::class => [
-                        'param1' => 'hello',
-                        'param2' => 'world',
-                    ],
+        Config::set('git-hooks', [
+            'commit-msg' => [
+                CommitMessageTestHook4::class => [
+                    'param1' => 'hello',
+                    'param2' => 'world',
                 ],
             ],
         ]);
@@ -124,7 +118,7 @@ class CommitMessageTest extends TestCase
             ->expects('update')
             ->with('tmp/COMMIT_MESSAGE', 'Test commit hello world');
 
-        $command = new CommitMessage($config, $commitMessageStorage);
+        $command = new CommitMessage($commitMessageStorage);
 
         $command->setLaravel($app);
 
@@ -218,11 +212,11 @@ class CommitMessageTestHook4 implements MessageHook
     /**
      * @var array
      */
-    protected $config;
+    protected $parameters;
 
-    public function __construct(array $config)
+    public function __construct(array $parameters)
     {
-        $this->config = $config;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -230,7 +224,7 @@ class CommitMessageTestHook4 implements MessageHook
      */
     public function handle(\Igorsgm\GitHooks\Git\CommitMessage $message, Closure $next)
     {
-        $message->setMessage($message->getMessage().' '.$this->config['param1'].' '.$this->config['param2']);
+        $message->setMessage($message->getMessage().' '.$this->parameters['param1'].' '.$this->parameters['param2']);
 
         return $next($message);
     }

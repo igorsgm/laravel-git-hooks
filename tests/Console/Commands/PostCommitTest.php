@@ -8,15 +8,14 @@ use Igorsgm\GitHooks\Contracts\PostCommitHook;
 use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Git\Log;
 use Igorsgm\GitHooks\Tests\TestCase;
-use Illuminate\Config\Repository;
+use Illuminate\Support\Facades\Config;
 use Mockery;
 
 class PostCommitTest extends TestCase
 {
     public function test_get_command_name()
     {
-        $config = $this->makeConfig();
-        $command = new PostCommit($config);
+        $command = new PostCommit();
 
         $this->assertEquals('git-hooks:post-commit', $command->getName());
     }
@@ -39,17 +38,15 @@ class PostCommitTest extends TestCase
                 return $closure($log);
             });
 
-        $config = new Repository([
-            'git-hooks' => [
-                'post-commit' => [
-                    $hook1,
-                    $hook2,
-                ],
+        Config::set('git-hooks', [
+            'post-commit' => [
+                $hook1,
+                $hook2,
             ],
         ]);
 
         $app = $this->makeApplication();
-        $command = new PostCommit($config);
+        $command = new PostCommit();
         $command->setLaravel($app);
 
         $gitHelper = Mockery::mock('alias:'.GitHelper::class);

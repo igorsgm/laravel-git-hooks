@@ -6,7 +6,6 @@ use Igorsgm\GitHooks\Contracts\CommitMessageStorage;
 use Igorsgm\GitHooks\Contracts\HookCommand;
 use Igorsgm\GitHooks\Traits\WithCommitMessage;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Config\Repository;
 
 class PrepareCommitMessage extends Command implements HookCommand
 {
@@ -27,14 +26,11 @@ class PrepareCommitMessage extends Command implements HookCommand
     protected $description = 'Run hook prepare-commit-msg';
 
     /**
-     * @param  Repository  $config
      * @param  CommitMessageStorage  $messageStorage
      */
-    public function __construct(Repository $config, CommitMessageStorage $messageStorage)
+    public function __construct(CommitMessageStorage $messageStorage)
     {
         parent::__construct();
-
-        $this->config = $config;
         $this->messageStorage = $messageStorage;
     }
 

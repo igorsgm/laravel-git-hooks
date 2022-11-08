@@ -4,7 +4,6 @@ namespace Igorsgm\GitHooks;
 
 use Closure;
 use Exception;
-use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Pipeline\Pipeline;
 use Throwable;
@@ -22,24 +21,17 @@ class HooksPipeline extends Pipeline
     protected $exceptionCallback;
 
     /**
-     * @var Repository
-     */
-    protected $config;
-
-    /**
      * @var string
      */
     protected $hook;
 
     /**
      * @param  \Illuminate\Contracts\Container\Container|null  $container
-     * @param  Repository  $config
      * @param  string  $hook
      */
-    public function __construct(Container $container, Repository $config, string $hook)
+    public function __construct(Container $container, string $hook)
     {
         parent::__construct($container);
-        $this->config = $config;
         $this->hook = $hook;
     }
 
@@ -81,12 +73,12 @@ class HooksPipeline extends Pipeline
                         // the appropriate method and arguments, returning the results back out.
                         return $pipe($passable, $stack);
                     } elseif (! is_object($pipe)) {
-                        $config = (array) $this->config->get('git-hooks.'.$this->hook.'.'.$pipe);
+                        $hookParameters = (array) config('git-hooks.'.$this->hook.'.'.$pipe);
 
                         // If the pipe is a string we will parse the string and resolve the class out
                         // of the dependency injection container. We can then build a callable and
                         // execute the pipe function giving in the parameters that are required.
-                        $pipe = $this->getContainer()->make($pipe, ['config' => $config]);
+                        $pipe = $this->getContainer()->make($pipe, ['parameters' => $hookParameters]);
 
                         if ($this->callback) {
                             call_user_func_array($this->callback, [$pipe]);

@@ -5,21 +5,11 @@ namespace Igorsgm\GitHooks\Traits;
 use Closure;
 use Igorsgm\GitHooks\Contracts\Hook;
 use Igorsgm\GitHooks\HooksPipeline;
-use Illuminate\Contracts\Config\Repository;
 use Illuminate\Pipeline\Pipeline;
-use Illuminate\Support\Collection;
 use Throwable;
 
 trait WithPipeline
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function getConfig(): Repository
-    {
-        return $this->config;
-    }
-
     /**
      * Make pipeline instance
      *
@@ -29,7 +19,6 @@ trait WithPipeline
     {
         $pipeline = new HooksPipeline(
             $this->getLaravel(),
-            $this->getConfig(),
             $this->getHook()
         );
 
@@ -72,7 +61,7 @@ trait WithPipeline
      */
     public function getRegisteredHooks(): array
     {
-        $hooks = new Collection((array) $this->config->get('git-hooks.'.$this->getHook()));
+        $hooks = collect((array) config('git-hooks.'.$this->getHook()));
 
         return $hooks->map(function ($hook, $i) {
             if (is_int($i)) {
