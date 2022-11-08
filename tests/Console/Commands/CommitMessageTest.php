@@ -34,15 +34,6 @@ class CommitMessageTest extends TestCase
 
     public function test_a_message_should_be_send_through_the_hook_pipes()
     {
-        $app = $this->makeApplication();
-        $app->allows('basePath')->andReturnUsing(function ($path = null) {
-            return $path;
-        });
-
-        $app->allows('make')->andReturnUsing(function ($class) {
-            return new $class;
-        });
-
         Config::set('git-hooks', [
             'commit-msg' => [
                 CommitMessageTestHook1::class,
@@ -58,11 +49,9 @@ class CommitMessageTest extends TestCase
 
         $commitMessageStorage
             ->expects('update')
-            ->with('tmp/COMMIT_MESSAGE', 'Test commit hook1 hook2');
+            ->with(base_path('tmp/COMMIT_MESSAGE'), 'Test commit hook1 hook2');
 
         $command = new CommitMessage($commitMessageStorage);
-
-        $command->setLaravel($app);
 
         $input = Mockery::mock(\Symfony\Component\Console\Input\InputInterface::class);
         $input->allows('getArgument')
@@ -90,15 +79,6 @@ class CommitMessageTest extends TestCase
 
     public function test_pass_hook_config_into_hook_object()
     {
-        $app = $this->makeApplication();
-        $app->allows('make')->andReturnUsing(function ($class, array $parameters = []) {
-            return new $class(...array_values($parameters));
-        });
-
-        $app->allows('basePath')->andReturnUsing(function ($path = null) {
-            return $path;
-        });
-
         Config::set('git-hooks', [
             'commit-msg' => [
                 CommitMessageTestHook4::class => [
@@ -116,11 +96,9 @@ class CommitMessageTest extends TestCase
 
         $commitMessageStorage
             ->expects('update')
-            ->with('tmp/COMMIT_MESSAGE', 'Test commit hello world');
+            ->with(base_path('tmp/COMMIT_MESSAGE'), 'Test commit hello world');
 
         $command = new CommitMessage($commitMessageStorage);
-
-        $command->setLaravel($app);
 
         $input = Mockery::mock(\Symfony\Component\Console\Input\InputInterface::class);
         $input->allows('getArgument')

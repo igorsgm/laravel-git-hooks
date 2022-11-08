@@ -45,9 +45,7 @@ class PostCommitTest extends TestCase
             ],
         ]);
 
-        $app = $this->makeApplication();
         $command = new PostCommit();
-        $command->setLaravel($app);
 
         $gitHelper = Mockery::mock('alias:'.GitHelper::class);
         $gitHelper->expects('getLastCommitFromLog')

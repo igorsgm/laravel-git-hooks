@@ -17,15 +17,12 @@ trait WithPipeline
      */
     protected function makePipeline(): Pipeline
     {
-        $pipeline = new HooksPipeline(
-            $this->getLaravel(),
-            $this->getHook()
-        );
+        $pipeline = new HooksPipeline(app(), $this->getHook());
 
         return $pipeline
             ->through($this->getRegisteredHooks())
-            ->withCallback($this->showInfoAboutHook())
-            ->withExceptionCallback($this->showHookErrorAndExit());
+            ->withCallback($this->showInfoAboutHook());
+//            ->withExceptionCallback($this->showHookErrorAndExit());
     }
 
     /**
