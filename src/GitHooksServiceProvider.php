@@ -39,7 +39,5 @@ class GitHooksServiceProvider extends ServiceProvider
         $this->app->singleton('laravel-git-hooks', function () {
             return new GitHooks;
         });
-
-        $this->app->bind(Contracts\CommitMessageStorage::class, CommitMessageStorage::class);
     }
 }

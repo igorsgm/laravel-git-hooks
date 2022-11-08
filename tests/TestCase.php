@@ -2,7 +2,6 @@
 
 namespace Igorsgm\GitHooks\Tests;
 
-use Igorsgm\GitHooks\Contracts\CommitMessageStorage;
 use Igorsgm\GitHooks\GitHooks;
 use Igorsgm\GitHooks\Tests\Traits\WithTmpFiles;
 use Illuminate\Contracts\Config\Repository;
@@ -97,13 +96,5 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected function makeGitHooks()
     {
         return Mockery::mock(GitHooks::class);
-    }
-
-    /**
-     * @return CommitMessageStorage|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    protected function makeCommitMessageStorage()
-    {
-        return Mockery::mock(CommitMessageStorage::class);
     }
 }

@@ -16,18 +16,14 @@ class PrepareCommitMessageTest extends TestCase
 {
     public function test_get_command_name()
     {
-        $commitMessageStorage = $this->makeCommitMessageStorage();
-
-        $command = new PrepareCommitMessage($commitMessageStorage);
+        $command = new PrepareCommitMessage();
 
         $this->assertEquals('git-hooks:prepare-commit-msg', $command->getName());
     }
 
     public function test_requires_file_argument()
     {
-        $commitMessageStorage = $this->makeCommitMessageStorage();
-
-        $command = new PrepareCommitMessage($commitMessageStorage);
+        $command = new PrepareCommitMessage();
 
         $this->assertTrue($command->getDefinition()->hasArgument('file'));
     }
@@ -41,17 +37,7 @@ class PrepareCommitMessageTest extends TestCase
             ],
         ]);
 
-        $commitMessageStorage = $this->makeCommitMessageStorage();
-
-        $commitMessageStorage
-            ->expects('get')
-            ->andReturns('Test commit');
-
-        $commitMessageStorage
-            ->expects('update')
-            ->with(base_path('tmp/COMMIT_MESSAGE'), 'Test commit hook1 hook2');
-
-        $command = new PrepareCommitMessage($commitMessageStorage);
+        $command = new PrepareCommitMessage();
 
         $input = Mockery::mock(\Symfony\Component\Console\Input\InputInterface::class);
         $input->expects('getArgument')
@@ -73,6 +59,8 @@ class PrepareCommitMessageTest extends TestCase
 
         $gitHelper = Mockery::mock('alias:'.GitHelper::class);
         $gitHelper->expects('getListOfChangedFiles')->andReturns('AM src/ChangedFiles.php');
+        $gitHelper->expects('getCommitMessageContentFromFile')->andReturns('Test commit');
+        $gitHelper->expects('updateCommitMessageContentInFile')->with(base_path('tmp/COMMIT_MESSAGE'), 'Test commit hook1 hook2');
 
         $this->assertEquals(0, $command->handle());
     }
