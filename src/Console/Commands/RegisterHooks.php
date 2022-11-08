@@ -26,6 +26,7 @@ class RegisterHooks extends Command
      *
      * @param  GitHooks  $gitHooks
      * @return void
+     *
      * @throws \Exception
      */
     public function handle(GitHooks $gitHooks)

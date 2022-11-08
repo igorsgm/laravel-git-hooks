@@ -41,6 +41,7 @@ class GitHooks
      *
      * @param  string  $hookName
      * @return void
+     *
      * @throws Exception
      */
     public function install($hookName)
