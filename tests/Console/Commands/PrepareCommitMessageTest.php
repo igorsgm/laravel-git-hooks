@@ -34,15 +34,6 @@ class PrepareCommitMessageTest extends TestCase
 
     public function test_a_message_should_be_send_through_the_hook_pipes()
     {
-        $app = $this->makeApplication();
-        $app->allows('basePath')->andReturnUsing(function ($path = null) {
-            return $path;
-        });
-
-        $app->allows('make')->andReturnUsing(function ($class) {
-            return new $class;
-        });
-
         Config::set('git-hooks', [
             'prepare-commit-msg' => [
                 PrepareCommitMessageTestHook1::class,
@@ -58,7 +49,7 @@ class PrepareCommitMessageTest extends TestCase
 
         $commitMessageStorage
             ->expects('update')
-            ->with('tmp/COMMIT_MESSAGE', 'Test commit hook1 hook2');
+            ->with(base_path('tmp/COMMIT_MESSAGE'), 'Test commit hook1 hook2');
 
         $command = new PrepareCommitMessage($commitMessageStorage);
 
@@ -68,7 +59,6 @@ class PrepareCommitMessageTest extends TestCase
             ->with('file')
             ->andReturns('tmp/COMMIT_MESSAGE');
 
-        $command->setLaravel($app);
         $command->setInput($input);
 
         $output = Mockery::mock(OutputStyle::class);

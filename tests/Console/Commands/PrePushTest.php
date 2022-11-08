@@ -45,9 +45,7 @@ class PrePushTest extends TestCase
             ],
         ]);
 
-        $app = $this->makeApplication();
         $command = new PrePush();
-        $command->setLaravel($app);
 
         $gitHelper = Mockery::mock('alias:'.GitHelper::class);
         $gitHelper->expects('getLastCommitFromLog')

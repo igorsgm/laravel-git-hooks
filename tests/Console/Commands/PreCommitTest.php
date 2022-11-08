@@ -46,9 +46,7 @@ class PreCommitTest extends TestCase
             ],
         ]);
 
-        $app = $this->makeApplication();
         $command = new PreCommit();
-        $command->setLaravel($app);
 
         $gitHelper = Mockery::mock('alias:'.GitHelper::class);
         $gitHelper->expects('getListOfChangedFiles')->andReturns('AM src/ChangedFiles.php');

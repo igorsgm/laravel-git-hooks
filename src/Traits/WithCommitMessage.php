@@ -31,9 +31,7 @@ trait WithCommitMessage
     {
         $file = $this->argument('file');
 
-        $message = $this->messageStorage->get(
-            $this->getLaravel()->basePath($file)
-        );
+        $message = $this->messageStorage->get(base_path($file));
 
         try {
             $this->sendMessageThroughHooks(
@@ -58,7 +56,7 @@ trait WithCommitMessage
     {
         $file = $this->argument('file');
 
-        return $this->getLaravel()->basePath($file);
+        return base_path($file);
     }
 
     /**
