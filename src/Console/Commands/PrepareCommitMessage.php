@@ -2,7 +2,6 @@
 
 namespace Igorsgm\GitHooks\Console\Commands;
 
-use Igorsgm\GitHooks\Contracts\CommitMessageStorage;
 use Igorsgm\GitHooks\Contracts\HookCommand;
 use Igorsgm\GitHooks\Traits\WithCommitMessage;
 use Illuminate\Console\Command;
@@ -24,15 +23,6 @@ class PrepareCommitMessage extends Command implements HookCommand
      * @var string
      */
     protected $description = 'Run hook prepare-commit-msg';
-
-    /**
-     * @param  CommitMessageStorage  $messageStorage
-     */
-    public function __construct(CommitMessageStorage $messageStorage)
-    {
-        parent::__construct();
-        $this->messageStorage = $messageStorage;
-    }
 
     /**
      * Get hook name

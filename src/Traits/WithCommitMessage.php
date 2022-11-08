@@ -3,37 +3,25 @@
 namespace Igorsgm\GitHooks\Traits;
 
 use Closure;
-use Igorsgm\GitHooks\Contracts\CommitMessageStorage;
 use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Git\CommitMessage;
 use Igorsgm\GitHooks\Git\GitHelper;
-use Illuminate\Contracts\Config\Repository;
 
 trait WithCommitMessage
 {
     use WithPipeline;
 
     /**
-     * @var Repository
-     */
-    protected $config;
-
-    /**
-     * @var CommitMessageStorage
-     */
-    protected $messageStorage;
-
-    /**
      * Execute the console command.
      */
     public function handle()
     {
-        $file = $this->argument('file');
-
-        $message = $this->messageStorage->get(base_path($file));
-
         try {
+            $message = GitHelper::getCommitMessageContentFromFile(
+                $this->getMessagePath()
+            );
+
             $this->sendMessageThroughHooks(
                 new CommitMessage(
                     $message,
@@ -79,7 +67,7 @@ trait WithCommitMessage
     protected function storeMessage(): Closure
     {
         return function (CommitMessage $message) {
-            $this->messageStorage->update(
+            GitHelper::updateCommitMessageContentInFile(
                 $this->getMessagePath(),
                 (string) $message
             );
