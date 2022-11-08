@@ -38,7 +38,7 @@ class PreCommit extends Command implements HookCommand
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int|void
      */
     public function handle()
     {
