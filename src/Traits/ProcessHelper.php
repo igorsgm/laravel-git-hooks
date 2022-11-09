@@ -62,18 +62,6 @@ trait ProcessHelper
     }
 
     /**
-     * Static alias for runCommands.
-     *
-     * @param  array|string  $commands
-     * @param  array  $params
-     * @return Process
-     */
-    public static function execCommands($commands, $params = [])
-    {
-        return (new self)->runCommands($commands, $params);
-    }
-
-    /**
      * @param  array  $commands
      * @param  callable  $callback
      * @return array

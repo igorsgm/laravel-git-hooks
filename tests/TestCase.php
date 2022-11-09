@@ -2,99 +2,75 @@
 
 namespace Igorsgm\GitHooks\Tests;
 
-use Igorsgm\GitHooks\GitHooks;
-use Igorsgm\GitHooks\Tests\Traits\WithTmpFiles;
-use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Foundation\Application;
-use Mockery;
-use Orchestra\Testbench\Concerns\CreatesApplication;
+use Igorsgm\GitHooks\Facades\GitHooks;
+use Igorsgm\GitHooks\GitHooksServiceProvider;
 
-abstract class TestCase extends \PHPUnit\Framework\TestCase
+class TestCase extends \Orchestra\Testbench\TestCase
 {
-    use CreatesApplication;
-
     /**
-     * @var array
+     * @var \Illuminate\Config\Repository
      */
-    protected $tearDownCallbacks = [];
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        Mockery::close();
-
-        $this->callTearDownCallbacks();
-    }
+    public $config;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->createApplication();
-        $this->setUpTraits();
+        $this->withoutMockingConsoleOutput();
     }
 
     /**
-     * Boot the testing helper traits.
+     * Define environment setup.
      *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
+    public function defineEnvironment($app)
+    {
+        $app['config']->set('database.default', 'sqlite');
+        $app['config']->set('database.connections.sqlite', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
+
+        $app['config']->set('git-hooks', [
+            'pre-commit' => [],
+            'prepare-commit-msg' => [],
+            'commit-msg' => [],
+            'post-commit' => [],
+            'pre-rebase' => [],
+            'post-rewrite' => [],
+            'post-checkout' => [],
+            'post-merge' => [],
+            'pre-push' => [],
+        ]);
+
+        $this->config = $app['config'];
+    }
+
+    /**
+     * Get package providers.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
-    protected function setUpTraits()
+    protected function getPackageProviders($app)
     {
-        $uses = array_flip(class_uses_recursive(static::class));
-
-        if (isset($uses[WithTmpFiles::class])) {
-            $this->registerTmpTrait();
-        }
-
-        return $uses;
+        return [
+            GitHooksServiceProvider::class,
+        ];
     }
 
     /**
-     * Register a callback to be run before the application is destroyed.
+     * Override application aliases.
      *
-     * @param  callable  $callback
-     * @return void
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return array
      */
-    protected function tearDownCallback(callable $callback)
+    protected function getPackageAliases($app)
     {
-        $this->tearDownCallbacks[] = $callback;
-    }
-
-    /**
-     * Execute the application's pre-destruction callbacks.
-     *
-     * @return void
-     */
-    protected function callTearDownCallbacks()
-    {
-        foreach ($this->tearDownCallbacks as $callback) {
-            $callback();
-        }
-    }
-
-    /**
-     * @return Repository|Mockery\MockInterface
-     */
-    protected function makeConfig()
-    {
-        return Mockery::mock(Repository::class);
-    }
-
-    /**
-     * @return Application|Mockery\MockInterface
-     */
-    protected function makeApplication()
-    {
-        return Mockery::mock(Application::class);
-    }
-
-    /**
-     * @return GitHooks|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    protected function makeGitHooks()
-    {
-        return Mockery::mock(GitHooks::class);
+        return [
+            'GitHooks' => GitHooks::class,
+        ];
     }
 }

@@ -3,9 +3,12 @@
 namespace Igorsgm\GitHooks;
 
 use Exception;
+use Igorsgm\GitHooks\Traits\GitHelper;
 
 class GitHooks
 {
+    use GitHelper;
+
     /**
      * Get all supported git hooks
      */
