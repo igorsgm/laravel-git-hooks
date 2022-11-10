@@ -8,7 +8,7 @@ test('Git Log is sent through HookPipes', function () {
     $commitHash = 'b636c88159e121d0c8276c417576d57ebb380dc3';
 
     $postCommitHook1 = mock(PostCommitHook::class)->expect(
-        handle: fn(Log $log, Closure $closure) => expect($log->getHash())->toBe($commitHash)
+        handle: fn (Log $log, Closure $closure) => expect($log->getHash())->toBe($commitHash)
     );
     $postCommitHook2 = clone $postCommitHook1;
 
