@@ -19,7 +19,7 @@ test('Commit Message is sent through HookPipes', function () {
         ->andReturn('Test commit');
 
     GitHooks::shouldReceive('getListOfChangedFiles')
-        ->andReturn('AM src/ChangedFiles.php');
+        ->andReturn(mockListOfChangedFiles());
 
     GitHooks::shouldReceive('updateCommitMessageContentInFile')
         ->with(base_path($file), 'Test commit hook1 hook2');
@@ -48,7 +48,7 @@ test('Pass parameters into Commit Hook class', function () {
         ->andReturn('Test commit');
 
     GitHooks::shouldReceive('getListOfChangedFiles')
-        ->andReturn('AM src/ChangedFiles.php');
+        ->andReturn(mockListOfChangedFiles());
 
     GitHooks::shouldReceive('updateCommitMessageContentInFile')
         ->with(base_path($file), 'Test commit hello world');
