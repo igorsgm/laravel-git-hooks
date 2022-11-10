@@ -12,12 +12,6 @@ class TestCase extends \Orchestra\Testbench\TestCase
      */
     public $config;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->withoutMockingConsoleOutput();
-    }
-
     /**
      * Define environment setup.
      *

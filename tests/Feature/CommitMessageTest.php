@@ -4,7 +4,6 @@ use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageTestHook1;
 use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageTestHook2;
 use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageTestHook4;
-use Illuminate\Support\Facades\Artisan;
 
 test('Commit Message is sent through HookPipes', function () {
     $commitMessageHooks = [
@@ -25,15 +24,11 @@ test('Commit Message is sent through HookPipes', function () {
     GitHooks::shouldReceive('updateCommitMessageContentInFile')
         ->with(base_path($file), 'Test commit hook1 hook2');
 
-    $this->artisan('git-hooks:commit-msg', ['file' => $file]);
-
-    $output = Artisan::output();
+    $command = $this->artisan('git-hooks:commit-msg', ['file' => $file])
+        ->assertExitCode(0);
 
     foreach ($commitMessageHooks as $hook) {
-        $this->assertStringContainsString(
-            sprintf('Hook: %s...', resolve($hook)->getName()),
-            $output
-        );
+        $command->expectsOutputToContain(sprintf('Hook: %s...', resolve($hook)->getName()));
     }
 });
 
@@ -58,16 +53,11 @@ test('Pass parameters into Commit Hook class', function () {
     GitHooks::shouldReceive('updateCommitMessageContentInFile')
         ->with(base_path($file), 'Test commit hello world');
 
-    $this->artisan('git-hooks:commit-msg', ['file' => $file]);
-
-    $output = Artisan::output();
+    $command = $this->artisan('git-hooks:commit-msg', ['file' => $file])
+        ->assertExitCode(0);
 
     foreach ($commitMessageHooks as $hook => $parameters) {
         $hook = resolve($hook, compact('parameters'));
-
-        $this->assertStringContainsString(
-            sprintf('Hook: %s...', $hook->getName()),
-            $output
-        );
+        $command->expectsOutputToContain(sprintf('Hook: %s...', $hook->getName()));
     }
 });
