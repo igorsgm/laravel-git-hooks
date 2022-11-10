@@ -27,8 +27,6 @@ it('sends ChangedFiles through HookPipes', function () {
 });
 
 it('returns 1 on HookFailException', function () {
-    $changedFilesString = 'AM src/ChangedFiles.php';
-
     $preCommitHook1 = mock(PreCommitHook::class)->expect(
         handle: function (ChangedFiles $files, Closure $closure) {
             throw new HookFailException();
@@ -38,8 +36,6 @@ it('returns 1 on HookFailException', function () {
     $this->config->set('git-hooks.pre-commit', [
         $preCommitHook1,
     ]);
-
-    GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($changedFilesString);
 
     $this->artisan('git-hooks:pre-commit')->assertExitCode(1);
 });

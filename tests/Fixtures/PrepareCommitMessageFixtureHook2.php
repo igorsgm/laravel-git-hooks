@@ -4,15 +4,16 @@ namespace Igorsgm\GitHooks\Tests\Fixtures;
 
 use Closure;
 use Igorsgm\GitHooks\Contracts\MessageHook;
+use Igorsgm\GitHooks\Git\CommitMessage;
 
-class CommitMessageTestHook1 implements MessageHook
+class PrepareCommitMessageFixtureHook2 implements MessageHook
 {
     /**
      * {@inheritDoc}
      */
-    public function handle(\Igorsgm\GitHooks\Git\CommitMessage $message, Closure $next)
+    public function handle(CommitMessage $message, Closure $next)
     {
-        $message->setMessage($message->getMessage().' hook1');
+        $message->setMessage($message->getMessage().' hook2');
 
         return $next($message);
     }
@@ -22,6 +23,6 @@ class CommitMessageTestHook1 implements MessageHook
      */
     public function getName(): string
     {
-        return 'Commit Message Test Hook 1';
+        return 'Prepare Commit Message Hook 2';
     }
 }

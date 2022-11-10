@@ -1,14 +1,14 @@
 <?php
 
 use Igorsgm\GitHooks\Facades\GitHooks;
-use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageTestHook1;
-use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageTestHook2;
-use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageTestHook4;
+use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageFixtureHook1;
+use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageFixtureHook2;
+use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageFixtureHook4;
 
 test('Commit Message is sent through HookPipes', function () {
     $commitMessageHooks = [
-        CommitMessageTestHook1::class,
-        CommitMessageTestHook2::class,
+        CommitMessageFixtureHook1::class,
+        CommitMessageFixtureHook2::class,
     ];
 
     $this->config->set('git-hooks.commit-msg', $commitMessageHooks);
@@ -34,7 +34,7 @@ test('Commit Message is sent through HookPipes', function () {
 
 test('Pass parameters into Commit Hook class', function () {
     $commitMessageHooks = [
-        CommitMessageTestHook4::class => [
+        CommitMessageFixtureHook4::class => [
             'param1' => 'hello',
             'param2' => 'world',
         ],
