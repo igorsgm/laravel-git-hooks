@@ -5,7 +5,7 @@ use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageFixtureHook1;
 use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageFixtureHook2;
 use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageFixtureHook4;
 
-test('Commit Message is sent through HookPipes', function () {
+test('Commit Message is sent through HookPipes', function (string $listOfChangedFiles) {
     $commitMessageHooks = [
         CommitMessageFixtureHook1::class,
         CommitMessageFixtureHook2::class,
@@ -19,7 +19,7 @@ test('Commit Message is sent through HookPipes', function () {
         ->andReturn('Test commit');
 
     GitHooks::shouldReceive('getListOfChangedFiles')
-        ->andReturn(mockListOfChangedFiles());
+        ->andReturn($listOfChangedFiles);
 
     GitHooks::shouldReceive('updateCommitMessageContentInFile')
         ->with(base_path($file), 'Test commit hook1 hook2');
@@ -30,9 +30,9 @@ test('Commit Message is sent through HookPipes', function () {
     foreach ($commitMessageHooks as $hook) {
         $command->expectsOutputToContain(sprintf('Hook: %s...', resolve($hook)->getName()));
     }
-});
+})->with('listOfChangedFiles');
 
-test('Pass parameters into Commit Hook class', function () {
+test('Pass parameters into Commit Hook class', function (string $listOfChangedFiles) {
     $commitMessageHooks = [
         CommitMessageFixtureHook4::class => [
             'param1' => 'hello',
@@ -48,7 +48,7 @@ test('Pass parameters into Commit Hook class', function () {
         ->andReturn('Test commit');
 
     GitHooks::shouldReceive('getListOfChangedFiles')
-        ->andReturn(mockListOfChangedFiles());
+        ->andReturn($listOfChangedFiles);
 
     GitHooks::shouldReceive('updateCommitMessageContentInFile')
         ->with(base_path($file), 'Test commit hello world');
@@ -60,4 +60,4 @@ test('Pass parameters into Commit Hook class', function () {
         $hook = resolve($hook, compact('parameters'));
         $command->expectsOutputToContain(sprintf('Hook: %s...', $hook->getName()));
     }
-});
+})->with('listOfChangedFiles');

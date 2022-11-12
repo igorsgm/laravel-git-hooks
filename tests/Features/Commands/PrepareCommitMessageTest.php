@@ -4,7 +4,7 @@ use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Tests\Fixtures\PrepareCommitMessageFixtureHook1;
 use Igorsgm\GitHooks\Tests\Fixtures\PrepareCommitMessageFixtureHook2;
 
-test('Commit Message is sent through HookPipes', function () {
+test('Commit Message is sent through HookPipes', function (string $listOfChangedFiles) {
     $prepareCommitMessageHooks = [
         PrepareCommitMessageFixtureHook1::class,
         PrepareCommitMessageFixtureHook2::class,
@@ -18,7 +18,7 @@ test('Commit Message is sent through HookPipes', function () {
         ->andReturn('Test commit');
 
     GitHooks::shouldReceive('getListOfChangedFiles')
-        ->andReturn(mockListOfChangedFiles());
+        ->andReturn($listOfChangedFiles);
 
     GitHooks::shouldReceive('updateCommitMessageContentInFile')
         ->with(base_path($file), 'Test commit hook1 hook2');
@@ -29,4 +29,4 @@ test('Commit Message is sent through HookPipes', function () {
     foreach ($prepareCommitMessageHooks as $hook) {
         $command->expectsOutputToContain(sprintf('Hook: %s...', resolve($hook)->getName()));
     }
-});
+})->with('listOfChangedFiles');

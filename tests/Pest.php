@@ -52,18 +52,3 @@ function mockCommitHash()
 {
     return 'da39a3ee5e6b4b0d3255bfef95601890afd80709';
 }
-
-function mockListOfChangedFiles()
-{
-    return 'AM src/ChangedFiles.php';
-}
-
-function mockLastCommitLog()
-{
-    return sprintf('commit %s
-Author: Igor Moraes <igor.sgm@gmail.com>
-Date:   Wed Nov 9 04:50:40 2022 -0800
-
-    wip
-', mockCommitHash());
-}
