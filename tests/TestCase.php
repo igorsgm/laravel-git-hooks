@@ -4,9 +4,12 @@ namespace Igorsgm\GitHooks\Tests;
 
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\GitHooksServiceProvider;
+use Igorsgm\GitHooks\Tests\Traits\WithTmpFiles;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
+    use WithTmpFiles;
+
     /**
      * @var \Illuminate\Config\Repository
      */
@@ -66,5 +69,15 @@ class TestCase extends \Orchestra\Testbench\TestCase
         return [
             'GitHooks' => GitHooks::class,
         ];
+    }
+
+    /**
+     * @return void
+     */
+    public function initializeGitAsTempDirectory()
+    {
+        chdir(base_path());
+        shell_exec('git init --quiet');
+        $this->initializeTempDirectory(base_path('.git'));
     }
 }

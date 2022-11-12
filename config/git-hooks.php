@@ -78,6 +78,8 @@ return [
     | Pre-Rebase Hooks
     |-----------------------------------------------------------------
     |
+    | @TODO Implement support to pre-rebase hooks
+    |
     | The pre-rebase hook runs before you rebase anything and can halt the process by exiting non-zero.
     | You can use this hook to disallow rebasing any commits that have already been pushed.
     | The example pre-rebase hook that Git installs does this, although it makes some assumptions that may not
@@ -93,6 +95,8 @@ return [
     | Post-Rewrite Hooks
     |-----------------------------------------------------------------
     |
+    | @TODO Implement support to post-rewrite hook
+    |
     | The post-rewrite hook is run by commands that replace commits, such as git commit --amend and git rebase
     | (though not by git filter-branch). Its single argument is which command triggered the rewrite, and it receives
     | a list of rewrites on stdin. This hook has many of the same uses as the post-checkout and post-merge hooks.
@@ -106,6 +110,8 @@ return [
     |-----------------------------------------------------------------
     | Post-Checkout Hooks
     |-----------------------------------------------------------------
+    |
+    | @TODO Implement support to post-checkout hook
     |
     | After you run a successful git checkout, the post-checkout hook runs; you can use it to set up your working
     | directory properly for your project environment. This may mean moving in large binary files that you don't want
@@ -121,9 +127,12 @@ return [
     | Post-Merge Hooks
     |-----------------------------------------------------------------
     |
+    | @TODO Implement support to post-merge hook
+    |
     | The post-merge hook runs after a successful merge command. You can use it to restore data in the working tree
     | that Git can't track, such as permissions data. This hook can likewise validate the presence of files external
     | to Git control that you may want copied in when the working tree changes.
+    |
     |
     */
     'post-merge' => [

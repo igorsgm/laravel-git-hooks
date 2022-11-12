@@ -13,8 +13,7 @@
 
 use Igorsgm\GitHooks\Tests\TestCase;
 
-uses(TestCase::class)->in('Feature');
-uses(TestCase::class)->in('Unit');
+uses(TestCase::class)->in(__DIR__);
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +30,13 @@ expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
 
+expect()->extend('toContainHookArtisanCommand', function ($hookName) {
+    $this->value = file_get_contents($this->value);
+    $artisanCommand = sprintf('php %s git-hooks:%s $@ >&2', base_path('artisan'), $hookName);
+
+    return $this->toContain($artisanCommand);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Functions
@@ -41,6 +47,7 @@ expect()->extend('toBeOne', function () {
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
+
 function mockCommitHash()
 {
     return 'da39a3ee5e6b4b0d3255bfef95601890afd80709';
