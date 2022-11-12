@@ -43,7 +43,6 @@ dataset('modifiedFilesMeta', [
     ],
 ]);
 
-
 dataset('modifiedFilesList', [
     'modified files list' => implode(PHP_EOL, [
         'M  src/Console/Commands/CommitMessage.php',

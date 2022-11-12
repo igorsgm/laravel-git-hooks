@@ -5,7 +5,7 @@ use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 
-it('sends ChangedFiles through HookPipes', function (string $listOfChangedFiles) {
+test('Sends ChangedFiles through HookPipes', function (string $listOfChangedFiles) {
     $preCommitHook1 = mock(PreCommitHook::class)->expect(
         handle: function (ChangedFiles $files, Closure $closure) use ($listOfChangedFiles) {
             $firstChangedFile = (string) $files->getFiles()->first();
@@ -24,7 +24,7 @@ it('sends ChangedFiles through HookPipes', function (string $listOfChangedFiles)
     $this->artisan('git-hooks:pre-commit')->assertSuccessful();
 })->with('listOfChangedFiles');
 
-it('returns 1 on HookFailException', function () {
+it('Returns 1 on HookFailException', function () {
     $preCommitHook1 = mock(PreCommitHook::class)->expect(
         handle: function (ChangedFiles $files, Closure $closure) {
             throw new HookFailException();

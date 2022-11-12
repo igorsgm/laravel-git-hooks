@@ -6,7 +6,7 @@ Author: Igor Moraes <igor.sgm@gmail.com>
 Date:   Wed Nov 9 04:50:40 2022 -0800
 
     wip
-', mockCommitHash())
+', mockCommitHash()),
 ]);
 
 dataset('mergeLogText', [
@@ -17,9 +17,9 @@ Date:   Wed Nov 9 04:50:40 2022 -0800
 
     Merge branch 'main' of github.com:igorsgm/laravel-git-hooks
 
-", mockCommitHash())
+", mockCommitHash()),
 ]);
 
 dataset('listOfChangedFiles', [
-    'list of changed files' => 'AM src/ChangedFiles.php'
+    'list of changed files' => 'AM src/ChangedFiles.php',
 ]);
