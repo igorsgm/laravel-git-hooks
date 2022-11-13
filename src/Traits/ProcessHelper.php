@@ -5,10 +5,14 @@ namespace Igorsgm\GitHooks\Traits;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
+/**
+ * @codeCoverageIgnore
+ */
 trait ProcessHelper
 {
     /**
      * Run the given commands.
+     *
      *
      * @param  array|string  $commands
      * @param  array  $params
