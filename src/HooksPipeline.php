@@ -46,17 +46,6 @@ class HooksPipeline extends Pipeline
     }
 
     /**
-     * @param  Closure  $callback
-     * @return $this
-     */
-    public function withExceptionCallback(Closure $callback)
-    {
-        $this->exceptionCallback = $callback;
-
-        return $this;
-    }
-
-    /**
      * Get a Closure that represents a slice of the application onion.
      *
      * @return Closure
@@ -101,17 +90,5 @@ class HooksPipeline extends Pipeline
                 }
             };
         };
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function handleException($passable, $e)
-    {
-        if ($this->exceptionCallback) {
-            return call_user_func_array($this->exceptionCallback, [$e]);
-        }
-
-        throw $e;
     }
 }
