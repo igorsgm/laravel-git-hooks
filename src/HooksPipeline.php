@@ -12,12 +12,12 @@ class HooksPipeline extends Pipeline
     /**
      * @var Closure
      */
-    protected $callback;
+    protected $pipeStartCallback;
 
     /**
      * @var Closure
      */
-    protected $exceptionCallback;
+    protected $pipeEndCallback;
 
     /**
      * @var string
@@ -38,9 +38,20 @@ class HooksPipeline extends Pipeline
      * @param  Closure  $callback
      * @return $this
      */
-    public function withCallback(Closure $callback)
+    public function withPipeStartCallback(Closure $callback)
     {
-        $this->callback = $callback;
+        $this->pipeStartCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param  Closure  $callback
+     * @return $this
+     */
+    public function withPipeEndCallback(Closure $callback)
+    {
+        $this->pipeEndCallback = $callback;
 
         return $this;
     }
@@ -68,8 +79,10 @@ class HooksPipeline extends Pipeline
                         // execute the pipe function giving in the parameters that are required.
                         $pipe = $this->getContainer()->make($pipe, ['parameters' => $hookParameters]);
 
-                        if ($this->callback) {
-                            call_user_func_array($this->callback, [$pipe]);
+                        $this->handlePipeEnd(true);
+
+                        if ($this->pipeStartCallback) {
+                            call_user_func_array($this->pipeStartCallback, [$pipe]);
                         }
 
                         $parameters = [$passable, $stack];
@@ -81,8 +94,8 @@ class HooksPipeline extends Pipeline
                     }
 
                     $carry = method_exists($pipe, $this->method)
-                                    ? $pipe->{$this->method}(...$parameters)
-                                    : $pipe(...$parameters);
+                                ? $pipe->{$this->method}(...$parameters)
+                                : $pipe(...$parameters);
 
                     return $this->handleCarry($carry);
                 } catch (Throwable $e) {
@@ -90,5 +103,47 @@ class HooksPipeline extends Pipeline
                 }
             };
         };
+    }
+
+    /**
+     * Handle the call back call once a specific pipe has finished or errored.
+     *
+     * @param  bool  $success
+     * @return void
+     */
+    protected function handlePipeEnd($success)
+    {
+        if ($this->pipeEndCallback) {
+            call_user_func_array($this->pipeEndCallback, [$success]);
+        }
+    }
+
+    /**
+     * Handle the value returned from each pipe before passing it to the next.
+     *
+     * @param  mixed  $carry
+     * @return mixed
+     */
+    protected function handleCarry($carry)
+    {
+        $this->handlePipeEnd(true);
+
+        return $carry;
+    }
+
+    /**
+     * Handle the given exception.
+     *
+     * @param  mixed  $passable
+     * @param  \Throwable  $e
+     * @return mixed
+     *
+     * @throws \Throwable
+     */
+    protected function handleException($passable, Throwable $e)
+    {
+        $this->handlePipeEnd(false);
+
+        throw $e;
     }
 }

@@ -29,7 +29,7 @@ trait ProcessHelper
             });
         }
 
-        if ($input && $input->getOption('quiet')) {
+        if (! empty($input->definition) && $input->definition->hasOption('quiet') && $input->getOption('quiet')) {
             $commands = $this->transformCommands($commands, function ($value) {
                 return $value.' --quiet';
             });

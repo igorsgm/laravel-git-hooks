@@ -30,7 +30,7 @@ test('Commit Message is sent through HookPipes', function (string $listOfChanged
         ->assertExitCode(0);
 
     foreach ($prepareCommitMessageHooks as $hook) {
-        $command->expectsOutputToContain(sprintf('Hook: %s...', resolve($hook)->getName()));
+        $command->expectsOutputToContain(sprintf('   HOOK  %s: ✔', resolve($hook)->getName()));
     }
 })->with('listOfChangedFiles');
 

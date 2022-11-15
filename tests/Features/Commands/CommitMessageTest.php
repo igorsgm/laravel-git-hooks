@@ -28,7 +28,7 @@ test('Commit Message is sent through HookPipes', function (string $listOfChanged
         ->assertExitCode(0);
 
     foreach ($commitMessageHooks as $hook) {
-        $command->expectsOutputToContain(sprintf('Hook: %s...', resolve($hook)->getName()));
+        $command->expectsOutputToContain(sprintf('   HOOK  %s: ✔', resolve($hook)->getName()));
     }
 })->with('listOfChangedFiles');
 
@@ -58,6 +58,6 @@ test('Pass parameters into Commit Hook class', function (string $listOfChangedFi
 
     foreach ($commitMessageHooks as $hook => $parameters) {
         $hook = resolve($hook, compact('parameters'));
-        $command->expectsOutputToContain(sprintf('Hook: %s...', $hook->getName()));
+        $command->expectsOutputToContain(sprintf('   HOOK  %s: ✔', $hook->getName()));
     }
 })->with('listOfChangedFiles');
