@@ -1,37 +1,36 @@
 <?php
 
-namespace Igorsgm\GitHooks\Git;
+namespace Igorsgm\GitHooks\Traits;
 
-use Igorsgm\GitHooks\Traits\ProcessHelper;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class GitHelper
+trait GitHelper
 {
     use ProcessHelper;
 
     /**
      * @return string
      */
-    public static function getListOfChangedFiles()
+    public function getListOfChangedFiles()
     {
-        return self::execAndGetCommandOutput('git status --short');
+        return $this->runCommandAndGetOutput('git status --short');
     }
 
     /**
      * @return string
      */
-    public static function getLastCommitFromLog()
+    public function getLastCommitFromLog()
     {
-        return self::execAndGetCommandOutput('git log -1 HEAD');
+        return $this->runCommandAndGetOutput('git log -1 HEAD');
     }
 
     /**
      * @param  string|array  $commands
      * @return string
      */
-    private static function execAndGetCommandOutput($commands)
+    private function runCommandAndGetOutput($commands)
     {
-        $process = self::execCommands($commands);
+        $process = $this->runCommands($commands);
 
         if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
@@ -46,7 +45,7 @@ class GitHelper
      * @param  string  $filePath
      * @return string
      */
-    public static function getCommitMessageContentFromFile(string $filePath): string
+    public function getCommitMessageContentFromFile(string $filePath): string
     {
         return file_get_contents($filePath);
     }
@@ -57,7 +56,7 @@ class GitHelper
      * @param  string  $path
      * @param  string  $message
      */
-    public static function updateCommitMessageContentInFile(string $path, string $message): void
+    public function updateCommitMessageContentInFile(string $path, string $message): void
     {
         file_put_contents($path, $message);
     }
