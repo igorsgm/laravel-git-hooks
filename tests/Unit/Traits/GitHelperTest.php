@@ -12,7 +12,7 @@ test('Gets list of changed files', function () {
     chdir(__DIR__);
 
     expect($this->getListOfChangedFiles())->toBe(
-        shell_exec('git status --short')
+        shell_exec('git status --short') ?? ''
     );
 });
 
