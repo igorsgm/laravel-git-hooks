@@ -3,7 +3,7 @@
 namespace Igorsgm\GitHooks\Traits;
 
 use Igorsgm\GitHooks\Exceptions\HookFailException;
-use Igorsgm\GitHooks\Facades\GitHooks;
+use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Git\Log;
 
 trait WithCommitLog
@@ -20,7 +20,7 @@ trait WithCommitLog
         try {
             $this->sendLogCommitThroughHooks(
                 new Log(
-                    GitHooks::getLastCommitFromLog()
+                    GitHelper::getLastCommitFromLog()
                 )
             );
         } catch (HookFailException $e) {
