@@ -4,8 +4,8 @@ namespace Igorsgm\GitHooks\Console\Commands;
 
 use Igorsgm\GitHooks\Contracts\HookCommand;
 use Igorsgm\GitHooks\Exceptions\HookFailException;
-use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Git\GitHelper;
 use Igorsgm\GitHooks\Traits\WithPipeline;
 use Illuminate\Console\Command;
 
@@ -45,7 +45,7 @@ class PreCommit extends Command implements HookCommand
         try {
             $this->sendChangedFilesThroughHooks(
                 new ChangedFiles(
-                    GitHooks::getListOfChangedFiles()
+                    GitHelper::getListOfChangedFiles()
                 )
             );
         } catch (HookFailException $e) {

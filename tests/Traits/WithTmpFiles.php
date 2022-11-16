@@ -2,60 +2,39 @@
 
 namespace Igorsgm\GitHooks\Tests\Traits;
 
-use Illuminate\Support\Facades\File;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 trait WithTmpFiles
 {
-    private $tempDirectoryPath;
+    protected $tempDir;
 
-    public function initializeTempDirectory(?string $path = '', bool $force = false)
+    public function registerTmpTrait()
     {
-        if ($path) {
-            $this->setTempDirectoryPath($path);
+        $this->tempDir = __DIR__.'/tmp';
+
+        if (! is_dir($this->tempDir)) {
+            mkdir($this->tempDir);
         }
 
-        $tempDirectoryPath = $this->getTempDirectoryPath();
+        $this->tearDownCallback(function () {
+            $this->deleteFiles($this->tempDir);
+        });
+    }
 
-        if ($force) {
-            $this->deleteTempDirectory();
+    protected function deleteFiles($target)
+    {
+        $it = new RecursiveDirectoryIterator($target, RecursiveDirectoryIterator::SKIP_DOTS);
+        $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($files as $file) {
+            if ($file->isDir()) {
+                rmdir($file->getRealPath());
+            } else {
+                unlink($file->getRealPath());
+            }
         }
 
-        if (! is_dir($tempDirectoryPath)) {
-            File::makeDirectory($tempDirectoryPath, 0755, true);
-        }
-    }
-
-    protected function deleteTempDirectory()
-    {
-        File::deleteDirectory(
-            $this->getTempDirectoryPath()
-        );
-    }
-
-    /**
-     * @param  string  $filename
-     * @return string
-     */
-    protected function getTempFilePath(string $filename): string
-    {
-        return $this->getTempDirectoryPath().DIRECTORY_SEPARATOR.$filename;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTempDirectoryPath(): string
-    {
-        return $this->tempDirectoryPath ?: __DIR__.DIRECTORY_SEPARATOR.'temp';
-    }
-
-    /**
-     * @param  string  $directoryName
-     * @return void
-     */
-    public function setTempDirectoryPath(string $directoryName): void
-    {
-        $this->tempDirectoryPath = $directoryName;
+        rmdir($target);
     }
 
     /**
@@ -63,12 +42,30 @@ trait WithTmpFiles
      * @param  string  $content
      * @return string
      */
-    protected function makeTempFile(string $filename, string $content): string
+    protected function makeTmpFile(string $filename, string $content): string
     {
-        $path = $this->getTempFilePath($filename);
+        $path = $this->getTmpFilePath($filename);
 
         file_put_contents($path, $content);
 
         return $path;
+    }
+
+    /**
+     * @param  string  $filename
+     * @param  string  $content
+     */
+    protected function assertTmpFileContains(string $filename, string $content)
+    {
+        $this->assertEquals($content, file_get_contents($this->getTmpFilePath($filename)));
+    }
+
+    /**
+     * @param  string  $filename
+     * @return string
+     */
+    protected function getTmpFilePath(string $filename): string
+    {
+        return $this->tempDir.'/'.$filename;
     }
 }
