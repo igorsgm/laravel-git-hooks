@@ -5,10 +5,14 @@ namespace Igorsgm\GitHooks\Traits;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
+/**
+ * @codeCoverageIgnore
+ */
 trait ProcessHelper
 {
     /**
      * Run the given commands.
+     *
      *
      * @param  array|string  $commands
      * @param  array  $params
@@ -25,7 +29,7 @@ trait ProcessHelper
             });
         }
 
-        if ($input && $input->getOption('quiet')) {
+        if (! empty($input->definition) && $input->definition->hasOption('quiet') && $input->getOption('quiet')) {
             $commands = $this->transformCommands($commands, function ($value) {
                 return $value.' --quiet';
             });
@@ -59,18 +63,6 @@ trait ProcessHelper
         });
 
         return $process;
-    }
-
-    /**
-     * Static alias for runCommands.
-     *
-     * @param  array|string  $commands
-     * @param  array  $params
-     * @return Process
-     */
-    public static function execCommands($commands, $params = [])
-    {
-        return (new self)->runCommands($commands, $params);
     }
 
     /**

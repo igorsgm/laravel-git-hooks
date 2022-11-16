@@ -4,9 +4,9 @@ namespace Igorsgm\GitHooks\Traits;
 
 use Closure;
 use Igorsgm\GitHooks\Exceptions\HookFailException;
+use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Git\CommitMessage;
-use Igorsgm\GitHooks\Git\GitHelper;
 
 trait WithCommitMessage
 {
@@ -20,7 +20,7 @@ trait WithCommitMessage
     public function handle()
     {
         try {
-            $message = GitHelper::getCommitMessageContentFromFile(
+            $message = GitHooks::getCommitMessageContentFromFile(
                 $this->getMessagePath()
             );
 
@@ -28,7 +28,7 @@ trait WithCommitMessage
                 new CommitMessage(
                     $message,
                     new ChangedFiles(
-                        GitHelper::getListOfChangedFiles()
+                        GitHooks::getListOfChangedFiles()
                     )
                 )
             );
@@ -69,7 +69,7 @@ trait WithCommitMessage
     protected function storeMessage(): Closure
     {
         return function (CommitMessage $message) {
-            GitHelper::updateCommitMessageContentInFile(
+            GitHooks::updateCommitMessageContentInFile(
                 $this->getMessagePath(),
                 (string) $message
             );
