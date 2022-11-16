@@ -14,6 +14,8 @@ trait WithCommitMessage
 
     /**
      * Execute the console command.
+     *
+     * @return int|void
      */
     public function handle()
     {

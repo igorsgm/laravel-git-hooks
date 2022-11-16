@@ -2,6 +2,7 @@
 
 namespace Igorsgm\GitHooks\Console\Commands;
 
+use Exception;
 use Igorsgm\GitHooks\GitHooks;
 use Illuminate\Console\Command;
 
@@ -27,7 +28,7 @@ class RegisterHooks extends Command
      * @param  GitHooks  $gitHooks
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(GitHooks $gitHooks)
     {

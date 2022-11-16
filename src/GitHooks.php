@@ -44,7 +44,7 @@ class GitHooks
      *
      * @throws Exception
      */
-    public function install($hookName)
+    public function install(string $hookName)
     {
         if (! is_dir($this->getGitHooksDir())) {
             throw new Exception('Git not initialized in this project.');
