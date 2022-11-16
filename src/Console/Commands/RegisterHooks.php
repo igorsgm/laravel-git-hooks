@@ -2,6 +2,7 @@
 
 namespace Igorsgm\GitHooks\Console\Commands;
 
+use Exception;
 use Igorsgm\GitHooks\GitHooks;
 use Illuminate\Console\Command;
 
@@ -12,14 +13,14 @@ class RegisterHooks extends Command
      *
      * @var string
      */
-    protected $signature = 'git-hooks:register-hooks';
+    protected $signature = 'git-hooks:register';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Register git hooks for application';
+    protected $description = 'Register or re-register git hooks for application';
 
     /**
      * Execute the console command.
@@ -27,7 +28,7 @@ class RegisterHooks extends Command
      * @param  GitHooks  $gitHooks
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(GitHooks $gitHooks)
     {
@@ -37,6 +38,6 @@ class RegisterHooks extends Command
             $gitHooks->install($hook);
         }
 
-        $this->info('Git hooks have been successfully created');
+        $this->info('Git hooks have been successfully installed.');
     }
 }

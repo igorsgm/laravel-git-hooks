@@ -3,9 +3,12 @@
 namespace Igorsgm\GitHooks;
 
 use Exception;
+use Igorsgm\GitHooks\Traits\GitHelper;
 
 class GitHooks
 {
+    use GitHelper;
+
     /**
      * Get all supported git hooks
      */
@@ -44,7 +47,7 @@ class GitHooks
      *
      * @throws Exception
      */
-    public function install($hookName)
+    public function install(string $hookName)
     {
         if (! is_dir($this->getGitHooksDir())) {
             throw new Exception('Git not initialized in this project.');
