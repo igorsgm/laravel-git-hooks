@@ -60,4 +60,16 @@ trait GitHelper
     {
         file_put_contents($path, $message);
     }
+
+    /**
+     * @read https://stackoverflow.com/questions/30733415/how-to-determine-if-git-merge-is-in-process#answer-30781568
+     * @return bool
+     */
+    public function isMergeInProgress()
+    {
+        $command = $this->runCommands('git merge HEAD &> /dev/null');
+
+        // If a merge is in progress, the process returns code 128
+        return $command->getExitCode() === 128;
+    }
 }

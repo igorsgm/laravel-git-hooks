@@ -97,6 +97,7 @@ trait WithPipeline
      */
     public function getHookTaskTitle(Hook $hook): string
     {
-        return sprintf('  <bg=blue;fg=white> HOOK </> %s', $hook->getName());
+        $hookName = $hook->getName() ?? class_basename($hook);
+        return sprintf('  <bg=blue;fg=white> HOOK </> %s', $hookName);
     }
 }
