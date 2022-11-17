@@ -28,10 +28,10 @@ class PintPreCommitHook implements PreCommitHook
             return $next($files);
         }
 
-        if (!$this->isPintInstalled()) {
+        if (! $this->isPintInstalled()) {
             $this->newLine(2);
             $this->output->writeln(
-                sprintf("<bg=red;fg=white> ERROR </> %s",
+                sprintf('<bg=red;fg=white> ERROR </> %s',
                     'Pint is not installed. Please run <info>composer require laravel/pint --dev</info> to install it.')
             );
             $this->newLine();
@@ -40,18 +40,18 @@ class PintPreCommitHook implements PreCommitHook
 
         $errorFiles = [];
         foreach ($stagedFilePaths as $stagedFilePath) {
-            $isPintProperlyFormatted = $this->runCommands('./vendor/bin/pint --test --config ./pint.json ' . $stagedFilePath,
+            $isPintProperlyFormatted = $this->runCommands('./vendor/bin/pint --test --config ./pint.json '.$stagedFilePath,
                 [
                     'cwd' => base_path(),
                 ])->isSuccessful();
 
-            if (!$isPintProperlyFormatted) {
+            if (! $isPintProperlyFormatted) {
                 if (empty($errorFiles)) {
                     $this->newLine();
                 }
 
                 $this->output->writeln(
-                    sprintf("<fg=red> Pint Failed:</> %s", "$stagedFilePath")
+                    sprintf('<fg=red> Pint Failed:</> %s', "$stagedFilePath")
                 );
                 $errorFiles[] = $stagedFilePath;
             }
@@ -63,16 +63,16 @@ class PintPreCommitHook implements PreCommitHook
 
         $this->newLine();
         $this->output->writeln(
-            sprintf("<bg=red;fg=white> COMMIT FAILED </> %s",
+            sprintf('<bg=red;fg=white> COMMIT FAILED </> %s',
                 'Your commit contains files that should pass Pint but do not. Please fix the Pint errors in the files above and try again.')
         );
 
-        if ($this->confirm("Would you like to attempt to correct files automagically?", false)) {
+        if ($this->confirm('Would you like to attempt to correct files automagically?', false)) {
             $errorFilesString = implode(' ', $errorFiles);
             $this->runCommands(
                 [
-                    './vendor/bin/pint --config ./pint.json ' . $errorFilesString,
-                    'git add ' . $errorFilesString,
+                    './vendor/bin/pint --config ./pint.json '.$errorFilesString,
+                    'git add '.$errorFilesString,
                 ],
                 ['cwd' => base_path()]
             );

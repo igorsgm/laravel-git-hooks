@@ -63,6 +63,7 @@ trait GitHelper
 
     /**
      * @read https://stackoverflow.com/questions/30733415/how-to-determine-if-git-merge-is-in-process#answer-30781568
+     *
      * @return bool
      */
     public function isMergeInProgress()
