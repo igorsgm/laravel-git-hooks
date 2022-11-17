@@ -24,6 +24,25 @@ test('Gets added to commit files', function ($modifiedFiles) {
         ]);
 })->with('modifiedFilesList');
 
+test('Gets staged files', function ($modifiedFiles) {
+    $files = new ChangedFiles($modifiedFiles);
+
+    $filesAddedToCommit = $files->getStaged()->map->__toString()->values()->all();
+
+    expect($filesAddedToCommit)
+        ->toBe([
+            'M  src/Console/Commands/CommitMessage.php',
+            'M  src/Contracts/MessageHook.php',
+            'AM src/Git/ChangedFile.php',
+            'AM src/Git/ChangedFiles.php',
+            'A  src/Git/CommitMessage.php',
+            'M  tests/Console/Commands/CommitMessageTest.php',
+            'M  tests/Console/Commands/PrepareCommitMessageTest.php',
+            'AM tests/Git/ChangedFileTest.php',
+            'AM tests/Git/ChangedFilesTest.php',
+        ]);
+})->with('modifiedFilesList');
+
 test('Gets deleted to commit files', function ($modifiedFiles) {
     $files = new ChangedFiles($modifiedFiles);
 

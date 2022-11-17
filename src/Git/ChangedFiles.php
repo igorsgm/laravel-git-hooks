@@ -36,6 +36,18 @@ class ChangedFiles
     }
 
     /**
+     * Get list of staged files
+     *
+     * @return Collection
+     */
+    public function getStaged(): Collection
+    {
+        return $this->files->filter(function (ChangedFile $file) {
+            return $file->isStaged();
+        });
+    }
+
+    /**
      * Get added to commit files
      *
      * @return Collection

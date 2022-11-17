@@ -2,7 +2,7 @@
 
 use Igorsgm\GitHooks\Git\ChangedFile;
 
-test('Gets file meta', function (string $file, bool $isAdded, bool $isModified, bool $isDeleted, bool $isUntracked, bool $inCommit) {
+test('Gets file meta', function (string $file, bool $isAdded, bool $isModified, bool $isDeleted, bool $isUntracked, bool $inCommit, bool $isStaged) {
     $file = new ChangedFile($file);
 
     $this->assertEquals($isAdded, $file->isAdded());
@@ -10,6 +10,7 @@ test('Gets file meta', function (string $file, bool $isAdded, bool $isModified, 
     $this->assertEquals($isDeleted, $file->isDeleted());
     $this->assertEquals($isUntracked, $file->isUntracked());
     $this->assertEquals($inCommit, $file->isInCommit());
+    $this->assertEquals($isStaged, $file->isStaged());
 })->with('modifiedFilesMeta');
 
 test('Gets files', function () {

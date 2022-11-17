@@ -96,6 +96,14 @@ class ChangedFile
     /**
      * @return bool
      */
+    public function isStaged(): bool
+    {
+        return $this->isAdded() || $this->isModified() || $this->isCopied();
+    }
+
+    /**
+     * @return bool
+     */
     public function isAdded(): bool
     {
         return $this->X & static::A || $this->Y & static::A;
@@ -123,6 +131,14 @@ class ChangedFile
     public function isUntracked(): bool
     {
         return $this->X & static::N || $this->Y & static::N;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCopied(): bool
+    {
+        return $this->X & static::C || $this->Y & static::C;
     }
 
     /**
