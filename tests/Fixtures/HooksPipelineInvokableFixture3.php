@@ -6,8 +6,6 @@ class HooksPipelineInvokableFixture3
 {
     /**
      * Get hook name
-     *
-     * @return string
      */
     public function getName(): string
     {

@@ -8,8 +8,6 @@ class HooksPipelineDefaultFixture1 implements Hook
 {
     /**
      * Get hook name
-     *
-     * @return string
      */
     public function getName(): string
     {

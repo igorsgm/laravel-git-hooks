@@ -38,8 +38,6 @@ class Log
 
     /**
      * Log constructor.
-     *
-     * @param  string  $log
      */
     public function __construct(string $log)
     {
@@ -51,8 +49,6 @@ class Log
 
     /**
      * Parse current log into variables
-     *
-     * @param  array  $lines
      */
     private function parse(array $lines): void
     {
@@ -75,8 +71,6 @@ class Log
 
     /**
      * Get commit hash
-     *
-     * @return string
      */
     public function getHash(): string
     {
@@ -85,8 +79,6 @@ class Log
 
     /**
      * Get author
-     *
-     * @return string|null
      */
     public function getAuthor(): ?string
     {
@@ -95,8 +87,6 @@ class Log
 
     /**
      * Get commit date
-     *
-     * @return Carbon
      */
     public function getDate(): Carbon
     {
@@ -105,8 +95,6 @@ class Log
 
     /**
      * Get merge information
-     *
-     * @return array
      */
     public function getMerge(): array
     {
@@ -115,8 +103,6 @@ class Log
 
     /**
      * Get commit message
-     *
-     * @return string
      */
     public function getMessage(): string
     {
@@ -131,9 +117,6 @@ class Log
         return $this->getHash();
     }
 
-    /**
-     * @return string
-     */
     public function getLog(): string
     {
         return $this->log;

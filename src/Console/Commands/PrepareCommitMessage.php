@@ -26,8 +26,6 @@ class PrepareCommitMessage extends Command implements HookCommand
 
     /**
      * Get hook name
-     *
-     * @return string
      */
     public function getHook(): string
     {

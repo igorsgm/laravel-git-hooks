@@ -18,8 +18,6 @@ class HooksPipelineWithParamsFixture2 implements Hook
 
     /**
      * Get hook name
-     *
-     * @return string
      */
     public function getName(): string
     {

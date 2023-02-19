@@ -26,7 +26,6 @@ class HooksPipeline extends Pipeline
 
     /**
      * @param  \Illuminate\Contracts\Container\Container|null  $container
-     * @param  string  $hook
      */
     public function __construct(Container $container, string $hook)
     {
@@ -35,7 +34,6 @@ class HooksPipeline extends Pipeline
     }
 
     /**
-     * @param  Closure  $callback
      * @return $this
      */
     public function withPipeStartCallback(Closure $callback)
@@ -46,7 +44,6 @@ class HooksPipeline extends Pipeline
     }
 
     /**
-     * @param  Closure  $callback
      * @return $this
      */
     public function withPipeEndCallback(Closure $callback)
@@ -135,7 +132,6 @@ class HooksPipeline extends Pipeline
      * Handle the given exception.
      *
      * @param  mixed  $passable
-     * @param  \Throwable  $e
      * @return mixed
      *
      * @throws \Throwable

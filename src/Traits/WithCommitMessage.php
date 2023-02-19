@@ -39,8 +39,6 @@ trait WithCommitMessage
 
     /**
      * Get the git message path (By default .git/COMMIT_MESSAGE)
-     *
-     * @return string
      */
     private function getMessagePath(): string
     {
@@ -51,8 +49,6 @@ trait WithCommitMessage
 
     /**
      * Send the given message from .git/COMMIT_MESSAGE through the pipes
-     *
-     * @param  CommitMessage  $message
      */
     protected function sendMessageThroughHooks(CommitMessage $message): void
     {
@@ -63,8 +59,6 @@ trait WithCommitMessage
 
     /**
      * Store prepared message
-     *
-     * @return Closure
      */
     protected function storeMessage(): Closure
     {

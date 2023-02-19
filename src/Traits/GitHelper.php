@@ -41,9 +41,6 @@ trait GitHelper
 
     /**
      * Get commit message content form local file
-     *
-     * @param  string  $filePath
-     * @return string
      */
     public function getCommitMessageContentFromFile(string $filePath): string
     {
@@ -52,9 +49,6 @@ trait GitHelper
 
     /**
      * Update commit message in local file
-     *
-     * @param  string  $path
-     * @param  string  $message
      */
     public function updateCommitMessageContentInFile(string $path, string $message): void
     {
