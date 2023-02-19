@@ -33,7 +33,7 @@ trait ConsoleHelper
      *
      * @return void
      */
-    public function __construct($argInput = '')
+    public function initConsole($argInput = '')
     {
         $this->input = new StringInput($argInput);
         $this->consoleOutput = new ConsoleOutput();
