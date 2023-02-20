@@ -62,7 +62,9 @@ trait GitHelper
      */
     public function isMergeInProgress()
     {
-        $command = $this->runCommands('git merge HEAD &> /dev/null');
+        $command = $this->runCommands('git merge HEAD', [
+            'silent' => true,
+        ]);
 
         // If a merge is in progress, the process returns code 128
         return $command->getExitCode() === 128;

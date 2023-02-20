@@ -8,6 +8,9 @@ use Illuminate\Console\OutputStyle;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
+/**
+ * @codeCoverageIgnore
+ */
 trait ConsoleHelper
 {
     use ProcessHelper,
