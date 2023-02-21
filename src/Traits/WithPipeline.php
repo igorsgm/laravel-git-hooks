@@ -49,6 +49,9 @@ trait WithPipeline
         return function (Hook $hook) {
             $this->hookExecuting = $hook;
 
+            // Binding the Command instance to the Hook, so it can be used inside the Hook
+            $hook->command = $this;
+
             $taskTitle = $this->getHookTaskTitle($hook);
             $loadingText = 'loading...';
             $this->output->write("$taskTitle: <comment>{$loadingText}</comment>");

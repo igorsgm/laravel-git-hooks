@@ -7,12 +7,20 @@ use Igorsgm\GitHooks\Contracts\PreCommitHook;
 use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFiles;
-use Igorsgm\GitHooks\Traits\ConsoleHelper;
+use Igorsgm\GitHooks\Traits\ProcessHelper;
+use Illuminate\Console\Command;
 use Symfony\Component\Console\Terminal;
 
 class PintPreCommitHook implements PreCommitHook
 {
-    use ConsoleHelper;
+    use ProcessHelper;
+
+    /**
+     * Command instance that is bound automatically by Hooks Pipeline, so it can be used inside the Hook.
+     *
+     * @var Command
+     */
+    public $command;
 
     /**
      * @var string
@@ -20,32 +28,23 @@ class PintPreCommitHook implements PreCommitHook
     private $pintExecutable;
 
     /**
-     * @var string
-     */
-    private $pintConfig;
-
-    /**
      * @var array
      */
-    private $filesBadlyFormatted;
-
-    public function getName(): ?string
-    {
-        return 'Laravel Pint';
-    }
+    private $filesBadlyFormatted = [];
 
     /**
      * Create a new console command instance.
      *
      * @return void
      */
-    public function __construct($argInput = '')
+    public function __construct()
     {
-        $this->initConsole($argInput);
-
         $this->pintExecutable = './'.trim(config('git-hooks.code_analyzers.laravel_pint.path'), '/');
-        $this->pintConfig = './'.trim(config('git-hooks.code_analyzers.laravel_pint.config'), '/');
-        $this->filesBadlyFormatted = [];
+    }
+
+    public function getName(): ?string
+    {
+        return 'Laravel Pint';
     }
 
     public function handle(ChangedFiles $files, Closure $next)
@@ -62,17 +61,22 @@ class PintPreCommitHook implements PreCommitHook
 
         foreach ($stagedFilePaths as $stagedFilePath) {
             $isPintProperlyFormatted = $this->runCommands(
-                sprintf('%s --test --config %s %s', $this->pintExecutable, $this->pintConfig, $stagedFilePath),
+                implode(' ', [
+                    $this->pintExecutable,
+                    '--test',
+                    $this->getPintConfigParam(),
+                    $stagedFilePath,
+                ]),
                 [
                     'cwd' => base_path(),
                 ])->isSuccessful();
 
             if (! $isPintProperlyFormatted) {
                 if (empty($this->filesBadlyFormatted)) {
-                    $this->newLine();
+                    $this->command->newLine();
                 }
 
-                $this->output->writeln(
+                $this->command->getOutput()->writeln(
                     sprintf('<fg=red> Pint Failed:</> %s', "$stagedFilePath")
                 );
                 $this->filesBadlyFormatted[] = $stagedFilePath;
@@ -83,13 +87,19 @@ class PintPreCommitHook implements PreCommitHook
             return $next($files);
         }
 
-        $this->newLine();
-        $this->output->writeln(
+        $this->command->newLine();
+        $this->command->getOutput()->writeln(
             sprintf('<bg=red;fg=white> COMMIT FAILED </> %s',
                 'Your commit contains files that should pass Pint but do not. Please fix the Pint errors in the files above and try again.')
         );
 
         $this->suggestAutoFixOrExit();
+    }
+
+    private function getPintConfigParam(): string
+    {
+        $pintConfigFile = trim(config('git-hooks.code_analyzers.laravel_pint.config'), '/');
+        return empty($pintConfigFile) ? '' : '--config ./'.$pintConfigFile;
     }
 
     /**
@@ -105,12 +115,12 @@ class PintPreCommitHook implements PreCommitHook
             return;
         }
 
-        $this->newLine(2);
-        $this->output->writeln(
+        $this->command->newLine(2);
+        $this->command->getOutput()->writeln(
             sprintf('<bg=red;fg=white> ERROR </> %s',
                 'Pint is not installed. Please run <info>composer require laravel/pint --dev</info> to install it.')
         );
-        $this->newLine();
+        $this->command->newLine();
         throw new HookFailException();
     }
 
@@ -122,12 +132,16 @@ class PintPreCommitHook implements PreCommitHook
     private function suggestAutoFixOrExit()
     {
         if (Terminal::hasSttyAvailable() &&
-            $this->confirm('Would you like to attempt to correct files automagically?', false)
+            $this->command->confirm('Would you like to attempt to correct files automagically?', false)
         ) {
             $errorFilesString = implode(' ', $this->filesBadlyFormatted);
             $this->runCommands(
                 [
-                    sprintf('%s --config %s %s', $this->pintExecutable, $this->pintConfig, $errorFilesString),
+                    implode(' ', [
+                        $this->pintExecutable,
+                        $this->getPintConfigParam(),
+                        $errorFilesString,
+                    ]),
                     'git add '.$errorFilesString,
                 ],
                 ['cwd' => base_path()]

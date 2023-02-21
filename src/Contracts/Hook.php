@@ -2,6 +2,9 @@
 
 namespace Igorsgm\GitHooks\Contracts;
 
+/**
+ * @property \Illuminate\Console\Command $command
+ */
 interface Hook
 {
     /**

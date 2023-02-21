@@ -23,3 +23,7 @@ Date:   Wed Nov 9 04:50:40 2022 -0800
 dataset('listOfChangedFiles', [
     'list of changed files' => 'AM src/ChangedFiles.php',
 ]);
+
+dataset('listOfFixableFiles', [
+    'list of fixable files' => 'AM temp/ClassWithFixableIssues.php',
+]);
