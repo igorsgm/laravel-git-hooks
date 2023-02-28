@@ -55,8 +55,6 @@ class PreCommit extends Command implements HookCommand
 
     /**
      * Send the changed files through the pipes
-     *
-     * @param  ChangedFiles  $files
      */
     protected function sendChangedFilesThroughHooks(ChangedFiles $files): void
     {

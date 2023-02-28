@@ -41,9 +41,6 @@ trait GitHelper
 
     /**
      * Get commit message content form local file
-     *
-     * @param  string  $filePath
-     * @return string
      */
     public function getCommitMessageContentFromFile(string $filePath): string
     {
@@ -52,12 +49,24 @@ trait GitHelper
 
     /**
      * Update commit message in local file
-     *
-     * @param  string  $path
-     * @param  string  $message
      */
     public function updateCommitMessageContentInFile(string $path, string $message): void
     {
         file_put_contents($path, $message);
+    }
+
+    /**
+     * @read https://stackoverflow.com/questions/30733415/how-to-determine-if-git-merge-is-in-process#answer-30781568
+     *
+     * @return bool
+     */
+    public function isMergeInProgress()
+    {
+        $command = $this->runCommands('git merge HEAD', [
+            'silent' => true,
+        ]);
+
+        // If a merge is in progress, the process returns code 128
+        return $command->getExitCode() === 128;
     }
 }

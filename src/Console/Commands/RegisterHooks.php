@@ -25,7 +25,6 @@ class RegisterHooks extends Command
     /**
      * Execute the console command.
      *
-     * @param  GitHooks  $gitHooks
      * @return void
      *
      * @throws Exception

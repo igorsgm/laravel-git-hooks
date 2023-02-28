@@ -18,8 +18,6 @@ trait WithPipeline
 
     /**
      * Make pipeline instance
-     *
-     * @return Pipeline
      */
     protected function makePipeline(): Pipeline
     {
@@ -45,13 +43,14 @@ trait WithPipeline
 
     /**
      * Show information about Hook which is being executed
-     *
-     * @return Closure
      */
     protected function startHookConsoleTask(): Closure
     {
         return function (Hook $hook) {
             $this->hookExecuting = $hook;
+
+            // Binding the Command instance to the Hook, so it can be used inside the Hook
+            $hook->command = $this;
 
             $taskTitle = $this->getHookTaskTitle($hook);
             $loadingText = 'loading...';
@@ -61,8 +60,6 @@ trait WithPipeline
 
     /**
      * Finish the console task of the Hook which just executed, with success or failure
-     *
-     * @return Closure
      */
     protected function finishHookConsoleTask(): Closure
     {
@@ -91,12 +88,10 @@ trait WithPipeline
         };
     }
 
-    /**
-     * @param  Hook  $hook
-     * @return string
-     */
     public function getHookTaskTitle(Hook $hook): string
     {
-        return sprintf('  <bg=blue;fg=white> HOOK </> %s', $hook->getName());
+        $hookName = $hook->getName() ?? class_basename($hook);
+
+        return sprintf('  <bg=blue;fg=white> HOOK </> %s', $hookName);
     }
 }

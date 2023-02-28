@@ -8,6 +8,7 @@ dataset('modifiedFilesMeta', [
         false,
         false,
         false,
+        false,
     ],
     'added and modified files' => [
         'AM src/ChangedFiles.php',
@@ -15,6 +16,7 @@ dataset('modifiedFilesMeta', [
         true,
         false,
         false,
+        true,
         true,
     ],
     'modified file' => [
@@ -24,12 +26,14 @@ dataset('modifiedFilesMeta', [
         false,
         false,
         false,
+        true,
     ],
     'deleted file' => [
         ' D LICENSE',
         false,
         false,
         true,
+        false,
         false,
         false,
     ],
@@ -39,6 +43,7 @@ dataset('modifiedFilesMeta', [
         false,
         false,
         true,
+        false,
         false,
     ],
 ]);

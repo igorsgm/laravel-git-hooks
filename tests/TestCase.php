@@ -40,6 +40,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'post-checkout' => [],
             'post-merge' => [],
             'pre-push' => [],
+            'code_analyzers' => [],
         ]);
 
         $this->config = $app['config'];
@@ -71,13 +72,20 @@ class TestCase extends \Orchestra\Testbench\TestCase
         ];
     }
 
+    public function gitInit()
+    {
+        chdir(base_path());
+        shell_exec('git init --quiet');
+
+        return $this;
+    }
+
     /**
      * @return void
      */
     public function initializeGitAsTempDirectory()
     {
-        chdir(base_path());
-        shell_exec('git init --quiet');
-        $this->initializeTempDirectory(base_path('.git'));
+        $this->gitInit()
+            ->initializeTempDirectory(base_path('.git'));
     }
 }

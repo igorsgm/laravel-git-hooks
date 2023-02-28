@@ -78,7 +78,7 @@ trait ProcessHelper
             }
 
             return $callback($value);
-        }, $commands);
+        }, (array) $commands);
     }
 
     /**

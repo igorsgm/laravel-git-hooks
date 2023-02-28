@@ -42,7 +42,6 @@ class GitHooks
     /**
      * Install git hook
      *
-     * @param  string  $hookName
      * @return void
      *
      * @throws Exception

@@ -53,9 +53,6 @@ class ChangedFile
         '?' => self::N,
     ];
 
-    /**
-     * @param  string  $line
-     */
     public function __construct(string $line)
     {
         $this->line = $line;
@@ -75,8 +72,6 @@ class ChangedFile
 
     /**
      * Check if file in commit
-     *
-     * @return bool
      */
     public function isInCommit(): bool
     {
@@ -85,44 +80,40 @@ class ChangedFile
 
     /**
      * Get file path
-     *
-     * @return string
      */
     public function getFilePath(): string
     {
         return $this->file;
     }
 
-    /**
-     * @return bool
-     */
+    public function isStaged(): bool
+    {
+        return $this->isAdded() || $this->isModified() || $this->isCopied();
+    }
+
     public function isAdded(): bool
     {
         return $this->X & static::A || $this->Y & static::A;
     }
 
-    /**
-     * @return bool
-     */
     public function isModified(): bool
     {
         return $this->X & static::M || $this->Y & static::M;
     }
 
-    /**
-     * @return bool
-     */
     public function isDeleted(): bool
     {
         return $this->X & static::D || $this->Y & static::D;
     }
 
-    /**
-     * @return bool
-     */
     public function isUntracked(): bool
     {
         return $this->X & static::N || $this->Y & static::N;
+    }
+
+    public function isCopied(): bool
+    {
+        return $this->X & static::C || $this->Y & static::C;
     }
 
     /**

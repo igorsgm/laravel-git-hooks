@@ -51,3 +51,50 @@ test('Updates Commit message content in .git file', function () {
     $this->updateCommitMessageContentInFile($gitFilePath, $newMessage);
     expect(file_get_contents($gitFilePath))->toBe($newMessage);
 });
+
+test('isMergeInProgress returns true when a merge is in progress', function () {
+    $testFileName = 'test.txt';
+
+    $this->makeTempFile('../'.$testFileName, 'Test merge');
+
+    $gitAddCommand = sprintf('git add %s', $testFileName);
+
+    // Generating a Fake Merge process
+    $commandsToGenerateFakeMerge = [
+        'git checkout -b main',
+        $gitAddCommand,
+        'git commit -m "Add test file"',
+        'git push main',
+        'git checkout -b test-branch',
+        'git checkout main',
+        "echo 'Test merge (edit on main)' > $testFileName",
+        $gitAddCommand,
+        'git commit -m "edited on main"',
+        'git push main',
+        'git checkout test-branch',
+        "echo 'Test merge (edit on test-branch)' > $testFileName",
+        $gitAddCommand,
+        'git commit -m "edited on test-branch"',
+        'git push test-branch',
+        'git checkout main',
+        'git merge test-branch',
+    ];
+
+    chdir(base_path());
+
+    $noOutputSuffix = ' > '.(PHP_OS_FAMILY == 'Windows' ? 'NUL' : '/dev/null 2>&1');
+    foreach ($commandsToGenerateFakeMerge as $command) {
+        if (strpos($command, 'git') === 0) {
+            $command .= $noOutputSuffix;
+        }
+        shell_exec($command);
+    }
+
+    expect($this->isMergeInProgress())->toBeTrue();
+});
+
+test('isMergeInProgress returns false when a merge is not in progress', function () {
+    chdir(base_path());
+    shell_exec('git merge --abort');
+    expect($this->isMergeInProgress())->toBeFalse();
+});

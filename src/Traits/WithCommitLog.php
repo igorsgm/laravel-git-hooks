@@ -30,8 +30,6 @@ trait WithCommitLog
 
     /**
      * Send the log commit through the pipes
-     *
-     * @param  Log  $log
      */
     protected function sendLogCommitThroughHooks(Log $log): void
     {

@@ -14,10 +14,6 @@ class CommitMessage
      */
     protected $files;
 
-    /**
-     * @param  string  $message
-     * @param  ChangedFiles  $files
-     */
     public function __construct(string $message, ChangedFiles $files)
     {
         $this->setMessage($message);
@@ -26,8 +22,6 @@ class CommitMessage
 
     /**
      * Set commit message
-     *
-     * @param  string  $message
      */
     public function setMessage(string $message): void
     {
@@ -36,8 +30,6 @@ class CommitMessage
 
     /**
      * Get commit message
-     *
-     * @return string
      */
     public function getMessage(): string
     {
@@ -46,8 +38,6 @@ class CommitMessage
 
     /**
      * Get changed files
-     *
-     * @return ChangedFiles
      */
     public function getFiles(): ChangedFiles
     {

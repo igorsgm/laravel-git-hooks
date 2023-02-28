@@ -155,4 +155,23 @@ return [
     'pre-push' => [
 
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Code Analyzers Configuration
+    |--------------------------------------------------------------------------
+    |
+    | The following variables are used to store the paths to bin executables for
+    | various code analyzer dependencies used in your Laravel application.
+    | This configuration node allows you to set up the paths for these executables.
+    | Here you can also specify the path to the configuration files they use to customize their behavior
+    |
+    */
+    'code_analyzers' => [
+        'laravel_pint' => [
+            'path' => env('LARAVEL_PINT_PATH', 'vendor/bin/pint'),
+            'config' => env('LARAVEL_PINT_CONFIG', 'pint.json'),
+        ],
+    ],
+
 ];

@@ -2,6 +2,9 @@
 
 namespace Igorsgm\GitHooks\Contracts;
 
+/**
+ * @property \Illuminate\Console\Command $command
+ */
 interface Hook
 {
     /**
@@ -9,5 +12,5 @@ interface Hook
      *
      * @return string
      */
-    public function getName(): string;
+    public function getName(): ?string;
 }
