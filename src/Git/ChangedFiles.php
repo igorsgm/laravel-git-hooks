@@ -32,6 +32,7 @@ class ChangedFiles
 
     /**
      * Get list of staged files
+     * @return Collection|ChangedFile[]
      */
     public function getStaged(): Collection
     {

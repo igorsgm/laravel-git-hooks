@@ -10,6 +10,8 @@ use Symfony\Component\Process\Process;
  */
 trait ProcessHelper
 {
+    private $cwd;
+
     /**
      * Run the given commands.
      *
@@ -43,7 +45,7 @@ trait ProcessHelper
 
         $process = Process::fromShellCommandline(
             implode(' && ', (array) $commands),
-            data_get($params, 'cwd'),
+            data_get($params, 'cwd', $this->cwd ?? null),
             data_get($params, 'env'),
             data_get($params, 'input'),
             data_get($params, 'timeout')
@@ -90,5 +92,14 @@ trait ProcessHelper
     public function buildNoOutputCommand($command = '')
     {
         return trim($command).' > '.(PHP_OS_FAMILY == 'Windows' ? 'NUL' : '/dev/null 2>&1');
+    }
+
+    /**
+     * @param string $cwd
+     * @return void
+     */
+    public function setCwd($cwd)
+    {
+        $this->cwd = $cwd;
     }
 }
