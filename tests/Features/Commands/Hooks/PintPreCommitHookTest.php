@@ -11,9 +11,9 @@ beforeEach(function () {
     $this->initializeTempDirectory(base_path('temp'));
 });
 
-test('Skips Pint check if there are no staged files', function () {
+test('Skips Pint check if there are no files added to commit', function () {
     $changedFiles = mock(ChangedFiles::class)
-        ->shouldReceive('getStaged')
+        ->shouldReceive('getAddedToCommit')
         ->andReturn(collect())
         ->getMock();
 
@@ -59,6 +59,7 @@ test('Throws HookFailException and notifies when Pint is not installed', functio
 test('Fails commit when Pint is not passing and user does not autofix the files', function ($listOfFixableFiles) {
     $this->config->set('git-hooks.code_analyzers.laravel_pint', [
         'path' => '../../../bin/pint',
+        'preset' => 'psr12'
     ]);
     $this->config->set('git-hooks.pre-commit', [
         PintPreCommitHook::class,
@@ -82,6 +83,7 @@ test('Fails commit when Pint is not passing and user does not autofix the files'
 test('Commit passes when Pint fixes fix the files', function ($listOfFixableFiles) {
     $this->config->set('git-hooks.code_analyzers.laravel_pint', [
         'path' => '../../../bin/pint',
+        'preset' => 'psr12'
     ]);
     $this->config->set('git-hooks.pre-commit', [
         PintPreCommitHook::class,

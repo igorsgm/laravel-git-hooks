@@ -96,10 +96,11 @@ trait ProcessHelper
 
     /**
      * @param string $cwd
-     * @return void
+     * @return $this
      */
     public function setCwd($cwd)
     {
         $this->cwd = $cwd;
+        return $this;
     }
 }

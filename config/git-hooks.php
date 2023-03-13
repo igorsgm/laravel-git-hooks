@@ -171,6 +171,7 @@ return [
         'laravel_pint' => [
             'path' => env('LARAVEL_PINT_PATH', 'vendor/bin/pint'),
             'config' => env('LARAVEL_PINT_CONFIG', 'pint.json'),
+            'preset' => env('LARAVEL_PINT_PRESET', 'psr12'),
         ],
         'php_code_sniffer' => [
             'phpcs_path' => env('PHPCS_PATH', 'vendor/bin/phpcs'),
