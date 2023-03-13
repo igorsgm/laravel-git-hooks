@@ -15,7 +15,6 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
 
     /**
      * Get the name of the hook.
-     * @return string|null
      */
     public function getName(): ?string
     {
@@ -27,7 +26,6 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      *
      * @param  ChangedFiles  $files  The files that have been changed in the current commit.
      * @param  Closure  $next  A closure that represents the next middleware in the pipeline.
-     *
      * @return mixed|null
      */
     public function handle(ChangedFiles $files, Closure $next)
@@ -42,8 +40,6 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
 
     /**
      * Returns the command to run PHPCS
-     *
-     * @return string
      */
     public function analyzerCommand(): string
     {
@@ -52,8 +48,6 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
 
     /**
      * Returns the command to run PHPCS
-     *
-     * @return string
      */
     public function fixerCommand(): string
     {
@@ -70,6 +64,7 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
     public function analyzerConfigParam(): string
     {
         $phpCSStandard = trim(config('git-hooks.code_analyzers.php_code_sniffer.standard'), '/');
+
         return empty($phpCSStandard) ? '' : '--standard='.$phpCSStandard;
     }
 }

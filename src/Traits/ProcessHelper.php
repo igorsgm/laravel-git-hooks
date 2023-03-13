@@ -95,12 +95,13 @@ trait ProcessHelper
     }
 
     /**
-     * @param string $cwd
+     * @param  string  $cwd
      * @return $this
      */
     public function setCwd($cwd)
     {
         $this->cwd = $cwd;
+
         return $this;
     }
 }

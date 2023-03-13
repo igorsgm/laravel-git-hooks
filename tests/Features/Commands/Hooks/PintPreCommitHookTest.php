@@ -59,7 +59,7 @@ test('Throws HookFailException and notifies when Pint is not installed', functio
 test('Fails commit when Pint is not passing and user does not autofix the files', function ($listOfFixableFiles) {
     $this->config->set('git-hooks.code_analyzers.laravel_pint', [
         'path' => '../../../bin/pint',
-        'preset' => 'psr12'
+        'preset' => 'psr12',
     ]);
     $this->config->set('git-hooks.pre-commit', [
         PintPreCommitHook::class,
@@ -77,13 +77,12 @@ test('Fails commit when Pint is not passing and user does not autofix the files'
         ->expectsOutputToContain('COMMIT FAILED')
         ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'no')
         ->assertExitCode(1);
-
 })->with('listOfFixableFiles');
 
 test('Commit passes when Pint fixes fix the files', function ($listOfFixableFiles) {
     $this->config->set('git-hooks.code_analyzers.laravel_pint', [
         'path' => '../../../bin/pint',
-        'preset' => 'psr12'
+        'preset' => 'psr12',
     ]);
     $this->config->set('git-hooks.pre-commit', [
         PintPreCommitHook::class,
@@ -104,5 +103,4 @@ test('Commit passes when Pint fixes fix the files', function ($listOfFixableFile
     $this->artisan('git-hooks:pre-commit')
         ->doesntExpectOutputToContain('Pint Failed')
         ->assertSuccessful();
-
 })->with('listOfFixableFiles');

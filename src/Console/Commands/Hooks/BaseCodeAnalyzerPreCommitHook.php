@@ -29,18 +29,21 @@ abstract class BaseCodeAnalyzerPreCommitHook
 
     /**
      * The path to the analyzer executable.
+     *
      * @var string
      */
     protected $analyzerExecutable;
 
     /**
      * The path to the fixer executable. In multiple cases it's the same of the analyzer executable.
+     *
      * @var string
      */
     protected $fixerExecutable;
 
     /**
      * The list of paths of files that are badly formatted and should be fixed.
+     *
      * @var array
      */
     protected $filesBadlyFormattedPaths = [];
@@ -87,7 +90,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
     protected function analizeCommittedFiles($commitFiles)
     {
         foreach ($commitFiles as $file) {
-            if (!in_array($file->extension(), $this->fileExtensions)) {
+            if (! in_array($file->extension(), $this->fileExtensions)) {
                 continue;
             }
 
@@ -96,7 +99,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
 
             $isProperlyFormatted = $this->runCommands($command)->isSuccessful();
 
-            if (!$isProperlyFormatted) {
+            if (! $isProperlyFormatted) {
                 if (empty($this->filesBadlyFormattedPaths)) {
                     $this->command->newLine();
                 }
@@ -113,6 +116,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
 
     /**
      * Returns the message to display when the commit fails.
+     *
      * @return $this
      */
     protected function commitFailMessage()
@@ -131,6 +135,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
      * Check if the BaseCodeAnalyzerPreCommitHook is installed.
      *
      * @return $this
+     *
      * @throws HookFailException
      */
     protected function checkAnalyzerInstallation()
@@ -153,6 +158,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
      * Suggests attempting to automatically fix the incorrectly formatted files or exit.
      *
      * @return void
+     *
      * @throws HookFailException
      */
     protected function suggestAutoFixOrExit()
@@ -164,7 +170,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
 
             $this->runCommands([
                 $this->fixerCommand().' '.$errorFilesString,
-                'git add '.$errorFilesString
+                'git add '.$errorFilesString,
             ]);
         } else {
             throw new HookFailException();
@@ -178,11 +184,11 @@ abstract class BaseCodeAnalyzerPreCommitHook
     public function setFileExtensions($fileExtensions)
     {
         $this->fileExtensions = (array) $fileExtensions;
+
         return $this;
     }
 
     /**
-     * @param $executablePath
      * @return BaseCodeAnalyzerPreCommitHook
      */
     public function setAnalyzerExecutable($executablePath, $isSameAsFixer = false)
@@ -192,27 +198,21 @@ abstract class BaseCodeAnalyzerPreCommitHook
         return $isSameAsFixer ? $this->setFixerExecutable($executablePath) : $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAnalyzerExecutable(): string
     {
         return $this->analyzerExecutable;
     }
 
     /**
-     * @param $exacutablePath
      * @return BaseCodeAnalyzerPreCommitHook
      */
     public function setFixerExecutable($exacutablePath)
     {
         $this->fixerExecutable = './'.trim($exacutablePath, '/');
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFixerExecutable(): string
     {
         return $this->fixerExecutable;

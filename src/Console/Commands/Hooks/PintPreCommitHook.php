@@ -15,7 +15,6 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
 
     /**
      * Get the name of the hook.
-     * @return string|null
      */
     public function getName(): ?string
     {
@@ -27,7 +26,6 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
      *
      * @param  ChangedFiles  $files  The files that have been changed in the current commit.
      * @param  Closure  $next  A closure that represents the next middleware in the pipeline.
-     *
      * @return mixed|null
      */
     public function handle(ChangedFiles $files, Closure $next)
@@ -41,8 +39,6 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
 
     /**
      * Returns the command to run Pint tester
-     *
-     * @return string
      */
     public function analyzerCommand(): string
     {
@@ -51,8 +47,6 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
 
     /**
      * Returns the command to run Pint fixer
-     *
-     * @return string
      */
     public function fixerCommand(): string
     {
@@ -68,11 +62,12 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
     {
         $pintConfigFile = config('git-hooks.code_analyzers.laravel_pint.config');
 
-        if (!empty($pintConfigFile)) {
+        if (! empty($pintConfigFile)) {
             return '--config '.trim($pintConfigFile, '/');
         }
 
         $pintPreset = config('git-hooks.code_analyzers.laravel_pint.preset');
+
         return empty($pintPreset) ? '' : '--preset '.trim($pintPreset, '/');
     }
 }
