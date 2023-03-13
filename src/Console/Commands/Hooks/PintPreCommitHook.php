@@ -3,151 +3,71 @@
 namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 
 use Closure;
-use Igorsgm\GitHooks\Contracts\PreCommitHook;
-use Igorsgm\GitHooks\Exceptions\HookFailException;
-use Igorsgm\GitHooks\Facades\GitHooks;
+use Igorsgm\GitHooks\Contracts\CodeAnalyzerPreCommitHook;
 use Igorsgm\GitHooks\Git\ChangedFiles;
-use Igorsgm\GitHooks\Traits\ProcessHelper;
-use Illuminate\Console\Command;
-use Symfony\Component\Console\Terminal;
 
-class PintPreCommitHook implements PreCommitHook
+class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
-    use ProcessHelper;
-
-    /**
-     * Command instance that is bound automatically by Hooks Pipeline, so it can be used inside the Hook.
-     *
-     * @var Command
-     */
-    public $command;
-
     /**
      * @var string
      */
-    private $pintExecutable;
+    protected $analyzerConfigParam;
 
     /**
-     * @var array
+     * Get the name of the hook.
      */
-    private $filesBadlyFormatted = [];
-
-    /**
-     * Create a new console command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->pintExecutable = './'.trim(config('git-hooks.code_analyzers.laravel_pint.path'), '/');
-    }
-
     public function getName(): ?string
     {
         return 'Laravel Pint';
     }
 
+    /**
+     * Analyze and fix committed PHP files using Laravel Pint
+     *
+     * @param  ChangedFiles  $files  The files that have been changed in the current commit.
+     * @param  Closure  $next  A closure that represents the next middleware in the pipeline.
+     * @return mixed|null
+     */
     public function handle(ChangedFiles $files, Closure $next)
     {
-        $stagedFilePaths = $files->getStaged()->map(function ($file) {
-            return $file->getFilePath();
-        })->toArray();
+        $this->analyzerConfigParam = $this->analyzerConfigParam();
 
-        if (empty($stagedFilePaths) || GitHooks::isMergeInProgress()) {
-            return $next($files);
-        }
-
-        $this->validatePintInstallation();
-
-        foreach ($stagedFilePaths as $stagedFilePath) {
-            $isPintProperlyFormatted = $this->runCommands(
-                implode(' ', [
-                    $this->pintExecutable,
-                    '--test',
-                    $this->getPintConfigParam(),
-                    $stagedFilePath,
-                ]),
-                [
-                    'cwd' => base_path(),
-                ])->isSuccessful();
-
-            if (! $isPintProperlyFormatted) {
-                if (empty($this->filesBadlyFormatted)) {
-                    $this->command->newLine();
-                }
-
-                $this->command->getOutput()->writeln(
-                    sprintf('<fg=red> Pint Failed:</> %s', "$stagedFilePath")
-                );
-                $this->filesBadlyFormatted[] = $stagedFilePath;
-            }
-        }
-
-        if (empty($this->filesBadlyFormatted)) {
-            return $next($files);
-        }
-
-        $this->command->newLine();
-        $this->command->getOutput()->writeln(
-            sprintf('<bg=red;fg=white> COMMIT FAILED </> %s',
-                'Your commit contains files that should pass Pint but do not. Please fix the Pint errors in the files above and try again.')
-        );
-
-        $this->suggestAutoFixOrExit();
-    }
-
-    private function getPintConfigParam(): string
-    {
-        $pintConfigFile = trim(config('git-hooks.code_analyzers.laravel_pint.config'), '/');
-        return empty($pintConfigFile) ? '' : '--config ./'.$pintConfigFile;
+        return $this->setFileExtensions(['php'])
+            ->setAnalyzerExecutable(config('git-hooks.code_analyzers.laravel_pint.path'), true)
+            ->handleCommittedFiles($files, $next);
     }
 
     /**
-     * @return void
-     *
-     * @throws HookFailException
+     * Returns the command to run Pint tester
      */
-    private function validatePintInstallation()
+    public function analyzerCommand(): string
     {
-        $isPintInstalled = file_exists(base_path(config('git-hooks.code_analyzers.laravel_pint.path')));
-
-        if ($isPintInstalled) {
-            return;
-        }
-
-        $this->command->newLine(2);
-        $this->command->getOutput()->writeln(
-            sprintf('<bg=red;fg=white> ERROR </> %s',
-                'Pint is not installed. Please run <info>composer require laravel/pint --dev</info> to install it.')
-        );
-        $this->command->newLine();
-        throw new HookFailException();
+        return trim(sprintf('%s --test %s', $this->getAnalyzerExecutable(), $this->analyzerConfigParam));
     }
 
     /**
-     * @return void
-     *
-     * @throws HookFailException
+     * Returns the command to run Pint fixer
      */
-    private function suggestAutoFixOrExit()
+    public function fixerCommand(): string
     {
-        if (Terminal::hasSttyAvailable() &&
-            $this->command->confirm('Would you like to attempt to correct files automagically?', false)
-        ) {
-            $errorFilesString = implode(' ', $this->filesBadlyFormatted);
-            $this->runCommands(
-                [
-                    implode(' ', [
-                        $this->pintExecutable,
-                        $this->getPintConfigParam(),
-                        $errorFilesString,
-                    ]),
-                    'git add '.$errorFilesString,
-                ],
-                ['cwd' => base_path()]
-            );
-        } else {
-            throw new HookFailException();
+        return trim(sprintf('%s %s', $this->getFixerExecutable(), $this->analyzerConfigParam));
+    }
+
+    /**
+     * Gets the command-line parameter for specifying the configuration file for Laravel Pint.
+     *
+     * @return string The command-line parameter for the configuration file, or an empty string if not set.
+     */
+    protected function analyzerConfigParam(): string
+    {
+        $pintConfigFile = config('git-hooks.code_analyzers.laravel_pint.config');
+
+        if (! empty($pintConfigFile)) {
+            return '--config '.trim($pintConfigFile, '/');
         }
+
+        $pintPreset = config('git-hooks.code_analyzers.laravel_pint.preset');
+
+        return empty($pintPreset) ? '' : '--preset '.trim($pintPreset, '/');
     }
 }

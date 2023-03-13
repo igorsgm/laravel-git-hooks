@@ -35,7 +35,8 @@
         "orchestra/testbench": "^7.0",
         "pestphp/pest": "^1.22",
         "pestphp/pest-plugin-mock": "^1.0",
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^9.0",
+        "squizlabs/php_codesniffer": "^3.7"
     },
     "autoload": {
         "psr-4": {

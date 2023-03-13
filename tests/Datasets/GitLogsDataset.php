@@ -1,7 +1,7 @@
 <?php
 
 dataset('lastCommitLogText', [
-    'default git log' => sprintf('commit %s
+    'Default Git Log' => sprintf('commit %s
 Author: Igor Moraes <igor.sgm@gmail.com>
 Date:   Wed Nov 9 04:50:40 2022 -0800
 
@@ -10,7 +10,7 @@ Date:   Wed Nov 9 04:50:40 2022 -0800
 ]);
 
 dataset('mergeLogText', [
-    'merge git log' => sprintf("commit %s
+    'Merge Git Log' => sprintf("commit %s
 Merge: 123abc 456def
 Author: Igor Moraes <igor.sgm@gmail.com>
 Date:   Wed Nov 9 04:50:40 2022 -0800
@@ -21,9 +21,9 @@ Date:   Wed Nov 9 04:50:40 2022 -0800
 ]);
 
 dataset('listOfChangedFiles', [
-    'list of changed files' => 'AM src/ChangedFiles.php',
+    'List Of Changed Files' => 'AM src/ChangedFiles.php',
 ]);
 
 dataset('listOfFixableFiles', [
-    'list of fixable files' => 'AM temp/ClassWithFixableIssues.php',
+    'List of Fixable Files' => 'AM temp/ClassWithFixableIssues.php',
 ]);

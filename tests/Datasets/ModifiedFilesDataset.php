@@ -1,7 +1,7 @@
 <?php
 
 dataset('modifiedFilesMeta', [
-    'empty log' => [
+    'Empty Log' => [
         '',
         false,
         false,
@@ -10,7 +10,7 @@ dataset('modifiedFilesMeta', [
         false,
         false,
     ],
-    'added and modified files' => [
+    'Added and Modified Files' => [
         'AM src/ChangedFiles.php',
         true,
         true,
@@ -19,7 +19,7 @@ dataset('modifiedFilesMeta', [
         true,
         true,
     ],
-    'modified file' => [
+    'Modified File' => [
         ' M src/Console/Commands/CommitMessage.php',
         false,
         true,
@@ -28,7 +28,7 @@ dataset('modifiedFilesMeta', [
         false,
         true,
     ],
-    'deleted file' => [
+    'Deleted File' => [
         ' D LICENSE',
         false,
         false,
@@ -37,7 +37,7 @@ dataset('modifiedFilesMeta', [
         false,
         false,
     ],
-    'untracked file' => [
+    'Untracked File' => [
         '?? LICENSE',
         false,
         false,
