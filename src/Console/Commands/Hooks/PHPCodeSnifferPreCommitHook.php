@@ -63,7 +63,7 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function analyzerConfigParam(): string
     {
-        $phpCSStandard = trim(config('git-hooks.code_analyzers.php_code_sniffer.standard'), '/');
+        $phpCSStandard = rtrim(config('git-hooks.code_analyzers.php_code_sniffer.standard'), '/');
 
         return empty($phpCSStandard) ? '' : '--standard='.$phpCSStandard;
     }

@@ -14,3 +14,13 @@ dataset('pintConfigurations', [
         ],
     ],
 ]);
+
+dataset('phpcsConfiguration', [
+    'phpcs.xml file' => [
+        [
+            'phpcs_path' => '../../../bin/phpcs',
+            'phpcbf_path' => '../../../bin/phpcbf',
+            'standard' => __DIR__.'/../Fixtures/phpcsFixture.xml',
+        ],
+    ],
+]);

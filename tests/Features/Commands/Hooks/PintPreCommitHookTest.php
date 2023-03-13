@@ -92,7 +92,7 @@ test('Fails commit when Pint is not passing and user does not autofix the files'
         ->assertExitCode(1);
 })->with('pintConfigurations', 'listOfFixableFiles');
 
-test('Commit passes when Pint fixes fix the files', function ($pintConfiguration, $listOfFixableFiles) {
+test('Commit passes when Pint fixes the files', function ($pintConfiguration, $listOfFixableFiles) {
     $this->config->set('git-hooks.code_analyzers.laravel_pint', $pintConfiguration);
     $this->config->set('git-hooks.pre-commit', [
         PintPreCommitHook::class,
