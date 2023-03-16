@@ -24,3 +24,12 @@ dataset('phpcsConfiguration', [
         ],
     ],
 ]);
+
+dataset('bladeFormatterConfiguration', [
+    '.bladeformatterrc.json file' => [
+        [
+            'path' => '../../../../node_modules/.bin/blade-formatter',
+            'config' => __DIR__.'/../Fixtures/bladeFormatterFixture.json',
+        ],
+    ],
+]);

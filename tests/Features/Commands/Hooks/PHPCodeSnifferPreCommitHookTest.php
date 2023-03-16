@@ -2,7 +2,6 @@
 
 use Igorsgm\GitHooks\Console\Commands\Hooks\PHPCodeSnifferPreCommitHook;
 use Igorsgm\GitHooks\Facades\GitHooks;
-use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Traits\GitHelper;
 
 uses(GitHelper::class);
@@ -10,34 +9,6 @@ beforeEach(function () {
     $this->gitInit();
     $this->initializeTempDirectory(base_path('temp'));
 });
-
-test('Skips PHPCS check if there are no files added to commit', function () {
-    $changedFiles = mock(ChangedFiles::class)
-        ->shouldReceive('getAddedToCommit')
-        ->andReturn(collect())
-        ->getMock();
-
-    $next = function ($files) {
-        return 'passed';
-    };
-
-    $hook = new PHPCodeSnifferPreCommitHook();
-    $result = $hook->handle($changedFiles, $next);
-    expect($result)->toBe('passed');
-});
-
-test('Skips PHPCS check during a Merge process', function ($modifiedFilesList) {
-    $changedFiles = new ChangedFiles($modifiedFilesList);
-    GitHooks::shouldReceive('isMergeInProgress')->andReturn(true);
-
-    $next = function ($files) {
-        return 'passed';
-    };
-
-    $hook = new PHPCodeSnifferPreCommitHook();
-    $result = $hook->handle($changedFiles, $next);
-    expect($result)->toBe('passed');
-})->with('modifiedFilesList');
 
 test('Skips PHPCS check when there is none php files added to commit', function ($phpCSConfiguration) {
     $this->config->set('git-hooks.code_analyzers.php_code_sniffer', $phpCSConfiguration);

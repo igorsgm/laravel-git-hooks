@@ -9,6 +9,11 @@ use Igorsgm\GitHooks\Git\ChangedFiles;
 class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
     /**
+     * @var string
+     */
+    protected $analyzerConfigParam;
+
+    /**
      * Get the name of the hook.
      */
     public function getName(): ?string
@@ -25,6 +30,8 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function handle(ChangedFiles $files, Closure $next)
     {
+        $this->analyzerConfigParam = $this->analyzerConfigParam();
+
         return $this->setFileExtensions('/\.blade\.php$/')
             ->setAnalyzerExecutable(config('git-hooks.code_analyzers.blade_formatter.path'), true)
             ->handleCommittedFiles($files, $next);
@@ -35,7 +42,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function analyzerCommand(): string
     {
-        return trim(sprintf('%s -c', $this->getAnalyzerExecutable()));
+        return trim(sprintf('%s -c %s', $this->getAnalyzerExecutable(), $this->analyzerConfigParam));
     }
 
     /**
@@ -43,6 +50,20 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function fixerCommand(): string
     {
-        return trim(sprintf('%s --write', $this->getFixerExecutable()));
+        return trim(sprintf('%s --write %s', $this->getFixerExecutable(), $this->analyzerConfigParam));
+    }
+
+    /**
+     * Returns the configuration parameter for the analyzer.
+     * This method retrieves the Blade Formatter configuration path (usually .bladeformatterrc.json or .bladeformatterrc)
+     * from the Git hooks configuration file and returns it as a string in the format '--config=<configFile>'.
+     *
+     * @return string The configuration parameter for the analyzer.
+     */
+    public function analyzerConfigParam(): string
+    {
+        $bladeFormatterConfig = rtrim(config('git-hooks.code_analyzers.blade_formatter.config'), '/');
+
+        return empty($bladeFormatterConfig) ? '' : '--config='.$bladeFormatterConfig;
     }
 }

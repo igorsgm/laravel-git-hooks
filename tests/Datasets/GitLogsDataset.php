@@ -25,5 +25,8 @@ dataset('listOfChangedFiles', [
 ]);
 
 dataset('listOfFixableFiles', [
-    'List of Fixable Files' => 'AM temp/ClassWithFixableIssues.php',
+    'List of Fixable Files' => implode(PHP_EOL, [
+        'AM temp/ClassWithFixableIssues.php',
+        'AM temp/fixable-blade-file.blade.php',
+    ]),
 ]);
