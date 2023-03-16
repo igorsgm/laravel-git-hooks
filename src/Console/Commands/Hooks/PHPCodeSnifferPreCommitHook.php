@@ -11,15 +11,14 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
     /**
      * @var string
      */
-    protected $analyzerConfigParam;
+    protected $configParam;
 
     /**
-     * Get the name of the hook.
+     * Name of the hook
+     *
+     * @var string
      */
-    public function getName(): ?string
-    {
-        return 'PHP_CodeSniffer';
-    }
+    protected $name = 'PHP_CodeSniffer';
 
     /**
      * Analyze and fix committed PHP files using PHP Code Sniffer and PHP Code Beautifier and Fixer.
@@ -30,7 +29,7 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function handle(ChangedFiles $files, Closure $next)
     {
-        $this->analyzerConfigParam = $this->analyzerConfigParam();
+        $this->configParam = $this->configParam();
 
         return $this->setFileExtensions(['php'])
             ->setAnalyzerExecutable(config('git-hooks.code_analyzers.php_code_sniffer.phpcs_path'))
@@ -43,7 +42,7 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function analyzerCommand(): string
     {
-        return trim(sprintf('%s %s', $this->getAnalyzerExecutable(), $this->analyzerConfigParam));
+        return trim(sprintf('%s %s', $this->getAnalyzerExecutable(), $this->configParam));
     }
 
     /**
@@ -51,7 +50,7 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function fixerCommand(): string
     {
-        return trim(sprintf('%s %s', $this->getFixerExecutable(), $this->analyzerConfigParam));
+        return trim(sprintf('%s %s', $this->getFixerExecutable(), $this->configParam));
     }
 
     /**
@@ -61,7 +60,7 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      *
      * @return string The configuration parameter for the analyzer.
      */
-    public function analyzerConfigParam(): string
+    public function configParam(): string
     {
         $phpCSStandard = rtrim(config('git-hooks.code_analyzers.php_code_sniffer.standard'), '/');
 

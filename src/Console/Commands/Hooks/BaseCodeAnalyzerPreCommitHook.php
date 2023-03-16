@@ -22,6 +22,12 @@ abstract class BaseCodeAnalyzerPreCommitHook
      */
     public $command;
 
+    /**
+     * Name of the hook
+     * @var string
+     */
+    protected $name;
+
     /*
      * List of files extensions that will be analyzed by the hook.
      * Can also be a regular expression.
@@ -181,6 +187,14 @@ abstract class BaseCodeAnalyzerPreCommitHook
         } else {
             throw new HookFailException();
         }
+    }
+
+    /**
+     * Get the name of the hook.
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
     }
 
     /**

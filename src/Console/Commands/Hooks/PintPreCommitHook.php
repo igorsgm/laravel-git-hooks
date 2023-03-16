@@ -11,15 +11,14 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
     /**
      * @var string
      */
-    protected $analyzerConfigParam;
+    protected $configParam;
 
     /**
-     * Get the name of the hook.
+     * Name of the hook
+     *
+     * @var string
      */
-    public function getName(): ?string
-    {
-        return 'Laravel Pint';
-    }
+    protected $name = 'Laravel Pint';
 
     /**
      * Analyze and fix committed PHP files using Laravel Pint
@@ -30,7 +29,7 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
      */
     public function handle(ChangedFiles $files, Closure $next)
     {
-        $this->analyzerConfigParam = $this->analyzerConfigParam();
+        $this->configParam = $this->configParam();
 
         return $this->setFileExtensions(['php'])
             ->setAnalyzerExecutable(config('git-hooks.code_analyzers.laravel_pint.path'), true)
@@ -42,7 +41,7 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
      */
     public function analyzerCommand(): string
     {
-        return trim(sprintf('%s --test %s', $this->getAnalyzerExecutable(), $this->analyzerConfigParam));
+        return trim(sprintf('%s --test %s', $this->getAnalyzerExecutable(), $this->configParam));
     }
 
     /**
@@ -50,7 +49,7 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
      */
     public function fixerCommand(): string
     {
-        return trim(sprintf('%s %s', $this->getFixerExecutable(), $this->analyzerConfigParam));
+        return trim(sprintf('%s %s', $this->getFixerExecutable(), $this->configParam));
     }
 
     /**
@@ -58,7 +57,7 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
      *
      * @return string The command-line parameter for the configuration file, or an empty string if not set.
      */
-    protected function analyzerConfigParam(): string
+    protected function configParam(): string
     {
         $pintConfigFile = config('git-hooks.code_analyzers.laravel_pint.config');
 

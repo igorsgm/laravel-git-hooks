@@ -11,15 +11,14 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
     /**
      * @var string
      */
-    protected $analyzerConfigParam;
+    protected $configParam;
 
     /**
-     * Get the name of the hook.
+     * Name of the hook
+     *
+     * @var string
      */
-    public function getName(): ?string
-    {
-        return 'Blade Formatter';
-    }
+    protected $name = 'Blade Formatter';
 
     /**
      * Analyze and fix committed blade.php files using blade-formatter npm package
@@ -30,7 +29,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function handle(ChangedFiles $files, Closure $next)
     {
-        $this->analyzerConfigParam = $this->analyzerConfigParam();
+        $this->configParam = $this->configParam();
 
         return $this->setFileExtensions('/\.blade\.php$/')
             ->setAnalyzerExecutable(config('git-hooks.code_analyzers.blade_formatter.path'), true)
@@ -42,7 +41,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function analyzerCommand(): string
     {
-        return trim(sprintf('%s -c %s', $this->getAnalyzerExecutable(), $this->analyzerConfigParam));
+        return trim(sprintf('%s -c %s', $this->getAnalyzerExecutable(), $this->configParam));
     }
 
     /**
@@ -50,7 +49,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function fixerCommand(): string
     {
-        return trim(sprintf('%s --write %s', $this->getFixerExecutable(), $this->analyzerConfigParam));
+        return trim(sprintf('%s --write %s', $this->getFixerExecutable(), $this->configParam));
     }
 
     /**
@@ -60,7 +59,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      *
      * @return string The configuration parameter for the analyzer.
      */
-    public function analyzerConfigParam(): string
+    public function configParam(): string
     {
         $bladeFormatterConfig = rtrim(config('git-hooks.code_analyzers.blade_formatter.config'), '/');
 
