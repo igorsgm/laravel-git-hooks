@@ -5,6 +5,7 @@ namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 use Closure;
 use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Facades\GitHooks;
+use Igorsgm\GitHooks\Git\ChangedFile;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Traits\ProcessHelper;
 use Illuminate\Console\Command;
@@ -22,8 +23,9 @@ abstract class BaseCodeAnalyzerPreCommitHook
     public $command;
 
     /*
-     * List of files extensions that will be analyzed by the hook
-     * @var array
+     * List of files extensions that will be analyzed by the hook.
+     * Can also be a regular expression.
+     * @var array|string
      */
     public $fileExtensions = [];
 
@@ -89,8 +91,12 @@ abstract class BaseCodeAnalyzerPreCommitHook
      */
     protected function analizeCommittedFiles($commitFiles)
     {
+        /** @var ChangedFile $file */
         foreach ($commitFiles as $file) {
-            if (! in_array($file->extension(), $this->fileExtensions)) {
+            if (
+                (is_array($this->fileExtensions) && ! in_array($file->extension(), $this->fileExtensions)) ||
+                (is_string($this->fileExtensions) && ! preg_match($this->fileExtensions, $file->getFilePath()))
+            ) {
                 continue;
             }
 
@@ -183,7 +189,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
      */
     public function setFileExtensions($fileExtensions)
     {
-        $this->fileExtensions = (array) $fileExtensions;
+        $this->fileExtensions = $fileExtensions;
 
         return $this;
     }
