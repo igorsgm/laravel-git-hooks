@@ -178,6 +178,10 @@ return [
             'phpcbf_path' => env('PHPCBF_PATH', 'vendor/bin/phpcbf'),
             'standard' => env('PHPCS_STANDARD', 'phpcs.xml'),
         ],
+        'blade_formatter' => [
+            'path' => env('BLADE_FORMATTER_PATH', 'node_modules/.bin/blade-formatter'),
+            'config' => env('BLADE_FORMATTER_CONFIG', '.bladeformatterrc.json'),
+        ],
     ],
 
 ];
