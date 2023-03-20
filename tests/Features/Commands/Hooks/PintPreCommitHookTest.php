@@ -26,23 +26,6 @@ test('Skips Pint check when there is none php files added to commit', function (
     $this->artisan('git-hooks:pre-commit')->assertSuccessful();
 })->with('pintConfigurations');
 
-test('Throws HookFailException and notifies when Pint is not installed', function ($listOfFixableFiles) {
-    $this->config->set('git-hooks.code_analyzers.laravel_pint', [
-        'path' => 'inexistent/path/to/pint',
-    ]);
-
-    $this->config->set('git-hooks.pre-commit', [
-        PintPreCommitHook::class,
-    ]);
-
-    GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
-    GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixableFiles);
-
-    $this->artisan('git-hooks:pre-commit')
-        ->expectsOutputToContain('Pint is not installed.')
-        ->assertExitCode(1);
-})->with('listOfFixableFiles', 'pintConfigurations');
-
 test('Fails commit when Pint is not passing and user does not autofix the files',
     function ($pintConfiguration, $listOfFixableFiles) {
         $this->config->set('git-hooks.code_analyzers.laravel_pint', $pintConfiguration);

@@ -186,7 +186,9 @@ abstract class BaseCodeAnalyzerPreCommitHook
      */
     protected function suggestAutoFixOrExit()
     {
-        if (Terminal::hasSttyAvailable() && ! empty($this->fixerExecutable) &&
+        $hasFixerCommand = ! empty($this->fixerCommand());
+
+        if (Terminal::hasSttyAvailable() && $hasFixerCommand &&
             $this->command->confirm('Would you like to attempt to correct files automagically?')
         ) {
             $errorFilesString = implode(' ', $this->filesBadlyFormattedPaths);
