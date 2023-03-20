@@ -24,6 +24,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
 
     /**
      * Name of the hook
+     *
      * @var string
      */
     protected $name;
@@ -99,10 +100,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
     {
         /** @var ChangedFile $file */
         foreach ($commitFiles as $file) {
-            if (
-                (is_array($this->fileExtensions) && ! in_array($file->extension(), $this->fileExtensions)) ||
-                (is_string($this->fileExtensions) && ! preg_match($this->fileExtensions, $file->getFilePath()))
-            ) {
+            if (! $this->canFileBeAnalyzed($file)) {
                 continue;
             }
 
@@ -124,6 +122,19 @@ abstract class BaseCodeAnalyzerPreCommitHook
         }
 
         return $this;
+    }
+
+    /**
+     * Checks whether the given ChangedFile can be analyzed based on its file extension and the list of allowed extensions.
+     */
+    protected function canFileBeAnalyzed(ChangedFile $file): bool
+    {
+        if (empty($this->fileExtensions) || $this->fileExtensions === 'all') {
+            return true;
+        }
+
+        return (is_array($this->fileExtensions) && in_array($file->extension(), $this->fileExtensions)) ||
+            (is_string($this->fileExtensions) && preg_match($this->fileExtensions, $file->getFilePath()));
     }
 
     /**
@@ -175,7 +186,9 @@ abstract class BaseCodeAnalyzerPreCommitHook
      */
     protected function suggestAutoFixOrExit()
     {
-        if (Terminal::hasSttyAvailable() &&
+        $hasFixerCommand = ! empty($this->fixerCommand());
+
+        if (Terminal::hasSttyAvailable() && $hasFixerCommand &&
             $this->command->confirm('Would you like to attempt to correct files automagically?')
         ) {
             $errorFilesString = implode(' ', $this->filesBadlyFormattedPaths);

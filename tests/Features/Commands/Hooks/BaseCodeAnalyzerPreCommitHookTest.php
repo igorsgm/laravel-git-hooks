@@ -38,3 +38,20 @@ test('Skips check during a Merge process', function ($modifiedFilesList) {
     $result = $hook->handleCommittedFiles($changedFiles, $next);
     expect($result)->toBe('passed');
 })->with('modifiedFilesList');
+
+test('Throws HookFailException and notifies when Code Analyzer is not installed',
+    function ($configName, $nonExistentPathConfig, $preCommitHookClass, $listOfFixableFiles) {
+        $this->config->set('git-hooks.code_analyzers.'.$configName, $nonExistentPathConfig);
+
+        $this->config->set('git-hooks.pre-commit', [
+            $preCommitHookClass,
+        ]);
+
+        GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
+        GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixableFiles);
+
+        $preCommitHook = new $preCommitHookClass();
+        $this->artisan('git-hooks:pre-commit')
+            ->expectsOutputToContain($preCommitHook->getName().' is not installed.')
+            ->assertExitCode(1);
+    })->with('codeAnalyzersList', 'listOfFixableFiles');

@@ -26,23 +26,6 @@ test('Skips Blade Formatter check when there is none .blade.php files added to c
     $this->artisan('git-hooks:pre-commit')->assertSuccessful();
 })->with('phpcsConfiguration');
 
-test('Throws HookFailException and notifies when Blade Formatter is not installed', function ($listOfFixableFiles) {
-    $this->config->set('git-hooks.code_analyzers.blade_formatter', [
-        'path' => 'inexistent/path/to/blade-formatter',
-    ]);
-
-    $this->config->set('git-hooks.pre-commit', [
-        BladeFormatterPreCommitHook::class,
-    ]);
-
-    GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
-    GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixableFiles);
-
-    $this->artisan('git-hooks:pre-commit')
-        ->expectsOutputToContain('Blade Formatter is not installed.')
-        ->assertExitCode(1);
-})->with('listOfFixableFiles');
-
 test('Fails commit when Blade Formatter is not passing and user does not autofix the files',
     function ($bladeFormatterConfiguration, $listOfFixableFiles) {
         $this->config->set('git-hooks.code_analyzers.blade_formatter', $bladeFormatterConfiguration);

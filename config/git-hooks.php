@@ -178,6 +178,11 @@ return [
             'phpcbf_path' => env('PHPCBF_PATH', 'vendor/bin/phpcbf'),
             'standard' => env('PHPCS_STANDARD', 'phpcs.xml'),
         ],
+        'larastan' => [
+            'path' => env('LARASTAN_PATH', 'vendor/bin/phpstan'),
+            'config' => env('LARASTAN_CONFIG', 'phpstan.neon'),
+            'additional_params' => env('LARASTAN_ADDITIONAL_PARAMS', '--xdebug'),
+        ],
         'blade_formatter' => [
             'path' => env('BLADE_FORMATTER_PATH', 'node_modules/.bin/blade-formatter'),
             'config' => env('BLADE_FORMATTER_CONFIG', '.bladeformatterrc.json'),

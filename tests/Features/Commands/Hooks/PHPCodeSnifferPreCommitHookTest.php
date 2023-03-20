@@ -26,23 +26,6 @@ test('Skips PHPCS check when there is none php files added to commit', function 
     $this->artisan('git-hooks:pre-commit')->assertSuccessful();
 })->with('phpcsConfiguration');
 
-test('Throws HookFailException and notifies when PHPCS is not installed', function ($listOfFixableFiles) {
-    $this->config->set('git-hooks.code_analyzers.php_code_sniffer', [
-        'phpcs_path' => 'inexistent/path/to/phpcs',
-    ]);
-
-    $this->config->set('git-hooks.pre-commit', [
-        PHPCodeSnifferPreCommitHook::class,
-    ]);
-
-    GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
-    GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixableFiles);
-
-    $this->artisan('git-hooks:pre-commit')
-        ->expectsOutputToContain('PHP_CodeSniffer is not installed.')
-        ->assertExitCode(1);
-})->with('listOfFixableFiles');
-
 test('Fails commit when PHPCS is not passing and user does not autofix the files',
     function ($phpCSConfiguration, $listOfFixableFiles) {
         $this->config->set('git-hooks.code_analyzers.php_code_sniffer', $phpCSConfiguration);
