@@ -187,6 +187,11 @@ return [
             'path' => env('BLADE_FORMATTER_PATH', 'node_modules/.bin/blade-formatter'),
             'config' => env('BLADE_FORMATTER_CONFIG', '.bladeformatterrc.json'),
         ],
+        'prettier' => [
+            'path' => env('PRETTIER_PATH', 'node_modules/.bin/prettier'),
+            'config' => env('PRETTIER_CONFIG', '.prettierrc.json'),
+            'additional_params' => env('PRETTIER_ADDITIONAL_PARAMS', ''),
+        ],
     ],
 
 ];

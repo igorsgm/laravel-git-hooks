@@ -27,7 +27,7 @@ test('Skips PHPCS check when there is none php files added to commit', function 
 })->with('phpcsConfiguration');
 
 test('Fails commit when PHPCS is not passing and user does not autofix the files',
-    function ($phpCSConfiguration, $listOfFixableFiles) {
+    function ($phpCSConfiguration, $listOfFixablePhpFiles) {
         $this->config->set('git-hooks.code_analyzers.php_code_sniffer', $phpCSConfiguration);
         $this->config->set('git-hooks.pre-commit', [
             PHPCodeSnifferPreCommitHook::class,
@@ -38,16 +38,16 @@ test('Fails commit when PHPCS is not passing and user does not autofix the files
         );
 
         GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
-        GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixableFiles);
+        GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixablePhpFiles);
 
         $this->artisan('git-hooks:pre-commit')
             ->expectsOutputToContain('PHP_CodeSniffer Failed')
             ->expectsOutputToContain('COMMIT FAILED')
             ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'no')
             ->assertExitCode(1);
-    })->with('phpcsConfiguration', 'listOfFixableFiles');
+    })->with('phpcsConfiguration', 'listOfFixablePhpFiles');
 
-test('Commit passes when PHPCBF fixes the files', function ($phpCSConfiguration, $listOfFixableFiles) {
+test('Commit passes when PHPCBF fixes the files', function ($phpCSConfiguration, $listOfFixablePhpFiles) {
     $this->config->set('git-hooks.code_analyzers.php_code_sniffer', $phpCSConfiguration);
     $this->config->set('git-hooks.pre-commit', [
         PHPCodeSnifferPreCommitHook::class,
@@ -58,7 +58,7 @@ test('Commit passes when PHPCBF fixes the files', function ($phpCSConfiguration,
     );
 
     GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
-    GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixableFiles);
+    GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixablePhpFiles);
 
     $this->artisan('git-hooks:pre-commit')
         ->expectsOutputToContain('PHP_CodeSniffer Failed')
@@ -68,4 +68,4 @@ test('Commit passes when PHPCBF fixes the files', function ($phpCSConfiguration,
     $this->artisan('git-hooks:pre-commit')
         ->doesntExpectOutputToContain('PHP_CodeSniffer Failed')
         ->assertSuccessful();
-})->with('phpcsConfiguration', 'listOfFixableFiles');
+})->with('phpcsConfiguration', 'listOfFixablePhpFiles');

@@ -150,7 +150,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
 
         $message = '<bg=red;fg=white> COMMIT FAILED </> ';
         $message .= sprintf("Your commit contains files that should pass %s but do not. Please fix the errors in the files above and try again.\n", $this->getName());
-        $message .= sprintf("You can check which %s errors happened in them by executing: <comment>%s {filePath}</comment>", $this->getName(), $this->analyzerCommand());
+        $message .= sprintf('You can check which %s errors happened in them by executing: <comment>%s {filePath}</comment>', $this->getName(), $this->analyzerCommand());
 
         $this->command->getOutput()->writeln($message);
 
