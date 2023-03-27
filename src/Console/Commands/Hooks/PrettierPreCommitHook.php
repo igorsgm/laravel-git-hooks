@@ -77,6 +77,7 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
         $additionalParams = config('git-hooks.code_analyzers.prettier.additional_params');
 
         if (! empty($additionalParams)) {
+            $additionalParams = preg_replace('/\s+\.(?:(\s)|$)/', '$1', $additionalParams);
             $additionalParams = preg_replace('/\s*--(config|find-config-path|write|check)\b(=\S*)?\s*/', '', $additionalParams);
         }
 
