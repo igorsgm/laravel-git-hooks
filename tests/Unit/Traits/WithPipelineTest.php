@@ -13,13 +13,18 @@ test('Starts and Finishes Pipe Task with decorated output', function () {
         ->method('isDecorated')
         ->willReturn(true);
 
+    $writeIndex = 0;
+    $expectedOutputs = [
+        '  <bg=blue;fg=white> HOOK </> '.$hook->getName().': <comment>loading...</comment>',
+        "\x0D",
+        "\x1B[2K"
+    ];
     $outputMock->expects($this->exactly(3))
         ->method('write')
-        ->withConsecutive(
-            [$this->equalTo('  <bg=blue;fg=white> HOOK </> '.$hook->getName().': <comment>loading...</comment>')],
-            [$this->equalTo("\x0D")],
-            [$this->equalTo("\x1B[2K")]
-        );
+        ->willReturnCallback(function ($output) use (&$writeIndex, $expectedOutputs) {
+            $this->assertSame($expectedOutputs[$writeIndex], $output);
+            $writeIndex++;
+        });
 
     $outputMock->expects($this->once())
         ->method('writeln')
