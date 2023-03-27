@@ -4,6 +4,7 @@ use Igorsgm\GitHooks\Console\Commands\Hooks\BladeFormatterPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\LarastanPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PHPCodeSnifferPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PintPreCommitHook;
+use Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook;
 
 dataset('pintConfigurations', [
     'Config File' => [
@@ -49,6 +50,16 @@ dataset('larastanConfiguration', [
     ],
 ]);
 
+dataset('prettierConfiguration', [
+    '.prettierrc.json file & additional params' => [
+        [
+            'path' => '../../../../node_modules/.bin/prettier',
+            'config' => __DIR__.'/../Fixtures/.prettierrcFixture.json',
+            'additional_params' => '--config --find-config-path',
+        ],
+    ],
+]);
+
 $nonExistentPath = [
     'path' => 'nonexistent/path',
     'phpcs_path' => 'nonexistent/path',
@@ -74,5 +85,10 @@ dataset('codeAnalyzersList', [
         'larastan',
         $nonExistentPath,
         LarastanPreCommitHook::class,
+    ],
+    'Prettier' => [
+        'prettier',
+        $nonExistentPath,
+        PrettierPreCommitHook::class,
     ],
 ]);

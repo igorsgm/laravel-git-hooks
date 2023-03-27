@@ -33,10 +33,9 @@
         "laravel/pint": "^1.2",
         "mockery/mockery": "^1.5.1",
         "nunomaduro/larastan": "^2.0",
-        "orchestra/testbench": "^7.0",
-        "pestphp/pest": "^1.22",
-        "pestphp/pest-plugin-mock": "^1.0",
-        "phpunit/phpunit": "^9.0",
+        "orchestra/testbench": "^v8.0.0",
+        "pestphp/pest": "^2.0",
+        "pestphp/pest-plugin-mock": "^2.0",
         "squizlabs/php_codesniffer": "^3.7"
     },
     "autoload": {
@@ -50,8 +49,8 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+        "test": "vendor/bin/pest",
+        "test-coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage"
     },
     "config": {
         "sort-packages": true,
