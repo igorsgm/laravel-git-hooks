@@ -27,7 +27,7 @@ test('Skips Pint check when there is none php files added to commit', function (
 })->with('pintConfigurations');
 
 test('Fails commit when Pint is not passing and user does not autofix the files',
-    function ($pintConfiguration, $listOfFixableFiles) {
+    function ($pintConfiguration, $listOfFixablePhpFiles) {
         $this->config->set('git-hooks.code_analyzers.laravel_pint', $pintConfiguration);
         $this->config->set('git-hooks.pre-commit', [
             PintPreCommitHook::class,
@@ -38,16 +38,16 @@ test('Fails commit when Pint is not passing and user does not autofix the files'
         );
 
         GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
-        GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixableFiles);
+        GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixablePhpFiles);
 
         $this->artisan('git-hooks:pre-commit')
             ->expectsOutputToContain('Pint Failed')
             ->expectsOutputToContain('COMMIT FAILED')
             ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'no')
             ->assertExitCode(1);
-    })->with('pintConfigurations', 'listOfFixableFiles');
+    })->with('pintConfigurations', 'listOfFixablePhpFiles');
 
-test('Commit passes when Pint fixes the files', function ($pintConfiguration, $listOfFixableFiles) {
+test('Commit passes when Pint fixes the files', function ($pintConfiguration, $listOfFixablePhpFiles) {
     $this->config->set('git-hooks.code_analyzers.laravel_pint', $pintConfiguration);
     $this->config->set('git-hooks.pre-commit', [
         PintPreCommitHook::class,
@@ -58,7 +58,7 @@ test('Commit passes when Pint fixes the files', function ($pintConfiguration, $l
     );
 
     GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
-    GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixableFiles);
+    GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixablePhpFiles);
 
     $this->artisan('git-hooks:pre-commit')
         ->expectsOutputToContain('Pint Failed')
@@ -68,4 +68,4 @@ test('Commit passes when Pint fixes the files', function ($pintConfiguration, $l
     $this->artisan('git-hooks:pre-commit')
         ->doesntExpectOutputToContain('Pint Failed')
         ->assertSuccessful();
-})->with('pintConfigurations', 'listOfFixableFiles');
+})->with('pintConfigurations', 'listOfFixablePhpFiles');

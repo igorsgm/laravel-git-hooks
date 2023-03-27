@@ -71,14 +71,12 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
     /**
      * Retrieves additional parameters for the Prettier code analyzer from the configuration file,
      * filters out pre-defined parameters to avoid conflicts, and returns them as a string.
-     *
-     * @return string
      */
     protected function additionalParams(): string
     {
         $additionalParams = config('git-hooks.code_analyzers.prettier.additional_params');
 
-        if (!empty($additionalParams)) {
+        if (! empty($additionalParams)) {
             $additionalParams = preg_replace('/\s*--(config|find-config-path|write|check)\b(=\S*)?\s*/', '', $additionalParams);
         }
 
