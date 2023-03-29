@@ -17,7 +17,7 @@ test('Starts and Finishes Pipe Task with decorated output', function () {
     $expectedOutputs = [
         '  <bg=blue;fg=white> HOOK </> '.$hook->getName().': <comment>loading...</comment>',
         "\x0D",
-        "\x1B[2K"
+        "\x1B[2K",
     ];
     $outputMock->expects($this->exactly(3))
         ->method('write')

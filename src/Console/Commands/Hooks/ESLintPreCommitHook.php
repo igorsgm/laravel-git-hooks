@@ -44,7 +44,7 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
         return trim(implode(' ', [
             $this->getAnalyzerExecutable(),
             $this->configParam,
-            $this->additionalParams()
+            $this->additionalParams(),
         ]));
     }
 
