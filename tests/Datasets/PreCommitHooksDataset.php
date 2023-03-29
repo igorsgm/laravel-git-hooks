@@ -60,6 +60,16 @@ dataset('prettierConfiguration', [
     ],
 ]);
 
+dataset('eslintConfiguration', [
+    '.eslintrc.js file & additional params' => [
+        [
+            'path' => '../../../../node_modules/.bin/eslint',
+            'config' => __DIR__.'/../Fixtures/.eslintrcFixture.js',
+            'additional_params' => '--config',
+        ],
+    ],
+]);
+
 $nonExistentPath = [
     'path' => 'nonexistent/path',
     'phpcs_path' => 'nonexistent/path',

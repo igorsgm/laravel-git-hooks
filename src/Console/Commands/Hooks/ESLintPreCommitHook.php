@@ -6,7 +6,7 @@ use Closure;
 use Igorsgm\GitHooks\Contracts\CodeAnalyzerPreCommitHook;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 
-class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
+class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
     /**
      * @var string
@@ -18,10 +18,10 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      *
      * @var string
      */
-    protected $name = 'Prettier';
+    protected $name = 'ESLint';
 
     /**
-     * Analyze and fix committed JS files using Prettier.
+     * Analyze and fix committed JS files using ESLint.
      *
      * @param  ChangedFiles  $files  The files that have been changed in the current commit.
      * @param  Closure  $next  A closure that represents the next middleware in the pipeline.
@@ -32,53 +32,55 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
         $this->configParam = $this->configParam();
 
         return $this->setFileExtensions('/\.(jsx?|tsx?|vue)$/')
-            ->setAnalyzerExecutable(config('git-hooks.code_analyzers.prettier.path'), true)
+            ->setAnalyzerExecutable(config('git-hooks.code_analyzers.eslint.path'), true)
             ->handleCommittedFiles($files, $next);
     }
 
     /**
-     * Returns the command to run Prettier tester
+     * Returns the command to run ESLint tester
      */
     public function analyzerCommand(): string
     {
-        return trim(
-            sprintf('%s --check %s %s', $this->getAnalyzerExecutable(), $this->configParam, $this->additionalParams())
-        );
+        return trim(implode(' ', [
+            $this->getAnalyzerExecutable(),
+            $this->configParam,
+            $this->additionalParams(),
+        ]));
     }
 
     /**
-     * Returns the command to run Prettier fixer
+     * Returns the command to run ESLint fixer
      */
     public function fixerCommand(): string
     {
         return trim(
-            sprintf('%s --write %s %s', $this->getFixerExecutable(), $this->configParam, $this->additionalParams())
+            sprintf('%s --fix %s %s', $this->getFixerExecutable(), $this->configParam, $this->additionalParams())
         );
     }
 
     /**
-     * Gets the command-line parameter for specifying the configuration file for Prettier.
+     * Gets the command-line parameter for specifying the configuration file for ESLint.
      *
      * @return string The command-line parameter for the configuration file, or an empty string if not set.
      */
     protected function configParam(): string
     {
-        $prettierConfig = rtrim(config('git-hooks.code_analyzers.prettier.config'), '/');
+        $eslintConfig = rtrim(config('git-hooks.code_analyzers.eslint.config'), '/');
 
-        return empty($prettierConfig) ? '' : '--config='.$prettierConfig;
+        return empty($eslintConfig) ? '' : '--config='.$eslintConfig;
     }
 
     /**
-     * Retrieves additional parameters for the Prettier code analyzer from the configuration file,
+     * Retrieves additional parameters for the ESLint code analyzer from the configuration file,
      * filters out pre-defined parameters to avoid conflicts, and returns them as a string.
      */
     protected function additionalParams(): ?string
     {
-        $additionalParams = config('git-hooks.code_analyzers.prettier.additional_params');
+        $additionalParams = config('git-hooks.code_analyzers.eslint.additional_params');
 
         if (! empty($additionalParams)) {
             $additionalParams = preg_replace('/\s+\.(?:(\s)|$)/', '$1', $additionalParams);
-            $additionalParams = preg_replace('/\s*--(config|find-config-path|write|check)\b(=\S*)?\s*/', '', $additionalParams);
+            $additionalParams = preg_replace('/\s*--(config|c)\b(=\S*)?\s*/', '', $additionalParams);
         }
 
         return $additionalParams;
