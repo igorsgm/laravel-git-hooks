@@ -74,7 +74,7 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
      * Retrieves additional parameters for the ESLint code analyzer from the configuration file,
      * filters out pre-defined parameters to avoid conflicts, and returns them as a string.
      */
-    protected function additionalParams(): string
+    protected function additionalParams(): ?string
     {
         $additionalParams = config('git-hooks.code_analyzers.eslint.additional_params');
 

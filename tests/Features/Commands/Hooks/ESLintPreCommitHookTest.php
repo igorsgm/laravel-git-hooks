@@ -1,6 +1,6 @@
 <?php
 
-use Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook;
+use Igorsgm\GitHooks\Console\Commands\Hooks\ESLintPreCommitHook;
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Traits\GitHelper;
 
@@ -10,10 +10,10 @@ beforeEach(function () {
     $this->initializeTempDirectory(base_path('temp'));
 });
 
-test('Skips Prettier check when there is none JS files added to commit', function ($prettierConfiguration, $listOfFixablePHPFiles) {
-    $this->config->set('git-hooks.code_analyzers.prettier', $prettierConfiguration);
+test('Skips ESLint check when there is none JS files added to commit', function ($eslintConfiguration, $listOfFixablePHPFiles) {
+    $this->config->set('git-hooks.code_analyzers.eslint', $eslintConfiguration);
     $this->config->set('git-hooks.pre-commit', [
-        PrettierPreCommitHook::class,
+        ESLintPreCommitHook::class,
     ]);
 
     $this->makeTempFile('ClassWithFixableIssues.php',
@@ -24,13 +24,13 @@ test('Skips Prettier check when there is none JS files added to commit', functio
     GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixablePHPFiles);
 
     $this->artisan('git-hooks:pre-commit')->assertSuccessful();
-})->with('prettierConfiguration', 'listOfFixablePhpFiles');
+})->with('eslintConfiguration', 'listOfFixablePhpFiles');
 
-test('Fails commit when Prettier is not passing and user does not autofix the files',
-    function ($prettierConfiguration, $listOfFixableJSFiles) {
-        $this->config->set('git-hooks.code_analyzers.prettier', $prettierConfiguration);
+test('Fails commit when ESLint is not passing and user does not autofix the files',
+    function ($eslintConfiguration, $listOfFixableJSFiles) {
+        $this->config->set('git-hooks.code_analyzers.eslint', $eslintConfiguration);
         $this->config->set('git-hooks.pre-commit', [
-            PrettierPreCommitHook::class,
+            ESLintPreCommitHook::class,
         ]);
 
         $this->makeTempFile('fixable-js-file.js',
@@ -41,16 +41,16 @@ test('Fails commit when Prettier is not passing and user does not autofix the fi
         GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixableJSFiles);
 
         $this->artisan('git-hooks:pre-commit')
-            ->expectsOutputToContain('Prettier Failed')
+            ->expectsOutputToContain('ESLint Failed')
             ->expectsOutputToContain('COMMIT FAILED')
             ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'no')
             ->assertExitCode(1);
-    })->with('prettierConfiguration', 'listOfFixableJSFiles');
+    })->with('eslintConfiguration', 'listOfFixableJSFiles');
 
-test('Commit passes when Prettier fixes the files', function ($prettierConfiguration, $listOfFixableJSFiles) {
-    $this->config->set('git-hooks.code_analyzers.prettier', $prettierConfiguration);
+test('Commit passes when ESLint fixes the files', function ($eslintConfiguration, $listOfFixableJSFiles) {
+    $this->config->set('git-hooks.code_analyzers.eslint', $eslintConfiguration);
     $this->config->set('git-hooks.pre-commit', [
-        PrettierPreCommitHook::class,
+        ESLintPreCommitHook::class,
     ]);
 
     $this->makeTempFile('fixable-js-file.js',
@@ -61,11 +61,11 @@ test('Commit passes when Prettier fixes the files', function ($prettierConfigura
     GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixableJSFiles);
 
     $this->artisan('git-hooks:pre-commit')
-        ->expectsOutputToContain('Prettier Failed')
+        ->expectsOutputToContain('ESLint Failed')
         ->expectsOutputToContain('COMMIT FAILED')
         ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'yes');
 
     $this->artisan('git-hooks:pre-commit')
-        ->doesntExpectOutputToContain('Prettier Failed')
+        ->doesntExpectOutputToContain('ESLint Failed')
         ->assertSuccessful();
-})->with('prettierConfiguration', 'listOfFixableJSFiles');
+})->with('eslintConfiguration', 'listOfFixableJSFiles');
