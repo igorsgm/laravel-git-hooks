@@ -192,6 +192,11 @@ return [
             'config' => env('PRETTIER_CONFIG', '.prettierrc.json'),
             'additional_params' => env('PRETTIER_ADDITIONAL_PARAMS', ''),
         ],
+        'eslint' => [
+            'path' => env('ESLINT_PATH', 'node_modules/.bin/eslint'),
+            'config' => env('ESLINT_CONFIG', '.eslintrc.js'),
+            'additional_params' => env('ESLINT_ADDITIONAL_PARAMS', ''),
+        ],
     ],
 
 ];
