@@ -70,6 +70,7 @@ class LarastanPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
     protected function configParam(): string
     {
         $phpStanConfigFile = rtrim(config('git-hooks.code_analyzers.larastan.config'), '/');
+        $this->validateConfigPath($phpStanConfigFile);
 
         return empty($phpStanConfigFile) ? '' : '--configuration='.$phpStanConfigFile;
     }

@@ -62,6 +62,8 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
         $pintConfigFile = config('git-hooks.code_analyzers.laravel_pint.config');
 
         if (! empty($pintConfigFile)) {
+            $this->validateConfigPath($pintConfigFile);
+
             return '--config '.trim($pintConfigFile, '/');
         }
 
