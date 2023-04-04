@@ -55,3 +55,21 @@ test('Throws HookFailException and notifies when Code Analyzer is not installed'
             ->expectsOutputToContain($preCommitHook->getName().' is not installed.')
             ->assertExitCode(1);
     })->with('codeAnalyzersList', 'listOfFixablePhpFiles');
+
+test('Throws HookFailException and notifies when config path does not exist',
+    function ($configName, $nonExistentPathConfig, $preCommitHookClass, $listOfFixablePhpFiles) {
+        $nonExistentPathConfig['config'] = 'nonexistent/path';
+        $this->config->set('git-hooks.code_analyzers.'.$configName, $nonExistentPathConfig);
+
+        $this->config->set('git-hooks.pre-commit', [
+            $preCommitHookClass,
+        ]);
+
+        GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
+        GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixablePhpFiles);
+
+        $preCommitHook = new $preCommitHookClass();
+        $this->artisan('git-hooks:pre-commit')
+            ->expectsOutputToContain($preCommitHook->getName().' config file does not exist.')
+            ->assertExitCode(1);
+    })->with('codeAnalyzersList', 'listOfFixablePhpFiles');

@@ -177,7 +177,7 @@ return [
         'php_code_sniffer' => [
             'phpcs_path' => env('PHPCS_PATH', 'vendor/bin/phpcs'),
             'phpcbf_path' => env('PHPCBF_PATH', 'vendor/bin/phpcbf'),
-            'standard' => env('PHPCS_STANDARD', 'phpcs.xml'),
+            'config' => env('PHPCS_STANDARD_CONFIG', 'phpcs.xml'),
             'file_extensions' => env('PHPCS_FILE_EXTENSIONS', '/\.php$/'),
         ],
         'larastan' => [

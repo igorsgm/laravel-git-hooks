@@ -64,6 +64,7 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
     protected function configParam(): string
     {
         $prettierConfig = rtrim(config('git-hooks.code_analyzers.prettier.config'), '/');
+        $this->validateConfigPath($prettierConfig);
 
         return empty($prettierConfig) ? '' : '--config='.$prettierConfig;
     }

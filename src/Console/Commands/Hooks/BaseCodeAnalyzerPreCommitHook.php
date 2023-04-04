@@ -79,7 +79,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
             return $next($files);
         }
 
-        $this->checkAnalyzerInstallation()
+        $this->validateAnalyzerInstallation()
             ->analizeCommittedFiles($commitFiles);
 
         if (empty($this->filesBadlyFormattedPaths)) {
@@ -148,8 +148,10 @@ abstract class BaseCodeAnalyzerPreCommitHook
         $this->command->newLine();
 
         $message = '<bg=red;fg=white> COMMIT FAILED </> ';
-        $message .= sprintf("Your commit contains files that should pass %s but do not. Please fix the errors in the files above and try again.\n", $this->getName());
-        $message .= sprintf('You can check which %s errors happened in them by executing: <comment>%s {filePath}</comment>', $this->getName(), $this->analyzerCommand());
+        $message .= sprintf("Your commit contains files that should pass %s but do not. Please fix the errors in the files above and try again.\n",
+            $this->getName());
+        $message .= sprintf('You can check which %s errors happened in them by executing: <comment>%s {filePath}</comment>',
+            $this->getName(), $this->analyzerCommand());
 
         $this->command->getOutput()->writeln($message);
 
@@ -163,7 +165,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
      *
      * @throws HookFailException
      */
-    protected function checkAnalyzerInstallation()
+    protected function validateAnalyzerInstallation()
     {
         if (file_exists($this->analyzerExecutable)) {
             return $this;
@@ -172,6 +174,22 @@ abstract class BaseCodeAnalyzerPreCommitHook
         $this->command->newLine(2);
         $this->command->getOutput()->writeln(
             sprintf('<bg=red;fg=white> ERROR </> %s is not installed. Please install it and try again.',
+                $this->getName())
+        );
+        $this->command->newLine();
+
+        throw new HookFailException();
+    }
+
+    protected function validateConfigPath($path)
+    {
+        if (file_exists($path)) {
+            return $this;
+        }
+
+        $this->command->newLine(2);
+        $this->command->getOutput()->writeln(
+            sprintf('<bg=red;fg=white> ERROR </> %s config file does not exist. Please check the path and try again.',
                 $this->getName())
         );
         $this->command->newLine();

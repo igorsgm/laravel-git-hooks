@@ -28,7 +28,7 @@ dataset('phpcsConfiguration', [
         [
             'phpcs_path' => '../../../bin/phpcs',
             'phpcbf_path' => '../../../bin/phpcbf',
-            'standard' => __DIR__.'/../Fixtures/phpcsFixture.xml',
+            'config' => __DIR__.'/../Fixtures/phpcsFixture.xml',
             'file_extensions' => '/\.php$/',
         ],
     ],
@@ -79,6 +79,7 @@ dataset('eslintConfiguration', [
 $nonExistentPath = [
     'path' => 'nonexistent/path',
     'phpcs_path' => 'nonexistent/path',
+    'config' => __DIR__.'/../Fixtures/pintFixture.json',
 ];
 
 dataset('codeAnalyzersList', [
