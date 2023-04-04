@@ -1,0 +1,6 @@
+function test()
+
+{
+  return false;
+
+}

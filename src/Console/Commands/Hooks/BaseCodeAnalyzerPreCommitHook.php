@@ -9,6 +9,7 @@ use Igorsgm\GitHooks\Git\ChangedFile;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Traits\ProcessHelper;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Symfony\Component\Console\Terminal;
 
 abstract class BaseCodeAnalyzerPreCommitHook
@@ -93,14 +94,15 @@ abstract class BaseCodeAnalyzerPreCommitHook
     }
 
     /**
-     * Analyzes the committed files and checks if they are properly formatted.
+     * Analyzes an array of ChangedFile objects and checks whether each file can be analyzed,
+     * whether it is properly formatted according to the configured analyzer, and collects
+     * paths of any files that are not properly formatted.
      *
-     * @param  mixed  $commitFiles  The files to analyze.
+     * @param  ChangedFile[]|Collection  $commitFiles  The files to analyze.
      * @return $this
      */
     protected function analizeCommittedFiles($commitFiles)
     {
-        /** @var ChangedFile $file */
         foreach ($commitFiles as $file) {
             if (! $this->canFileBeAnalyzed($file)) {
                 continue;
@@ -181,6 +183,14 @@ abstract class BaseCodeAnalyzerPreCommitHook
         throw new HookFailException();
     }
 
+    /**
+     * Validates the given configuration path.
+     *
+     * @param  string  $path  The path to the configuration file.
+     * @return $this This instance for method chaining.
+     *
+     * @throws HookFailException If the configuration file does not exist.
+     */
     protected function validateConfigPath($path)
     {
         if (file_exists($path)) {
@@ -199,27 +209,50 @@ abstract class BaseCodeAnalyzerPreCommitHook
 
     /**
      * Suggests attempting to automatically fix the incorrectly formatted files or exit.
-     *
-     * @return void
+     * If any files cannot be fixed, throws a HookFailException to cancel the commit.
      *
      * @throws HookFailException
      */
-    protected function suggestAutoFixOrExit()
+    protected function suggestAutoFixOrExit(): bool
     {
         $hasFixerCommand = ! empty($this->fixerCommand());
 
         if (Terminal::hasSttyAvailable() && $hasFixerCommand &&
-            $this->command->confirm('Would you like to attempt to correct files automagically?')
+            $this->command->confirm('Would you like to attempt to correct files automagically?') &&
+            $this->autoFixFiles()
         ) {
-            $errorFilesString = implode(' ', $this->filesBadlyFormattedPaths);
-
-            $this->runCommands([
-                $this->fixerCommand().' '.$errorFilesString,
-                'git add '.$errorFilesString,
-            ]);
-        } else {
-            throw new HookFailException();
+            return true;
         }
+
+        throw new HookFailException();
+    }
+
+    /**
+     * Automatically fixes any files in the `$filesBadlyFormattedPaths` array using the
+     * configured fixer command. For each fixed file, adds it to Git and removes its path
+     * from the `$filesBadlyFormattedPaths` array.
+     *
+     *
+     * @throws HookFailException if any files cannot be fixed.
+     */
+    private function autoFixFiles(): bool
+    {
+        foreach ($this->filesBadlyFormattedPaths as $key => $filePath) {
+            $wasProperlyFixed = $this->runCommands($this->fixerCommand().' '.$filePath)->isSuccessful();
+
+            if ($wasProperlyFixed) {
+                $this->runCommands('git add '.$filePath);
+                unset($this->filesBadlyFormattedPaths[$key]);
+
+                continue;
+            }
+
+            $this->command->getOutput()->writeln(
+                sprintf('<fg=red> %s Autofix Failed:</> %s', $this->getName(), $filePath)
+            );
+        }
+
+        return empty($this->filesBadlyFormattedPaths);
     }
 
     /**
