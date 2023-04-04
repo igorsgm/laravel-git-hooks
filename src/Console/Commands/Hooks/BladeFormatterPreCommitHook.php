@@ -31,7 +31,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
     {
         $this->configParam = $this->configParam();
 
-        return $this->setFileExtensions('/\.blade\.php$/')
+        return $this->setFileExtensions(config('git-hooks.code_analyzers.blade_formatter.file_extensions'))
             ->setAnalyzerExecutable(config('git-hooks.code_analyzers.blade_formatter.path'), true)
             ->handleCommittedFiles($files, $next);
     }

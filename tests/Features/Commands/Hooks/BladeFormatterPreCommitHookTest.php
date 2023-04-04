@@ -10,8 +10,8 @@ beforeEach(function () {
     $this->initializeTempDirectory(base_path('temp'));
 });
 
-test('Skips Blade Formatter check when there is none .blade.php files added to commit', function ($phpCSConfiguration) {
-    $this->config->set('git-hooks.code_analyzers.php_code_sniffer', $phpCSConfiguration);
+test('Skips Blade Formatter check when there is none .blade.php files added to commit', function ($bladeFormatterConfiguration) {
+    $this->config->set('git-hooks.code_analyzers.blade_formatter', $bladeFormatterConfiguration);
     $this->config->set('git-hooks.pre-commit', [
         BladeFormatterPreCommitHook::class,
     ]);
@@ -24,7 +24,7 @@ test('Skips Blade Formatter check when there is none .blade.php files added to c
     GitHooks::shouldReceive('getListOfChangedFiles')->andReturn('AM src/CommitMessageFixtureHook1.php');
 
     $this->artisan('git-hooks:pre-commit')->assertSuccessful();
-})->with('phpcsConfiguration');
+})->with('bladeFormatterConfiguration');
 
 test('Fails commit when Blade Formatter is not passing and user does not autofix the files',
     function ($bladeFormatterConfiguration, $listOfFixablePhpFiles) {

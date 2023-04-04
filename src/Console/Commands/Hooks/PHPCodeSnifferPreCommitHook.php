@@ -31,7 +31,7 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
     {
         $this->configParam = $this->configParam();
 
-        return $this->setFileExtensions(['php'])
+        return $this->setFileExtensions(config('git-hooks.code_analyzers.php_code_sniffer.file_extensions'))
             ->setAnalyzerExecutable(config('git-hooks.code_analyzers.php_code_sniffer.phpcs_path'))
             ->setFixerExecutable(config('git-hooks.code_analyzers.php_code_sniffer.phpcbf_path'))
             ->handleCommittedFiles($files, $next);

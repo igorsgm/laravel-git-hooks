@@ -31,7 +31,7 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
     {
         $this->configParam = $this->configParam();
 
-        return $this->setFileExtensions(['php'])
+        return $this->setFileExtensions(config('git-hooks.code_analyzers.laravel_pint.file_extensions'))
             ->setAnalyzerExecutable(config('git-hooks.code_analyzers.laravel_pint.path'), true)
             ->handleCommittedFiles($files, $next);
     }

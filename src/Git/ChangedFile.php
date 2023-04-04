@@ -116,11 +116,6 @@ class ChangedFile
         return $this->X & static::C || $this->Y & static::C;
     }
 
-    public function extension()
-    {
-        return pathinfo($this->getFilePath(), PATHINFO_EXTENSION);
-    }
-
     /**
      * @return string
      */

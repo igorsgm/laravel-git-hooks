@@ -31,7 +31,7 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
     {
         $this->configParam = $this->configParam();
 
-        return $this->setFileExtensions('/\.(jsx?|tsx?|vue)$/')
+        return $this->setFileExtensions(config('git-hooks.code_analyzers.eslint.file_extensions'))
             ->setAnalyzerExecutable(config('git-hooks.code_analyzers.eslint.path'), true)
             ->handleCommittedFiles($files, $next);
     }

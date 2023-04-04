@@ -172,11 +172,13 @@ return [
             'path' => env('LARAVEL_PINT_PATH', 'vendor/bin/pint'),
             'config' => env('LARAVEL_PINT_CONFIG', 'pint.json'),
             'preset' => env('LARAVEL_PINT_PRESET', 'psr12'),
+            'file_extensions' => env('LARAVEL_PINT_FILE_EXTENSIONS', '/\.php$/'),
         ],
         'php_code_sniffer' => [
             'phpcs_path' => env('PHPCS_PATH', 'vendor/bin/phpcs'),
             'phpcbf_path' => env('PHPCBF_PATH', 'vendor/bin/phpcbf'),
             'standard' => env('PHPCS_STANDARD', 'phpcs.xml'),
+            'file_extensions' => env('PHPCS_FILE_EXTENSIONS', '/\.php$/'),
         ],
         'larastan' => [
             'path' => env('LARASTAN_PATH', 'vendor/bin/phpstan'),
@@ -186,16 +188,19 @@ return [
         'blade_formatter' => [
             'path' => env('BLADE_FORMATTER_PATH', 'node_modules/.bin/blade-formatter'),
             'config' => env('BLADE_FORMATTER_CONFIG', '.bladeformatterrc.json'),
+            'file_extensions' => env('BLADE_FORMATTER_FILE_EXTENSIONS', '/\.blade\.php$/'),
         ],
         'prettier' => [
             'path' => env('PRETTIER_PATH', 'node_modules/.bin/prettier'),
             'config' => env('PRETTIER_CONFIG', '.prettierrc.json'),
             'additional_params' => env('PRETTIER_ADDITIONAL_PARAMS', ''),
+            'file_extensions' => env('PRETTIER_FILE_EXTENSIONS', '/\.(jsx?|tsx?|vue)$/'),
         ],
         'eslint' => [
             'path' => env('ESLINT_PATH', 'node_modules/.bin/eslint'),
             'config' => env('ESLINT_CONFIG', '.eslintrc.js'),
             'additional_params' => env('ESLINT_ADDITIONAL_PARAMS', ''),
+            'file_extensions' => env('ESLINT_FILE_EXTENSIONS', '/\.(jsx?|tsx?|vue)$/'),
         ],
     ],
 

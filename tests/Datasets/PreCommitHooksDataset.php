@@ -6,17 +6,19 @@ use Igorsgm\GitHooks\Console\Commands\Hooks\PHPCodeSnifferPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PintPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook;
 
-dataset('pintConfigurations', [
+dataset('pintConfiguration', [
     'Config File' => [
         [
             'path' => '../../../bin/pint',
             'config' => __DIR__.'/../Fixtures/pintFixture.json',
+            'file_extensions' => '/\.php$/',
         ],
     ],
     'Preset' => [
         [
             'path' => '../../../bin/pint',
             'preset' => 'psr12',
+            'file_extensions' => '/\.php$/',
         ],
     ],
 ]);
@@ -27,6 +29,7 @@ dataset('phpcsConfiguration', [
             'phpcs_path' => '../../../bin/phpcs',
             'phpcbf_path' => '../../../bin/phpcbf',
             'standard' => __DIR__.'/../Fixtures/phpcsFixture.xml',
+            'file_extensions' => '/\.php$/',
         ],
     ],
 ]);
@@ -36,6 +39,7 @@ dataset('bladeFormatterConfiguration', [
         [
             'path' => '../../../../node_modules/.bin/blade-formatter',
             'config' => __DIR__.'/../Fixtures/bladeFormatterFixture.json',
+            'file_extensions' => '/\.blade\.php$/',
         ],
     ],
 ]);
@@ -56,6 +60,7 @@ dataset('prettierConfiguration', [
             'path' => '../../../../node_modules/.bin/prettier',
             'config' => __DIR__.'/../Fixtures/.prettierrcFixture.json',
             'additional_params' => '--config --find-config-path',
+            'file_extensions' => '/\.(jsx?|tsx?|vue)$/',
         ],
     ],
 ]);
@@ -66,6 +71,7 @@ dataset('eslintConfiguration', [
             'path' => '../../../../node_modules/.bin/eslint',
             'config' => __DIR__.'/../Fixtures/.eslintrcFixture.js',
             'additional_params' => '--config',
+            'file_extensions' => '/\.(jsx?|tsx?|vue)$/',
         ],
     ],
 ]);

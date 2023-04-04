@@ -31,7 +31,7 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
     {
         $this->configParam = $this->configParam();
 
-        return $this->setFileExtensions('/\.(jsx?|tsx?|vue)$/')
+        return $this->setFileExtensions(config('git-hooks.code_analyzers.prettier.file_extensions'))
             ->setAnalyzerExecutable(config('git-hooks.code_analyzers.prettier.path'), true)
             ->handleCommittedFiles($files, $next);
     }

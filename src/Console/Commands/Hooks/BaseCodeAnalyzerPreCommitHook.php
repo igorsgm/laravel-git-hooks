@@ -135,8 +135,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
             return true;
         }
 
-        return (is_array($this->fileExtensions) && in_array($file->extension(), $this->fileExtensions)) ||
-            (is_string($this->fileExtensions) && preg_match($this->fileExtensions, $file->getFilePath()));
+        return is_string($this->fileExtensions) && preg_match($this->fileExtensions, $file->getFilePath());
     }
 
     /**
