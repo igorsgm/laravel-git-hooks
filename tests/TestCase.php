@@ -2,6 +2,7 @@
 
 namespace Igorsgm\GitHooks\Tests;
 
+use Enlightn\Enlightn\EnlightnServiceProvider;
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\GitHooksServiceProvider;
 use Igorsgm\GitHooks\Tests\Traits\WithTmpFiles;
@@ -56,6 +57,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
     {
         return [
             GitHooksServiceProvider::class,
+            EnlightnServiceProvider::class,
         ];
     }
 
