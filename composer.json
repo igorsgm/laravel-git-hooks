@@ -30,6 +30,7 @@
         "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0"
     },
     "require-dev": {
+        "enlightn/enlightn": "^2.3",
         "laravel/pint": "^1.2",
         "mockery/mockery": "^1.5.1",
         "nunomaduro/larastan": "^2.0",

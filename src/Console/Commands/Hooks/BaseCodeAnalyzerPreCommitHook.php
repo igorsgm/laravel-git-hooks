@@ -208,7 +208,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
     {
         $hasFixerCommand = ! empty($this->fixerCommand());
 
-        if (Terminal::hasSttyAvailable() && $hasFixerCommand &&
+        if ($hasFixerCommand && Terminal::hasSttyAvailable() &&
             $this->command->confirm('Would you like to attempt to correct files automagically?')
         ) {
             $errorFilesString = implode(' ', $this->filesBadlyFormattedPaths);
