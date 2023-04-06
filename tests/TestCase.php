@@ -17,6 +17,15 @@ class TestCase extends \Orchestra\Testbench\TestCase
     public $config;
 
     /**
+     * Setup the test environment.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        GitHooks::shouldReceive('getSupportedHooks')->andReturn(array_keys($this->config->get('git-hooks')));
+    }
+
+    /**
      * Define environment setup.
      *
      * @param  \Illuminate\Foundation\Application  $app

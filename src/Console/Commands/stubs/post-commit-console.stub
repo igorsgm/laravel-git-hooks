@@ -1,0 +1,42 @@
+<?php
+
+namespace {{ namespace }};
+
+use Closure;
+use Igorsgm\GitHooks\Git\Log;
+use Igorsgm\GitHooks\Contracts\PostCommitHook;
+
+class {{ class }} implements PostCommitHook
+{
+    /**
+     * Get the name of the hook.
+     */
+    public function getName(): ?string
+    {
+        return '{{ hookName }}';
+    }
+
+    /**
+     * Execute the Hook.
+     *
+     * @param  Log  $log
+     * @param  Closure  $next The next hook in the chain to execute.
+     * @return mixed|null
+     */
+    public function handle(Log $log, Closure $next)
+    {
+        // TODO: Implement post commit hook logic here.
+
+        // You can interact with the commit log
+        $hash = $log->getHash();
+        $author = $log->getAuthor();
+        $date = $log->getDate();
+        $message = $log->getMessage();
+
+        // If you want to cancel the commit, you have to throw an exception.
+        // i.e: throw new HookFailException();
+
+        // Run the next hook in the chain
+        return $next($log);
+    }
+}

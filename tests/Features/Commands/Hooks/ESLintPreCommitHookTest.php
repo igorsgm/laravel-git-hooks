@@ -2,9 +2,7 @@
 
 use Igorsgm\GitHooks\Console\Commands\Hooks\ESLintPreCommitHook;
 use Igorsgm\GitHooks\Facades\GitHooks;
-use Igorsgm\GitHooks\Traits\GitHelper;
 
-uses(GitHelper::class);
 beforeEach(function () {
     $this->gitInit();
     $this->initializeTempDirectory(base_path('temp'));

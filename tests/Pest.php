@@ -12,8 +12,10 @@
 */
 
 use Igorsgm\GitHooks\Tests\TestCase;
+use Igorsgm\GitHooks\Traits\GitHelper;
 
 uses(TestCase::class)->in(__DIR__);
+uses(GitHelper::class)->in(__DIR__.'/Features/Hooks');
 
 /*
 |--------------------------------------------------------------------------

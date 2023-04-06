@@ -1,0 +1,40 @@
+<?php
+
+namespace {{ namespace }};
+
+use Closure;
+use Igorsgm\GitHooks\Git\CommitMessage;
+use Igorsgm\GitHooks\Contracts\MessageHook;
+
+class {{ class }} implements MessageHook
+{
+    /**
+     * Get the name of the hook.
+     */
+    public function getName(): ?string
+    {
+        return '{{ hookName }}';
+    }
+
+    /**
+     * Execute the Hook.
+     *
+     * @param  CommitMessage  $message The commit message.
+     * @param  Closure  $next The next hook in the chain to execute.
+     * @return mixed|null
+     */
+    public function handle(CommitMessage $message, Closure $next)
+    {
+        // TODO: Implement your prepare commit msg hook logic here.
+
+        $currentMessage = $message->getMessage();
+        // You can update commit message text
+        $message->setMessage(str_replace('issue', 'fixed', $currentMessage));
+
+        // If you want to cancel the commit, you have to throw an exception.
+        // i.e: throw new HookFailException();
+
+        // Run the next hook in the chain
+        return $next($message);
+    }
+}

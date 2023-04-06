@@ -1,0 +1,36 @@
+<?php
+
+namespace {{ namespace }};
+
+use Closure;
+use Igorsgm\GitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Contracts\PreCommitHook;
+
+class {{ class }} implements PreCommitHook
+{
+    /**
+     * Get the name of the hook.
+     */
+    public function getName(): ?string
+    {
+        return '{{ hookName }}';
+    }
+
+    /**
+     * Execute the Hook.
+     *
+     * @param  ChangedFiles  $files The list of changed files to analyze.
+     * @param  Closure  $next The next hook in the chain to execute.
+     * @return mixed|null
+     */
+    public function handle(ChangedFiles $files, Closure $next)
+    {
+        // TODO: Implement your pre commit hook logic here.
+
+        // If you want to cancel the commit, you have to throw an exception.
+        // i.e: throw new HookFailException();
+
+        // Run the next hook in the chain
+        return $next($files);
+    }
+}

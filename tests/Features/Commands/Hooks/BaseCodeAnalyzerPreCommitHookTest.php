@@ -3,9 +3,7 @@
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Tests\Fixtures\ConcreteBaseCodeAnalyzerFixture;
-use Igorsgm\GitHooks\Traits\GitHelper;
 
-uses(GitHelper::class);
 beforeEach(function () {
     $this->gitInit();
     $this->initializeTempDirectory(base_path('temp'));
