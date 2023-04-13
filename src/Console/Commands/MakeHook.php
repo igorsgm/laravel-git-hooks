@@ -51,7 +51,7 @@ class MakeHook extends GeneratorCommand
                 implode(', ', $supportedHooks)
             ));
 
-            return false;
+            return 1;
         }
 
         return parent::handle();
