@@ -79,7 +79,9 @@ dataset('eslintConfiguration', [
 $nonExistentPath = [
     'path' => 'nonexistent/path',
     'phpcs_path' => 'nonexistent/path',
+    'preset' => null,
     'config' => __DIR__.'/../Fixtures/pintFixture.json',
+
 ];
 
 dataset('codeAnalyzersList', [

@@ -36,3 +36,9 @@ dataset('listOfFixableJSFiles', [
         'AM temp/fixable-js-file.js',
     ]),
 ]);
+
+dataset('listOfNonFixableJSFiles', [
+    'List of Fixable Files' => implode(PHP_EOL, [
+        'AM temp/not-fully-fixable-js-file.js',
+    ]),
+]);

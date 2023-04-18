@@ -24,6 +24,7 @@ class GitHooksServiceProvider extends ServiceProvider
                 \Igorsgm\GitHooks\Console\Commands\PrepareCommitMessage::class,
                 \Igorsgm\GitHooks\Console\Commands\PostCommit::class,
                 \Igorsgm\GitHooks\Console\Commands\PrePush::class,
+                \Igorsgm\GitHooks\Console\Commands\MakeHook::class,
             ]);
         }
     }

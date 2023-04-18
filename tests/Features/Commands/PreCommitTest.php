@@ -24,7 +24,7 @@ test('Sends ChangedFiles through HookPipes', function (string $listOfChangedFile
     $this->artisan('git-hooks:pre-commit')->assertSuccessful();
 })->with('listOfChangedFiles');
 
-it('Returns 1 on HookFailException', function () {
+it('Returns 1 on HookFailException', function ($listOfChangedFiles) {
     $preCommitHook1 = mock(PreCommitHook::class)->expect(
         handle: function (ChangedFiles $files, Closure $closure) {
             throw new HookFailException();
@@ -35,5 +35,6 @@ it('Returns 1 on HookFailException', function () {
         $preCommitHook1,
     ]);
 
+    GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfChangedFiles);
     $this->artisan('git-hooks:pre-commit')->assertExitCode(1);
-});
+})->with('listOfChangedFiles');
