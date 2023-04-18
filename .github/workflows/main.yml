@@ -46,7 +46,7 @@ jobs:
 
       - name: Install NPM packages
         if: steps.node_modules-cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm ci --include=dev
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
