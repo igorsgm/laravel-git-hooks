@@ -45,8 +45,6 @@ jobs:
       - name: Install NPM packages
         if: steps.node_modules-cache.outputs.cache-hit != 'true'
         run: npm ci
-      - name: Build frontend
-        run: npm run development
       - name: Install PHP versions
         uses: shivammathur/setup-php@v2
         with:
@@ -70,7 +68,6 @@ jobs:
           key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
       - name: Install Laravel Dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.dependency-stability }} --prefer-dist --no-interaction --no-suggest
 
       - name: Update Dependencies with latest stable
