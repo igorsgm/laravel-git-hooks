@@ -1,5 +1,5 @@
 # GithHub Actions Workflow generated with Ghygen
-# Original configuration: https://ghygen.hi-folks.dev?code=5eeae8ee67de18c6bb0ec00188b0c617
+# Original configuration: https://ghygen.hi-folks.dev?code=0555902844da5dd5163a69e93327a0aa
 name: Laravel Git Hooks
 on:
   push:
@@ -20,22 +20,24 @@ jobs:
     strategy:
       matrix:
         operating-system: [ ubuntu-latest ]
-        php-versions: [ '8.1' ]
-        dependency-stability: [ 'prefer-stable' ]
+        php: [ '8.1', '8.2' ]
+        dependency-stability: [ 'prefer-stable','prefer-lowest' ]
 
         laravel: [ '10.*' ]
         include:
           - laravel: 10.*
             testbench: 8.*
 
-    name: P${{ matrix.php-versions }} - L${{ matrix.laravel }} - ${{ matrix.dependency-stability }} - ${{ matrix.operating-system}}
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependency-stability }} - ${{ matrix.operating-system}}
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '19.x'
+          node-version: '18.x'
 
       - name: Cache node_modules directory
         uses: actions/cache@v3
@@ -48,18 +50,18 @@ jobs:
         if: steps.node_modules-cache.outputs.cache-hit != 'true'
         run: npm ci --include=dev
 
-      - name: Setup PHP
+      - name: Install PHP versions
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
-          coverage: pcov
 
-      - name: Get Composer Cache Directory 2
+      - name: Get Composer Cache Directory
         id: composer-cache
         run: |
           echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - uses: actions/cache@v3
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
         id: actions-cache
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
@@ -67,7 +69,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Cache PHP dependencies
+      - name: Cache PHP dependencies (vendor)
         uses: actions/cache@v3
         id: vendor-cache
         with:
@@ -82,25 +84,25 @@ jobs:
       - name: Update Dependencies with latest stable
         if: matrix.dependency-stability == 'prefer-stable'
         run: composer update --prefer-stable
+
       - name: Update Dependencies with lowest stable
         if: matrix.dependency-stability == 'prefer-lowest'
         run: composer update --prefer-stable --prefer-lowest
 
-
-      - name: Show dir
-        run: pwd
-      - name: PHP Version
-        run: php --version
+      - name: Set up Git User
+        run: |
+          git config --global user.email "github-actions@example.com"
+          git config --global user.name "GitHub Actions"
 
       # Code quality
-
       - name: Execute tests (Unit and Feature tests) via PestPHP
+        shell: 'script -q -e -c "bash {0}"'
         # Set environment
         env:
           SESSION_DRIVER: array
+          TTY: true
 
         run: vendor/bin/pest
-
 
       - name: Execute Code Sniffer via Laravel Pint
         run: vendor/bin/pint --test src config
