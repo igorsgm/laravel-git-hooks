@@ -17,8 +17,9 @@
 <hr/>
 
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/14129843/233913522-db204a8b-9419-4b6f-8def-f8ec61185092.png" alt="Laravel Git Hooks usage sample">
+    <img src="https://user-images.githubusercontent.com/14129843/234191523-859b962d-bfdf-4df7-88da-9c80ddb93607.png" alt="Laravel Git Hooks usage sample">
 </p>
+
 
 ## ✨ Features
 
