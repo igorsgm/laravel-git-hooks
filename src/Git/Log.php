@@ -3,6 +3,7 @@
 namespace Igorsgm\GitHooks\Git;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class Log
 {
@@ -52,17 +53,30 @@ class Log
      */
     private function parse(array $lines): void
     {
-        foreach ($lines as $line) {
-            if (strpos($line, 'commit') === 0) {
+        $handlers = collect([
+            'commit' => function ($line) {
                 preg_match('/(?<hash>[a-z0-9]{40})/', $line, $matches);
                 $this->hash = $matches['hash'] ?? null;
-            } elseif (strpos($line, 'Author') === 0) {
+            },
+            'Author' => function ($line) {
                 $this->author = substr($line, strlen('Author:') + 1);
-            } elseif (strpos($line, 'Date') === 0) {
+            },
+            'Date' => function ($line) {
                 $this->date = Carbon::parse(substr($line, strlen('Date:') + 3));
-            } elseif (strpos($line, 'Merge') === 0) {
+            },
+            'Merge' => function ($line) {
                 $merge = substr($line, strlen('Merge:') + 1);
                 $this->merge = explode(' ', $merge);
+            },
+        ]);
+
+        foreach ($lines as $line) {
+            $handler = $handlers->first(function ($handler, $prefix) use ($line) {
+                return Str::startsWith($line, $prefix);
+            });
+
+            if ($handler !== null) {
+                $handler($line);
             } elseif (! empty($line)) {
                 $this->message .= substr($line, 4)."\n";
             }

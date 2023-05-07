@@ -31,7 +31,9 @@ trait ProcessHelper
             });
         }
 
-        if (! empty($input->definition) && $input->definition->hasOption('quiet') && $input->getOption('quiet')) {
+        if (! empty($input->definition) && $input->definition->hasOption('quiet') &&
+            ! empty($input) && $input->getOption('quiet')
+        ) {
             $commands = $this->transformCommands($commands, function ($value) {
                 return $value.' --quiet';
             });
@@ -68,7 +70,7 @@ trait ProcessHelper
     }
 
     /**
-     * @param  array  $commands
+     * @param  array|string  $commands
      * @param  callable  $callback
      * @return array
      */
