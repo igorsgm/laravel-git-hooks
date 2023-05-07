@@ -1,6 +1,6 @@
 {
     "name": "igorsgm/laravel-git-hooks",
-    "description": "Tools for managing git hooks in Laravel apps",
+    "description": "🪝• Efficiently manage Git hooks in Laravel projects. Enhance code quality, save time on reviews, and prevent bugs from entering your repository.",
     "keywords": [
         "igorsgm",
         "laravel-git-hooks",
