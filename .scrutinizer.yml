@@ -2,6 +2,7 @@ build:
   environment:
     php:
       version: 8.1
+    node: "v16.20.0"
   nodes:
     analysis:
       project_setup:
@@ -10,6 +11,8 @@ build:
         override: [ php-scrutinizer-run ]
     coverage:
       tests:
+        before:
+          - command: git config --global user.email "github-actions@example.com" && git config --global user.name "GitHub Actions"
         override:
           - command: XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --coverage-clover=coverage.clover
             coverage:
