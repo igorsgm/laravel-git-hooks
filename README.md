@@ -20,7 +20,6 @@
     <img src="https://user-images.githubusercontent.com/14129843/234191523-859b962d-bfdf-4df7-88da-9c80ddb93607.png" alt="Laravel Git Hooks usage sample">
 </p>
 
-
 ## ✨ Features
 
 - **Pre-configured Hooks:** Laravel Git Hooks comes with pre-configured pre-commit hooks for popular tools, such as Laravel Pint, PHPCS, ESLint, Prettier, Larastan, Enlightn, and Blade Formatter, making it easy to enforce coding standards and style guidelines right away.
