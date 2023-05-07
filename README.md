@@ -7,7 +7,7 @@
         <img src="https://img.shields.io/packagist/v/igorsgm/laravel-git-hooks.svg?style=flat-square" alt="Latest Version on Packagist">
     </a>
     <a href="https://github.com/igorsgm/laravel-git-hooks/actions/workflows/main.yml/badge.svg">
-        <img src="https://img.shields.io/github/actions/workflow/status/igorsgm/laravel-git-hooks/main?style=flat-square" alt="Build Status">
+        <img src="https://img.shields.io/github/actions/workflow/status/igorsgm/laravel-git-hooks/main.yml?style=flat-square" alt="Build Status">
     </a>
     <a href="https://packagist.org/packages/igorsgm/laravel-git-hooks">
         <img src="https://img.shields.io/packagist/dt/igorsgm/laravel-git-hooks.svg?style=flat-square" alt="Total Downloads">
