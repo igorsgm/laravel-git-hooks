@@ -9,6 +9,8 @@
     <a href="https://github.com/igorsgm/laravel-git-hooks/actions/workflows/main.yml/badge.svg">
         <img src="https://img.shields.io/github/actions/workflow/status/igorsgm/laravel-git-hooks/main.yml?style=flat-square" alt="Build Status">
     </a>
+    <img src="https://img.shields.io/scrutinizer/coverage/g/igorsgm/laravel-git-hooks/master?style=flat-square" alt="Test Coverage">
+    <img src="https://img.shields.io/scrutinizer/quality/g/igorsgm/laravel-git-hooks/master?style=flat-square" alt="Code Quality">
     <a href="https://packagist.org/packages/igorsgm/laravel-git-hooks">
         <img src="https://img.shields.io/packagist/dt/igorsgm/laravel-git-hooks.svg?style=flat-square" alt="Total Downloads">
     </a>
