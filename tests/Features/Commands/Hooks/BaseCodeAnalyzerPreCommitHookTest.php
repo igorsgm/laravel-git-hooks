@@ -9,9 +9,9 @@ beforeEach(function () {
     $this->initializeTempDirectory(base_path('temp'));
 });
 
-test('Skips check if there are no files added to commit', function () {
+test('Skips check if there are no staged files in commit', function () {
     $changedFiles = mock(ChangedFiles::class)
-        ->shouldReceive('getAddedToCommit')
+        ->shouldReceive('getStaged')
         ->andReturn(collect())
         ->getMock();
 

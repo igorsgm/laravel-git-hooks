@@ -74,7 +74,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
      */
     public function handleCommittedFiles(ChangedFiles $files, Closure $next)
     {
-        $commitFiles = $files->getAddedToCommit();
+        $commitFiles = $files->getStaged();
 
         if ($commitFiles->isEmpty() || GitHooks::isMergeInProgress()) {
             return $next($files);
