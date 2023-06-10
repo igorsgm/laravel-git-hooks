@@ -51,6 +51,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'post-merge' => [],
             'pre-push' => [],
             'code_analyzers' => [],
+            'artisan_path' => base_path('artisan'),
         ]);
 
         $this->config = $app['config'];

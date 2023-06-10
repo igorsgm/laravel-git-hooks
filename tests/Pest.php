@@ -34,7 +34,7 @@ expect()->extend('toBeOne', function () {
 
 expect()->extend('toContainHookArtisanCommand', function ($hookName) {
     $this->value = file_get_contents($this->value);
-    $artisanCommand = sprintf('php %s git-hooks:%s $@ >&2', base_path('artisan'), $hookName);
+    $artisanCommand = sprintf('php %s git-hooks:%s $@ >&2', config('git-hooks.artisan_path'), $hookName);
 
     return $this->toContain($artisanCommand);
 });

@@ -56,8 +56,8 @@ class GitHooks
 
         $hookPath = $this->getGitHooksDir().'/'.$hookName;
         $hookScript = str_replace(
-            ['{command}', '{path}'],
-            [$command, base_path()],
+            ['{command}', '{artisanPath}'],
+            [$command, config('git-hooks.artisan_path')],
             $this->getHookStub()
         );
 
