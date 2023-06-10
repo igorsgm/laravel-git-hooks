@@ -35,11 +35,19 @@ test('Commit Message is sent through HookPipes', function (string $listOfChanged
 })->with('listOfChangedFiles');
 
 it('Returns 1 on HookFailException', function ($listOfChangedFiles) {
-    $postCommitHook1 = mock(MessageHook::class)->expect(
-        handle: function (CommitMessage $commitMessage, Closure $closure) {
+// This approach is broken in the current version of Mockery
+// @TODO: Update this test once Pest or Mockery versions are updated
+//    $postCommitHook1 = mock(MessageHook::class)->expect(
+//        handle: function (CommitMessage $commitMessage, Closure $closure) {
+//            throw new HookFailException();
+//        }
+//    );
+    $postCommitHook1 = mock(MessageHook::class);
+    $postCommitHook1->expects('handle')
+        ->andReturnUsing(function (CommitMessage $commitMessage, Closure $closure) {
             throw new HookFailException();
-        }
-    );
+        });
+
 
     $this->config->set('git-hooks.prepare-commit-msg', [
         $postCommitHook1,

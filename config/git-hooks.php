@@ -204,4 +204,21 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Artisan Executable Path
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to set the path of the Artisan
+    | executable within your Laravel or Laravel Zero application.
+    |
+    | By default, the path is set to the base_path('artisan') which corresponds
+    | to the main Artisan executable in a standard Laravel installation.
+    |
+    | In case you are using a Laravel Zero CLI tool, you may need to change
+    | this value to match the path of your main executable file instead
+    | of artisan.php.
+    |
+    */
+    'artisan_path' => base_path('artisan'),
 ];
