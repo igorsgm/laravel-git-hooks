@@ -170,7 +170,7 @@ return [
     'code_analyzers' => [
         'laravel_pint' => [
             'path' => env('LARAVEL_PINT_PATH', 'vendor/bin/pint'),
-            'config' => env('LARAVEL_PINT_CONFIG', 'pint.json'),
+            'config' => env('LARAVEL_PINT_CONFIG'),
             'preset' => env('LARAVEL_PINT_PRESET', 'laravel'),
             'file_extensions' => env('LARAVEL_PINT_FILE_EXTENSIONS', '/\.php$/'),
         ],
