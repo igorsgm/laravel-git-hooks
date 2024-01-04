@@ -5,14 +5,14 @@ use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\Log;
 
 test('Git Log is sent through HookPipes', function (string $logText) {
-// This approach is broken in the current version of Mockery
-// @TODO: Update this test once Pest or Mockery versions are updated
-//    $prePushHook1 = mock(PostCommitHook::class)->expect(
-//        handle: fn (Log $log, Closure $closure) => expect($log->getHash())->toBe(mockCommitHash())
-//    );
+    // This approach is broken in the current version of Mockery
+    // @TODO: Update this test once Pest or Mockery versions are updated
+    //    $prePushHook1 = mock(PostCommitHook::class)->expect(
+    //        handle: fn (Log $log, Closure $closure) => expect($log->getHash())->toBe(mockCommitHash())
+    //    );
     $prePushHook1 = mock(PostCommitHook::class);
     $prePushHook1->expects('handle')
-        ->withArgs(fn(Log $log, Closure $closure) => $log->getHash() === mockCommitHash())
+        ->withArgs(fn (Log $log, Closure $closure) => $log->getHash() === mockCommitHash())
         ->once();
 
     $prePushHook2 = clone $prePushHook1;
