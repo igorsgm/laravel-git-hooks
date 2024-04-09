@@ -10,7 +10,7 @@ test('Git Log is sent through HookPipes', function (string $logText) {
     //    $prePushHook1 = mock(PostCommitHook::class)->expect(
     //        handle: fn (Log $log, Closure $closure) => expect($log->getHash())->toBe(mockCommitHash())
     //    );
-    $prePushHook1 = mock(PostCommitHook::class);
+    $prePushHook1 = Mockery::mock(PostCommitHook::class);
     $prePushHook1->expects('handle')
         ->withArgs(fn (Log $log, Closure $closure) => $log->getHash() === mockCommitHash())
         ->once();

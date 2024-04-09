@@ -82,7 +82,7 @@ test('isMergeInProgress returns true when a merge is in progress', function () {
 
     chdir(base_path());
 
-    $noOutputSuffix = ' > '.(PHP_OS_FAMILY == 'Windows' ? 'NUL' : '/dev/null 2>&1');
+    $noOutputSuffix = ' > '.(PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null 2>&1');
     foreach ($commandsToGenerateFakeMerge as $command) {
         if (strpos($command, 'git') === 0) {
             $command .= $noOutputSuffix;

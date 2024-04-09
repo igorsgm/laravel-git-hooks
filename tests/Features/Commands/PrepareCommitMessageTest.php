@@ -42,7 +42,7 @@ it('Returns 1 on HookFailException', function ($listOfChangedFiles) {
     //            throw new HookFailException();
     //        }
     //    );
-    $postCommitHook1 = mock(MessageHook::class);
+    $postCommitHook1 = Mockery::mock(MessageHook::class);
     $postCommitHook1->expects('handle')
         ->andReturnUsing(function (CommitMessage $commitMessage, Closure $closure) {
             throw new HookFailException();

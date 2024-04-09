@@ -12,7 +12,7 @@ test('Git Log is sent through HookPipes', function (string $logText) {
     //        handle: fn (Log $log, Closure $closure) => expect($log->getHash())->toBe(mockCommitHash())
     //    );
 
-    $postCommitHook1 = mock(PostCommitHook::class);
+    $postCommitHook1 = Mockery::mock(PostCommitHook::class);
     $postCommitHook1->expects('handle')
         ->withArgs(fn ($log, $closure) => $log->getHash() === mockCommitHash());
 
@@ -37,7 +37,7 @@ it('Returns 1 on HookFailException', function ($logText) {
     //        }
     //    );
 
-    $postCommitHook1 = mock(PostCommitHook::class);
+    $postCommitHook1 = Mockery::mock(PostCommitHook::class);
     $postCommitHook1->expects('handle')
         ->andReturnUsing(function (Log $log, Closure $closure) {
             throw new HookFailException();

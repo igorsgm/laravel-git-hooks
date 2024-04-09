@@ -36,7 +36,6 @@
         "larastan/larastan": "^2.9",
         "orchestra/testbench": "^v8.0.0|^v9.0.0",
         "pestphp/pest": "^2.0",
-        "pestphp/pest-plugin-mock": "^2.0",
         "squizlabs/php_codesniffer": "^3.7"
     },
     "autoload": {

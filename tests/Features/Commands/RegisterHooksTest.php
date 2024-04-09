@@ -14,7 +14,7 @@ test('Throws exception when git was not initialized in project', function () {
     // delete .git folder
     $this->deleteTempDirectory();
 
-    $preCommitHookClass = mock(PreCommitHook::class);
+    $preCommitHookClass = Mockery::mock(PreCommitHook::class);
 
     $this->config->set('git-hooks.pre-commit', [
         $preCommitHookClass,

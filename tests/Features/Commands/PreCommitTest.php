@@ -14,7 +14,7 @@ test('Sends ChangedFiles through HookPipes', function (string $listOfChangedFile
     //            expect($firstChangedFile)->toBe($listOfChangedFiles);
     //        }
     //    );
-    $preCommitHook1 = mock(PreCommitHook::class);
+    $preCommitHook1 = Mockery::mock(PreCommitHook::class);
     $preCommitHook1->expects('handle')
         ->andReturnUsing(function (ChangedFiles $files, Closure $closure) use ($listOfChangedFiles) {
             $firstChangedFile = (string) $files->getFiles()->first();
@@ -41,7 +41,7 @@ it('Returns 1 on HookFailException', function ($listOfChangedFiles) {
     //            throw new HookFailException();
     //        }
     //    );
-    $preCommitHook1 = mock(PreCommitHook::class);
+    $preCommitHook1 = Mockery::mock(PreCommitHook::class);
     $preCommitHook1->expects('handle')
         ->andReturnUsing(function (ChangedFiles $files, Closure $closure) {
             throw new HookFailException();
