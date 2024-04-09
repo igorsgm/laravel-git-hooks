@@ -107,3 +107,4 @@ jobs:
 
       - name: Execute Code Sniffer via Laravel Pint
         run: vendor/bin/pint --test src config
+
