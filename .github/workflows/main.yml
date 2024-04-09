@@ -40,7 +40,7 @@ jobs:
           node-version: '20.x'
 
       - name: Cache node_modules directory
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: node_modules-cache
         with:
           path: node_modules
@@ -61,7 +61,7 @@ jobs:
           echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: actions-cache
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
@@ -70,7 +70,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Cache PHP dependencies (vendor)
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: vendor-cache
         with:
           path: vendor
@@ -134,7 +134,7 @@ jobs:
           node-version: '20.x'
 
       - name: Cache node_modules directory
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: node_modules-cache
         with:
           path: node_modules
@@ -155,7 +155,7 @@ jobs:
           echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: actions-cache
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
@@ -164,7 +164,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Cache PHP dependencies (vendor)
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: vendor-cache
         with:
           path: vendor
@@ -228,7 +228,7 @@ jobs:
           node-version: '20.x'
 
       - name: Cache node_modules directory
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: node_modules-cache
         with:
           path: node_modules
@@ -249,7 +249,7 @@ jobs:
           echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: actions-cache
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
@@ -258,7 +258,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Cache PHP dependencies (vendor)
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: vendor-cache
         with:
           path: vendor
