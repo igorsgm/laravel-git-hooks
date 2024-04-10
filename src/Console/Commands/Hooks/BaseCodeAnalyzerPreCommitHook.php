@@ -57,14 +57,14 @@ abstract class BaseCodeAnalyzerPreCommitHook
      * @var array
      */
     protected $filesBadlyFormattedPaths = [];
-    
+
     /**
      * Run tool in docker
      *
      * @var bool
      */
     protected $runInDocker = false;
-    
+
     /**
      * Docker container on which to run
      *
@@ -128,7 +128,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
             $process = $this->runCommands($command);
 
             if (config('git-hooks.debug_commands')) {
-                $this->command->getOutput()->write(PHP_EOL . ' <bg=yellow;fg=white> DEBUG </> Executed command: ' . $process->getCommandLine() . PHP_EOL);
+                $this->command->getOutput()->write(PHP_EOL.' <bg=yellow;fg=white> DEBUG </> Executed command: '.$process->getCommandLine().PHP_EOL);
             }
 
             $isProperlyFormatted = $process->isSuccessful();
@@ -362,7 +362,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
      */
     public function setRunInDocker($runInDocker)
     {
-        $this->runInDocker = (bool)$runInDocker;
+        $this->runInDocker = (bool) $runInDocker;
 
         return $this;
     }
@@ -373,7 +373,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
     }
 
     /**
-     * @param string $dockerContainer
+     * @param  string  $dockerContainer
      * @return BaseCodeAnalyzerPreCommitHook
      */
     public function setDockerContainer($dockerContainer)
@@ -390,10 +390,10 @@ abstract class BaseCodeAnalyzerPreCommitHook
 
     private function dockerCommand(string $command): string
     {
-        if (!$this->runInDocker || empty($this->dockerContainer)) {
+        if (! $this->runInDocker || empty($this->dockerContainer)) {
             return $command;
         }
 
-        return 'docker exec ' . escapeshellarg($this->dockerContainer) . ' sh -c ' . escapeshellarg($command);
+        return 'docker exec '.escapeshellarg($this->dockerContainer).' sh -c '.escapeshellarg($command);
     }
 }
