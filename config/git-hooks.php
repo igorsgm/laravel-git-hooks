@@ -164,7 +164,8 @@ return [
     | The following variables are used to store the paths to bin executables for
     | various code analyzer dependencies used in your Laravel application.
     | This configuration node allows you to set up the paths for these executables.
-    | Here you can also specify the path to the configuration files they use to customize their behavior
+    | Here you can also specify the path to the configuration files they use to customize their behavior.
+    | Each analyzer can be configured to run inside Docker on a specific container.
     |
     */
     'code_analyzers' => [
@@ -173,34 +174,46 @@ return [
             'config' => env('LARAVEL_PINT_CONFIG'),
             'preset' => env('LARAVEL_PINT_PRESET', 'laravel'),
             'file_extensions' => env('LARAVEL_PINT_FILE_EXTENSIONS', '/\.php$/'),
+            'run_in_docker' => env('LARAVEL_PINT_RUN_IN_DOCKER', false),
+            'docker_container' => env('LARAVEL_PINT_DOCKER_CONTAINER', ''),
         ],
         'php_code_sniffer' => [
             'phpcs_path' => env('PHPCS_PATH', 'vendor/bin/phpcs'),
             'phpcbf_path' => env('PHPCBF_PATH', 'vendor/bin/phpcbf'),
             'config' => env('PHPCS_STANDARD_CONFIG', 'phpcs.xml'),
             'file_extensions' => env('PHPCS_FILE_EXTENSIONS', '/\.php$/'),
+            'run_in_docker' => env('LARAVEL_PHPCS_RUN_IN_DOCKER', false),
+            'docker_container' => env('LARAVEL_PHPCS_DOCKER_CONTAINER', ''),
         ],
         'larastan' => [
             'path' => env('LARASTAN_PATH', 'vendor/bin/phpstan'),
             'config' => env('LARASTAN_CONFIG', 'phpstan.neon'),
             'additional_params' => env('LARASTAN_ADDITIONAL_PARAMS', '--xdebug'),
+            'run_in_docker' => env('LARAVEL_LARASTAN_RUN_IN_DOCKER', false),
+            'docker_container' => env('LARAVEL_LARASTAN_DOCKER_CONTAINER', ''),
         ],
         'blade_formatter' => [
             'path' => env('BLADE_FORMATTER_PATH', 'node_modules/.bin/blade-formatter'),
             'config' => env('BLADE_FORMATTER_CONFIG', '.bladeformatterrc.json'),
             'file_extensions' => env('BLADE_FORMATTER_FILE_EXTENSIONS', '/\.blade\.php$/'),
+            'run_in_docker' => env('BLADE_FORMATTER_RUN_IN_DOCKER', false),
+            'docker_container' => env('BLADE_FORMATTER_DOCKER_CONTAINER', ''),
         ],
         'prettier' => [
             'path' => env('PRETTIER_PATH', 'node_modules/.bin/prettier'),
             'config' => env('PRETTIER_CONFIG', '.prettierrc.json'),
             'additional_params' => env('PRETTIER_ADDITIONAL_PARAMS', ''),
             'file_extensions' => env('PRETTIER_FILE_EXTENSIONS', '/\.(jsx?|tsx?|vue)$/'),
+            'run_in_docker' => env('PRETTIER_RUN_IN_DOCKER', false),
+            'docker_container' => env('PRETTIER_DOCKER_CONTAINER', ''),
         ],
         'eslint' => [
             'path' => env('ESLINT_PATH', 'node_modules/.bin/eslint'),
             'config' => env('ESLINT_CONFIG', '.eslintrc.js'),
             'additional_params' => env('ESLINT_ADDITIONAL_PARAMS', ''),
             'file_extensions' => env('ESLINT_FILE_EXTENSIONS', '/\.(jsx?|tsx?|vue)$/'),
+            'run_in_docker' => env('ESLINT_RUN_IN_DOCKER', false),
+            'docker_container' => env('ESLINT_DOCKER_CONTAINER', ''),
         ],
     ],
 
@@ -221,4 +234,60 @@ return [
     |
     */
     'artisan_path' => base_path('artisan'),
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Output errors
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you output any errors encountered
+    | during execution directly for easy debug.
+    |
+    */
+    'output_errors' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Automatically fix errors
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to configure the git hooks to
+    | automatically run the fixer without any CLI prompt.
+    |
+    */
+    'automatically_fix_errors' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Automatically re-run analyzer after autofix
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to configure the git hooks to
+    | automatically re-run the analyzer command after autofix.
+    | The git hooks will not fail in case the re-run is succesful.
+    |
+    */
+    'rerun_analyzer_after_autofix' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Stop at first analyzer failure
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to configure the git hooks to
+    | stop (or not) at the first analyzer failure encountered.
+    |
+    */
+    'stop_at_first_analyzer_failure' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Debug commands
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to configure the git hooks to
+    | display the commands that are executed (usually for debug purpose).
+    |
+    */
+    'debug_commands' => false,
 ];

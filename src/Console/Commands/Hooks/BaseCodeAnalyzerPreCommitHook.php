@@ -57,6 +57,20 @@ abstract class BaseCodeAnalyzerPreCommitHook
      * @var array
      */
     protected $filesBadlyFormattedPaths = [];
+    
+    /**
+     * Run tool in docker
+     *
+     * @var bool
+     */
+    protected $runInDocker = false;
+    
+    /**
+     * Docker container on which to run
+     *
+     * @var string
+     */
+    protected $dockerContainer = '';
 
     public function __construct()
     {
@@ -109,9 +123,15 @@ abstract class BaseCodeAnalyzerPreCommitHook
             }
 
             $filePath = $file->getFilePath();
-            $command = $this->analyzerCommand().' '.$filePath;
+            $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
 
-            $isProperlyFormatted = $this->runCommands($command)->isSuccessful();
+            $process = $this->runCommands($command);
+
+            if (config('git-hooks.debug_commands')) {
+                $this->command->getOutput()->write(PHP_EOL . ' <bg=yellow;fg=white> DEBUG </> Executed command: ' . $process->getCommandLine() . PHP_EOL);
+            }
+
+            $isProperlyFormatted = $process->isSuccessful();
 
             if (! $isProperlyFormatted) {
                 if (empty($this->filesBadlyFormattedPaths)) {
@@ -122,6 +142,11 @@ abstract class BaseCodeAnalyzerPreCommitHook
                     sprintf('<fg=red> %s Failed:</> %s', $this->getName(), $filePath)
                 );
                 $this->filesBadlyFormattedPaths[] = $filePath;
+
+                if (config('git-hooks.output_errors')) {
+                    $this->command->newLine();
+                    $this->command->getOutput()->write($process->getOutput());
+                }
             }
         }
 
@@ -217,14 +242,29 @@ abstract class BaseCodeAnalyzerPreCommitHook
     {
         $hasFixerCommand = ! empty($this->fixerCommand());
 
-        if ($hasFixerCommand && Terminal::hasSttyAvailable() &&
-            $this->command->confirm('Would you like to attempt to correct files automagically?') &&
-            $this->autoFixFiles()
-        ) {
-            return true;
+        if ($hasFixerCommand) {
+            if (config('git-hooks.automatically_fix_errors')) {
+                $this->command->getOutput()->writeln(
+                    sprintf('<bg=green;fg=white> AUTOFIX </> <fg=green> %s Running Autofix</>', $this->getName())
+                );
+                if ($this->autoFixFiles()) {
+                    return true;
+                }
+            } else {
+                if (Terminal::hasSttyAvailable() &&
+                    $this->command->confirm('Would you like to attempt to correct files automagically?') &&
+                    $this->autoFixFiles()
+                ) {
+                    return true;
+                }
+            }
         }
 
-        throw new HookFailException();
+        if (config('git-hooks.stop_at_first_analyzer_failure')) {
+            throw new HookFailException();
+        }
+
+        return false;
     }
 
     /**
@@ -238,7 +278,15 @@ abstract class BaseCodeAnalyzerPreCommitHook
     private function autoFixFiles(): bool
     {
         foreach ($this->filesBadlyFormattedPaths as $key => $filePath) {
-            $wasProperlyFixed = $this->runCommands($this->fixerCommand().' '.$filePath)->isSuccessful();
+            $fixerCommand = $this->dockerCommand($this->fixerCommand().' '.$filePath);
+            $process = $this->runCommands($fixerCommand);
+
+            if (config('git-hooks.rerun_analyzer_after_autofix')) {
+                $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
+                $process = $this->runCommands($command);
+            }
+
+            $wasProperlyFixed = $process->isSuccessful();
 
             if ($wasProperlyFixed) {
                 $this->runCommands('git add '.$filePath);
@@ -250,6 +298,11 @@ abstract class BaseCodeAnalyzerPreCommitHook
             $this->command->getOutput()->writeln(
                 sprintf('<fg=red> %s Autofix Failed:</> %s', $this->getName(), $filePath)
             );
+
+            if (config('git-hooks.output_errors')) {
+                $this->command->newLine();
+                $this->command->getOutput()->write($process->getOutput());
+            }
         }
 
         return empty($this->filesBadlyFormattedPaths);
@@ -302,5 +355,45 @@ abstract class BaseCodeAnalyzerPreCommitHook
     public function getFixerExecutable(): string
     {
         return $this->fixerExecutable;
+    }
+
+    /**
+     * @return BaseCodeAnalyzerPreCommitHook
+     */
+    public function setRunInDocker($runInDocker)
+    {
+        $this->runInDocker = (bool)$runInDocker;
+
+        return $this;
+    }
+
+    public function getRunInDocker(): bool
+    {
+        return $this->runInDocker;
+    }
+
+    /**
+     * @param string $dockerContainer
+     * @return BaseCodeAnalyzerPreCommitHook
+     */
+    public function setDockerContainer($dockerContainer)
+    {
+        $this->dockerContainer = $dockerContainer;
+
+        return $this;
+    }
+
+    public function getDockerContainer(): string
+    {
+        return $this->dockerContainer;
+    }
+
+    private function dockerCommand(string $command): string
+    {
+        if (!$this->runInDocker || empty($this->dockerContainer)) {
+            return $command;
+        }
+
+        return 'docker exec ' . escapeshellarg($this->dockerContainer) . ' sh -c ' . escapeshellarg($command);
     }
 }

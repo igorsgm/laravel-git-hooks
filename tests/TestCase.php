@@ -52,6 +52,13 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'pre-push' => [],
             'code_analyzers' => [],
             'artisan_path' => base_path('artisan'),
+            'output_errors' => false,
+            'automatically_fix_errors' => false,
+            'rerun_analyzer_after_autofix' => false,
+            'stop_at_first_analyzer_failure' => true,
+            'debug_commands' => false,
+            'run_in_docker' => false,
+            'docker_command' => '',
         ]);
 
         $this->config = $app['config'];
