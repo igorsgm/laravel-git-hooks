@@ -10,7 +10,7 @@ beforeEach(function () {
 });
 
 test('Skips check if there are no staged files in commit', function () {
-    $changedFiles = mock(ChangedFiles::class)
+    $changedFiles = Mockery::mock(ChangedFiles::class)
         ->shouldReceive('getStaged')
         ->andReturn(collect())
         ->getMock();

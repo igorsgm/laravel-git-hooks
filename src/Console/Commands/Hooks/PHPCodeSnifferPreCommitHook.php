@@ -34,6 +34,8 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
         return $this->setFileExtensions(config('git-hooks.code_analyzers.php_code_sniffer.file_extensions'))
             ->setAnalyzerExecutable(config('git-hooks.code_analyzers.php_code_sniffer.phpcs_path'))
             ->setFixerExecutable(config('git-hooks.code_analyzers.php_code_sniffer.phpcbf_path'))
+            ->setRunInDocker(config('git-hooks.code_analyzers.php_code_sniffer.run_in_docker'))
+            ->setDockerContainer(config('git-hooks.code_analyzers.php_code_sniffer.docker_container'))
             ->handleCommittedFiles($files, $next);
     }
 

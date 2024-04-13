@@ -19,7 +19,7 @@ it('Handles invalid hook types', function () {
 });
 
 test('Generates a hook file with a valid hook type', function () {
-    $filesystem = mock(Filesystem::class)
+    $filesystem = Mockery::mock(Filesystem::class)
         ->expects('put')->withArgs(function ($path, $contents) {
             return Str::contains($path, 'MyCustomPreCommitHook.php');
         })->andReturns(true)
@@ -38,7 +38,7 @@ test('Generates a hook file with a valid hook type', function () {
 });
 
 test('Does not overwrite existing hook file', function () {
-    $filesystem = mock(Filesystem::class)->allows([
+    $filesystem = Mockery::mock(Filesystem::class)->allows([
         'isDirectory' => true,
         'exists' => true,
         'get' => '',
