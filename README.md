@@ -29,7 +29,8 @@
 - **Edit Commit Messages:** Gain control over your commit messages by customizing them to meet your project requirements and maintain a clean Git history.
 - **Create Custom Hooks:** Add and integrate custom hooks tailored to your specific project needs, ensuring better code quality and adherence to guidelines.
 - **Artisan Command for Hook Generation:** The package includes a convenient Artisan command that allows you to effortlessly generate new hooks of various types. Such as: `pre-commit`, `prepare-commit-msg`, `commit-msg`, `post-commit`, `pre-push`
-- **Code Quality:** The package is thoroughly tested, with 100% of code coverage, ensuring its reliability and stability in a wide range of Laravel projects.
+- **Code Quality:** The package is thoroughly tested, with >95% of code coverage, ensuring its reliability and stability in a wide range of Laravel projects.
+- **Docker support:** Each hook can be configured to either run locally or inside a docker container.
 
 ## 1️⃣ Installation
 
