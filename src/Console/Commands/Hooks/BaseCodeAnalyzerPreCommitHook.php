@@ -75,20 +75,6 @@ abstract class BaseCodeAnalyzerPreCommitHook
      */
     protected $dockerContainer = '';
 
-    /**
-     * Run tool in docker
-     *
-     * @var bool
-     */
-    protected $runInDocker = false;
-
-    /**
-     * Docker container on which to run
-     *
-     * @var string
-     */
-    protected $dockerContainer = '';
-
     public function __construct()
     {
         $this->setCwd(base_path());
