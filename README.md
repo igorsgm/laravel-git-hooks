@@ -141,6 +141,14 @@ There are also several debug options which can be adjusted using the following p
     */
     'debug_output' => false,
 ```
+### Docker support
+
+By default commands are executed locally, however this behavior can be adjusted for each hook using the parameters `run_in_docker` and `docker_container`:
+
+```php
+        'run_in_docker' => env('LARAVEL_PINT_RUN_IN_DOCKER', true),
+        'docker_container' => env('LARAVEL_PINT_DOCKER_CONTAINER', 'app'),
+```
 
 ### Creating Custom Git Hooks
 1) If you need to create a custom Git hook for your project, Laravel Git Hooks makes it easy with the `git-hooks:make` Artisan command. To create a new custom hook, simply run the following command:
