@@ -7,11 +7,13 @@ use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Traits\WithPipeline;
+use \Igorsgm\GitHooks\Traits\WithPipelineFailCheck;
 use Illuminate\Console\Command;
 
 class PreCommit extends Command implements HookCommand
 {
     use WithPipeline;
+    use WithPipelineFailCheck;
 
     /**
      * The name and signature of the console command.
@@ -43,11 +45,18 @@ class PreCommit extends Command implements HookCommand
     public function handle()
     {
         try {
+            $this->clearPipelineFailed();
+
             $this->sendChangedFilesThroughHooks(
                 new ChangedFiles(
                     GitHooks::getListOfChangedFiles()
                 )
             );
+
+            if ($this->checkPipelineFailed()) {
+                $this->clearPipelineFailed();
+                throw new HookFailException();
+            }
         } catch (HookFailException $e) {
             return 1;
         }

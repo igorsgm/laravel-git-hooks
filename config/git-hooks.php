@@ -189,6 +189,7 @@ return [
             'path' => env('LARASTAN_PATH', 'vendor/bin/phpstan'),
             'config' => env('LARASTAN_CONFIG', 'phpstan.neon'),
             'additional_params' => env('LARASTAN_ADDITIONAL_PARAMS', '--xdebug'),
+            'file_extensions' => env('LARASTAN_FILE_EXTENSIONS', '/\.php$/'),
             'run_in_docker' => env('LARAVEL_LARASTAN_RUN_IN_DOCKER', false),
             'docker_container' => env('LARAVEL_LARASTAN_DOCKER_CONTAINER', ''),
         ],
@@ -290,4 +291,15 @@ return [
     |
     */
     'debug_commands' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Debug output
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you display the output of each
+    | command during execution directly for easy debug.
+    |
+    */
+    'debug_output' => false,
 ];

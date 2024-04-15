@@ -57,6 +57,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'rerun_analyzer_after_autofix' => false,
             'stop_at_first_analyzer_failure' => true,
             'debug_commands' => false,
+            'debug_output' => false,
             'run_in_docker' => false,
             'docker_command' => '',
         ]);

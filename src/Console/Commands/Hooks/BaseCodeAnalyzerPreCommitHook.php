@@ -8,13 +8,16 @@ use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFile;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Traits\ProcessHelper;
+use Igorsgm\GitHooks\Traits\WithPipelineFailCheck;
 use Illuminate\Console\Command;
+use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
 use Symfony\Component\Console\Terminal;
 
 abstract class BaseCodeAnalyzerPreCommitHook
 {
     use ProcessHelper;
+    use WithPipelineFailCheck;
 
     /**
      * Command instance that is bound automatically by Hooks Pipeline, so it can be used inside the Hook.
@@ -139,9 +142,14 @@ abstract class BaseCodeAnalyzerPreCommitHook
             $filePath = $file->getFilePath();
             $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
 
-            $process = $this->runCommands($command);
+            $params = [
+                'show-output' => config('git-hooks.debug_output')
+            ];
+
+            $process = $this->runCommands($command, $params);
 
             if (config('git-hooks.debug_commands')) {
+                $this->command->newLine();
                 $this->command->getOutput()->write(PHP_EOL.' <bg=yellow;fg=white> DEBUG </> Executed command: '.$process->getCommandLine().PHP_EOL);
             }
 
@@ -157,7 +165,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
                 );
                 $this->filesBadlyFormattedPaths[] = $filePath;
 
-                if (config('git-hooks.output_errors')) {
+                if (config('git-hooks.output_errors') && !config('git-hooks.debug_commands')) {
                     $this->command->newLine();
                     $this->command->getOutput()->write($process->getOutput());
                 }
@@ -274,6 +282,8 @@ abstract class BaseCodeAnalyzerPreCommitHook
             }
         }
 
+        $this->markPipelineFailed();
+
         if (config('git-hooks.stop_at_first_analyzer_failure')) {
             throw new HookFailException();
         }
@@ -291,13 +301,27 @@ abstract class BaseCodeAnalyzerPreCommitHook
      */
     private function autoFixFiles(): bool
     {
+        $params = [
+            'show-output' => config('git-hooks.debug_output')
+        ];
+
         foreach ($this->filesBadlyFormattedPaths as $key => $filePath) {
             $fixerCommand = $this->dockerCommand($this->fixerCommand().' '.$filePath);
-            $process = $this->runCommands($fixerCommand);
+            $process = $this->runCommands($fixerCommand, $params);
+
+            if (config('git-hooks.debug_commands')) {
+                $this->command->newLine();
+                $this->command->getOutput()->write(PHP_EOL.' <bg=yellow;fg=white> DEBUG </> Executed command: '.$process->getCommandLine().PHP_EOL);
+            }
 
             if (config('git-hooks.rerun_analyzer_after_autofix')) {
                 $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
-                $process = $this->runCommands($command);
+                $process = $this->runCommands($command, $params);
+
+                if (config('git-hooks.debug_commands')) {
+                    $this->command->newLine();
+                    $this->command->getOutput()->write(PHP_EOL.' <bg=yellow;fg=white> DEBUG </> Executed command: '.$process->getCommandLine().PHP_EOL);
+                }
             }
 
             $wasProperlyFixed = $process->isSuccessful();
@@ -313,13 +337,24 @@ abstract class BaseCodeAnalyzerPreCommitHook
                 sprintf('<fg=red> %s Autofix Failed:</> %s', $this->getName(), $filePath)
             );
 
-            if (config('git-hooks.output_errors')) {
+            if (config('git-hooks.output_errors') && !config('git-hooks.debug_commands')) {
                 $this->command->newLine();
                 $this->command->getOutput()->write($process->getOutput());
             }
         }
 
         return empty($this->filesBadlyFormattedPaths);
+    }
+
+    /**
+     * Get output method
+     */
+    public function getOutput(): ?OutputStyle
+    {
+        if (!config('git-hooks.debug_output')) {
+            return null;
+        }
+        return $this->command->getOutput();
     }
 
     /**
