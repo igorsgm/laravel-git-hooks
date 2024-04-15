@@ -17,6 +17,7 @@ trait WithPipelineFailCheck
     protected function checkPipelineFailed(): bool
     {
         $tmpFile = $this->getPipelineFailedTempFile();
+
         return file_exists($tmpFile);
     }
 
@@ -28,10 +29,11 @@ trait WithPipelineFailCheck
             unlink($tmpFile);
         }
     }
-    
+
     protected function getPipelineFailedTempFile(): string
     {
-        $tmpFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'githooks-pipeline-fail-' . getmypid();
+        $tmpFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.'githooks-pipeline-fail-'.getmypid();
+
         return $tmpFile;
     }
 }

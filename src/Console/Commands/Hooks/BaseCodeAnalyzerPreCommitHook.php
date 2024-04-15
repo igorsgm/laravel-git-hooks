@@ -143,7 +143,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
             $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
 
             $params = [
-                'show-output' => config('git-hooks.debug_output')
+                'show-output' => config('git-hooks.debug_output'),
             ];
 
             $process = $this->runCommands($command, $params);
@@ -165,7 +165,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
                 );
                 $this->filesBadlyFormattedPaths[] = $filePath;
 
-                if (config('git-hooks.output_errors') && !config('git-hooks.debug_commands')) {
+                if (config('git-hooks.output_errors') && ! config('git-hooks.debug_commands')) {
                     $this->command->newLine();
                     $this->command->getOutput()->write($process->getOutput());
                 }
@@ -302,7 +302,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
     private function autoFixFiles(): bool
     {
         $params = [
-            'show-output' => config('git-hooks.debug_output')
+            'show-output' => config('git-hooks.debug_output'),
         ];
 
         foreach ($this->filesBadlyFormattedPaths as $key => $filePath) {
@@ -337,7 +337,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
                 sprintf('<fg=red> %s Autofix Failed:</> %s', $this->getName(), $filePath)
             );
 
-            if (config('git-hooks.output_errors') && !config('git-hooks.debug_commands')) {
+            if (config('git-hooks.output_errors') && ! config('git-hooks.debug_commands')) {
                 $this->command->newLine();
                 $this->command->getOutput()->write($process->getOutput());
             }
@@ -351,9 +351,10 @@ abstract class BaseCodeAnalyzerPreCommitHook
      */
     public function getOutput(): ?OutputStyle
     {
-        if (!config('git-hooks.debug_output')) {
+        if (! config('git-hooks.debug_output')) {
             return null;
         }
+
         return $this->command->getOutput();
     }
 

@@ -7,7 +7,7 @@ use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Traits\WithPipeline;
-use \Igorsgm\GitHooks\Traits\WithPipelineFailCheck;
+use Igorsgm\GitHooks\Traits\WithPipelineFailCheck;
 use Illuminate\Console\Command;
 
 class PreCommit extends Command implements HookCommand
