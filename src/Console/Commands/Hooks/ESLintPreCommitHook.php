@@ -62,7 +62,7 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
      */
     protected function configParam(): string
     {
-        $eslintConfig = rtrim(config('git-hooks.code_analyzers.eslint.config'), '/');
+        $eslintConfig = rtrim((string) config('git-hooks.code_analyzers.eslint.config'), '/');
         $this->validateConfigPath($eslintConfig);
 
         return empty($eslintConfig) ? '' : '--config='.$eslintConfig;
@@ -77,8 +77,8 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
         $additionalParams = config('git-hooks.code_analyzers.eslint.additional_params');
 
         if (! empty($additionalParams)) {
-            $additionalParams = preg_replace('/\s+\.(?:(\s)|$)/', '$1', $additionalParams);
-            $additionalParams = preg_replace('/\s*--(config|c)\b(=\S*)?\s*/', '', $additionalParams);
+            $additionalParams = preg_replace('/\s+\.(?:(\s)|$)/', '$1', (string) $additionalParams);
+            $additionalParams = preg_replace('/\s*--(config|c)\b(=\S*)?\s*/', '', (string) $additionalParams);
         }
 
         return $additionalParams;

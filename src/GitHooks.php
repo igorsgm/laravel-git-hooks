@@ -38,9 +38,7 @@ class GitHooks
     {
         $configGitHooks = config('git-hooks');
 
-        return array_filter($this->getSupportedHooks(), function ($hook) use ($configGitHooks) {
-            return ! empty($configGitHooks[$hook]);
-        });
+        return array_filter($this->getSupportedHooks(), fn ($hook) => ! empty($configGitHooks[$hook]));
     }
 
     /**
@@ -60,7 +58,7 @@ class GitHooks
         $hookScript = str_replace(
             ['{command}', '{artisanPath}'],
             [$command, config('git-hooks.artisan_path')],
-            $this->getHookStub()
+            (string) $this->getHookStub()
         );
 
         file_put_contents($hookPath, $hookScript);

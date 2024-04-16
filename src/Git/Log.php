@@ -5,7 +5,7 @@ namespace Igorsgm\GitHooks\Git;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
-class Log
+class Log implements \Stringable
 {
     /**
      * @var string
@@ -73,9 +73,7 @@ class Log
         ]);
 
         foreach ($lines as $line) {
-            $handler = $handlers->first(function ($handler, $prefix) use ($line) {
-                return Str::startsWith($line, $prefix);
-            });
+            $handler = $handlers->first(fn ($handler, $prefix) => Str::startsWith($line, $prefix));
 
             if ($handler !== null) {
                 $handler($line);
@@ -127,10 +125,7 @@ class Log
         return $this->message;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getHash();
     }

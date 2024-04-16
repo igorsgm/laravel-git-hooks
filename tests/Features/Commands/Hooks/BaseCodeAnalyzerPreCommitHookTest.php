@@ -15,9 +15,7 @@ test('Skips check if there are no staged files in commit', function () {
         ->andReturn(collect())
         ->getMock();
 
-    $next = function ($files) {
-        return 'passed';
-    };
+    $next = fn ($files) => 'passed';
 
     $hook = new ConcreteBaseCodeAnalyzerFixture();
     $result = $hook->handleCommittedFiles($changedFiles, $next);
@@ -28,9 +26,7 @@ test('Skips check during a Merge process', function ($modifiedFilesList) {
     $changedFiles = new ChangedFiles($modifiedFilesList);
     GitHooks::shouldReceive('isMergeInProgress')->andReturn(true);
 
-    $next = function ($files) {
-        return 'passed';
-    };
+    $next = fn ($files) => 'passed';
 
     $hook = new ConcreteBaseCodeAnalyzerFixture();
     $result = $hook->handleCommittedFiles($changedFiles, $next);

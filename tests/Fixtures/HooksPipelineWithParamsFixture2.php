@@ -7,14 +7,8 @@ use Illuminate\Console\Command;
 
 class HooksPipelineWithParamsFixture2 implements Hook
 {
-    /**
-     * @var array
-     */
-    private $parameters;
-
-    public function __construct(array $parameters)
+    public function __construct(private array $parameters)
     {
-        $this->parameters = $parameters;
     }
 
     /**

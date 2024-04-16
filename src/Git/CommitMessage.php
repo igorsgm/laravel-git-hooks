@@ -2,7 +2,7 @@
 
 namespace Igorsgm\GitHooks\Git;
 
-class CommitMessage
+class CommitMessage implements \Stringable
 {
     /**
      * @var string
@@ -44,10 +44,7 @@ class CommitMessage
         return $this->files;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->message;
     }

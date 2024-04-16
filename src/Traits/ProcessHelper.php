@@ -24,15 +24,11 @@ trait ProcessHelper
         $output = method_exists($this, 'getOutput') ? $this->getOutput() : null;
 
         if ($output && ! $output->isDecorated()) {
-            $commands = $this->transformCommands($commands, function ($value) {
-                return $value.' --no-ansi';
-            });
+            $commands = $this->transformCommands($commands, fn ($value) => $value.' --no-ansi');
         }
 
         if (data_get($params, 'silent')) {
-            $commands = $this->transformCommands($commands, function ($value) {
-                return $this->buildNoOutputCommand($value);
-            });
+            $commands = $this->transformCommands($commands, fn ($value) => $this->buildNoOutputCommand($value));
         }
 
         $process = Process::fromShellCommandline(
@@ -66,7 +62,7 @@ trait ProcessHelper
     public function transformCommands(string|array $commands, callable $callback): array
     {
         return array_map(function ($value) use ($callback) {
-            if (substr($value, 0, 5) === 'chmod') {
+            if (str_starts_with($value, 'chmod')) {
                 return $value;
             }
 

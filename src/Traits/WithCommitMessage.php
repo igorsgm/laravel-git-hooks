@@ -32,7 +32,7 @@ trait WithCommitMessage
                     )
                 )
             );
-        } catch (HookFailException $e) {
+        } catch (HookFailException) {
             return 1;
         }
     }

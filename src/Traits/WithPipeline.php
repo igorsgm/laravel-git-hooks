@@ -34,9 +34,7 @@ trait WithPipeline
     {
         $hooks = collect((array) config('git-hooks.'.$this->getHook()));
 
-        return $hooks->map(function ($hook, $i) {
-            return is_int($i) ? $hook : $i;
-        })->all();
+        return $hooks->map(fn ($hook, $i) => is_int($i) ? $hook : $i)->all();
     }
 
     /**

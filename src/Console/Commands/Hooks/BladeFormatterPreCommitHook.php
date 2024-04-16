@@ -55,7 +55,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function configParam(): string
     {
-        $bladeFormatterConfig = rtrim(config('git-hooks.code_analyzers.blade_formatter.config'), '/');
+        $bladeFormatterConfig = rtrim((string) config('git-hooks.code_analyzers.blade_formatter.config'), '/');
         $this->validateConfigPath($bladeFormatterConfig);
 
         return empty($bladeFormatterConfig) ? '' : '--config='.$bladeFormatterConfig;

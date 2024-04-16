@@ -23,7 +23,7 @@ trait WithCommitLog
                     GitHooks::getLastCommitFromLog()
                 )
             );
-        } catch (HookFailException $e) {
+        } catch (HookFailException) {
             return 1;
         }
     }

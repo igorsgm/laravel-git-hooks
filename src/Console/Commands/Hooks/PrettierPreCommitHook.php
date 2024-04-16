@@ -60,7 +60,7 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      */
     protected function configParam(): string
     {
-        $prettierConfig = rtrim(config('git-hooks.code_analyzers.prettier.config'), '/');
+        $prettierConfig = rtrim((string) config('git-hooks.code_analyzers.prettier.config'), '/');
         $this->validateConfigPath($prettierConfig);
 
         return empty($prettierConfig) ? '' : '--config='.$prettierConfig;
@@ -75,8 +75,8 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
         $additionalParams = config('git-hooks.code_analyzers.prettier.additional_params');
 
         if (! empty($additionalParams)) {
-            $additionalParams = preg_replace('/\s+\.(?:(\s)|$)/', '$1', $additionalParams);
-            $additionalParams = preg_replace('/\s*--(config|find-config-path|write|check)\b(=\S*)?\s*/', '', $additionalParams);
+            $additionalParams = preg_replace('/\s+\.(?:(\s)|$)/', '$1', (string) $additionalParams);
+            $additionalParams = preg_replace('/\s*--(config|find-config-path|write|check)\b(=\S*)?\s*/', '', (string) $additionalParams);
         }
 
         return $additionalParams;
