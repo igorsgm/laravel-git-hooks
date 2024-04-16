@@ -25,11 +25,10 @@ class RegisterHooks extends Command
     /**
      * Execute the console command.
      *
-     * @return void
      *
      * @throws Exception
      */
-    public function handle(GitHooks $gitHooks)
+    public function handle(GitHooks $gitHooks): void
     {
         $availableHooks = $gitHooks->getAvailableHooks();
 

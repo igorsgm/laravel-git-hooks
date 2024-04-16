@@ -20,9 +20,7 @@ test('Skips Enlightn check if there are no files added to commit', function () {
         ->andReturn(collect())
         ->getMock();
 
-    $next = function ($files) {
-        return 'passed';
-    };
+    $next = fn ($files) => 'passed';
 
     $hook = new EnlightnPreCommitHook();
     $result = $hook->handle($changedFiles, $next);
@@ -37,9 +35,7 @@ test('Fails commit when Enlightn is not passing', function ($listOfChangedFiles)
     GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
     GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfChangedFiles);
 
-    Artisan::command('enlightn', function () {
-        return 1;
-    });
+    Artisan::command('enlightn', fn () => 1);
 
     // Get all registered commands
     $commands = Artisan::all();
@@ -66,9 +62,7 @@ test('Commit passes when Enlightn check is OK', function ($listOfChangedFiles) {
     GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
     GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfChangedFiles);
 
-    Artisan::command('enlightn', function () {
-        return 0;
-    });
+    Artisan::command('enlightn', fn () => 0);
 
     $this->artisan('git-hooks:pre-commit')->assertSuccessful();
 })->with('listOfChangedFiles');

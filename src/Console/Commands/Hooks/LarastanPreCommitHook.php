@@ -8,17 +8,12 @@ use Igorsgm\GitHooks\Git\ChangedFiles;
 
 class LarastanPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
-    /**
-     * @var string
-     */
-    protected $configParam;
+    protected string $configParam;
 
     /**
      * Name of the hook
-     *
-     * @var string
      */
-    protected $name = 'Larastan';
+    protected string $name = 'Larastan';
 
     /**
      * Analyzes committed files using Larastan
@@ -49,7 +44,7 @@ class LarastanPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
         if (! empty($additionalParams)) {
             // Removing configuration/c/xdebug parameters from additional parameters to avoid conflicts
             // because they are already set in the command by default.
-            $additionalParams = preg_replace('/\s*--(configuration|c|xdebug)\b(=\S*)?\s*/', '', $additionalParams);
+            $additionalParams = preg_replace('/\s*--(configuration|c|xdebug)\b(=\S*)?\s*/', '', (string) $additionalParams);
         }
 
         return trim(
@@ -72,7 +67,7 @@ class LarastanPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      */
     protected function configParam(): string
     {
-        $phpStanConfigFile = rtrim(config('git-hooks.code_analyzers.larastan.config'), '/');
+        $phpStanConfigFile = rtrim((string) config('git-hooks.code_analyzers.larastan.config'), '/');
         $this->validateConfigPath($phpStanConfigFile);
 
         return empty($phpStanConfigFile) ? '' : '--configuration='.$phpStanConfigFile;

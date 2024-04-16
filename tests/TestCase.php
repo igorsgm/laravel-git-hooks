@@ -29,9 +29,8 @@ class TestCase extends \Orchestra\Testbench\TestCase
      * Define environment setup.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     * @return void
      */
-    public function defineEnvironment($app)
+    public function defineEnvironment($app): void
     {
         $app['config']->set('database.default', 'sqlite');
         $app['config']->set('database.connections.sqlite', [
@@ -100,10 +99,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
         return $this;
     }
 
-    /**
-     * @return void
-     */
-    public function initializeGitAsTempDirectory()
+    public function initializeGitAsTempDirectory(): void
     {
         $this->gitInit()
             ->initializeTempDirectory(base_path('.git'));

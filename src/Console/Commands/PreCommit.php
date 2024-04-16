@@ -57,7 +57,7 @@ class PreCommit extends Command implements HookCommand
                 $this->clearPipelineFailed();
                 throw new HookFailException();
             }
-        } catch (HookFailException $e) {
+        } catch (HookFailException) {
             return 1;
         }
     }

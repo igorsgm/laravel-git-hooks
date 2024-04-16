@@ -5,7 +5,7 @@ namespace Igorsgm\GitHooks\Git;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
-class Log
+class Log implements \Stringable
 {
     /**
      * @var string
@@ -28,7 +28,7 @@ class Log
     private $date;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     private $merge = [];
 
@@ -50,6 +50,8 @@ class Log
 
     /**
      * Parse current log into variables
+     *
+     * @param  array<int, string>  $lines
      */
     private function parse(array $lines): void
     {
@@ -71,9 +73,7 @@ class Log
         ]);
 
         foreach ($lines as $line) {
-            $handler = $handlers->first(function ($handler, $prefix) use ($line) {
-                return Str::startsWith($line, $prefix);
-            });
+            $handler = $handlers->first(fn ($handler, $prefix) => Str::startsWith($line, $prefix));
 
             if ($handler !== null) {
                 $handler($line);
@@ -109,6 +109,8 @@ class Log
 
     /**
      * Get merge information
+     *
+     * @return array<int, string>
      */
     public function getMerge(): array
     {
@@ -123,10 +125,7 @@ class Log
         return $this->message;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getHash();
     }

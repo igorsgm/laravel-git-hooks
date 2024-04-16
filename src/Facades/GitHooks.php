@@ -6,6 +6,17 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \Igorsgm\GitHooks\GitHooks
+ *
+ * @method static array getSupportedHooks()
+ * @method static array getAvailableHooks()
+ * @method static void install()
+ * @method static ?string getHookStub()
+ * @method static string getGitHooksDir()
+ * @method static string getListOfChangedFiles()
+ * @method static string getLastCommitFromLog()
+ * @method static string getCommitMessageContentFromFile(string $filePath)
+ * @method static void updateCommitMessageContentInFile(string $path, string $message)
+ * @method static bool isMergeInProgress()
  */
 class GitHooks extends Facade
 {

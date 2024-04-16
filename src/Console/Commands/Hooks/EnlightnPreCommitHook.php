@@ -12,10 +12,8 @@ class EnlightnPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
 {
     /**
      * Name of the hook
-     *
-     * @var string
      */
-    protected $name = 'Enlightn';
+    protected string $name = 'Enlightn';
 
     /**
      * Analyzes committed files using Enlightn
@@ -58,10 +56,8 @@ class EnlightnPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
 
     /**
      * Returns the message to display when the commit fails.
-     *
-     * @return $this
      */
-    protected function commitFailMessage()
+    protected function commitFailMessage(): self
     {
         $this->command->newLine();
 

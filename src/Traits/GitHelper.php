@@ -8,27 +8,20 @@ trait GitHelper
 {
     use ProcessHelper;
 
-    /**
-     * @return string
-     */
-    public function getListOfChangedFiles()
+    public function getListOfChangedFiles(): string
     {
         return $this->runCommandAndGetOutput('git status --short');
     }
 
-    /**
-     * @return string
-     */
-    public function getLastCommitFromLog()
+    public function getLastCommitFromLog(): string
     {
         return $this->runCommandAndGetOutput('git log -1 HEAD');
     }
 
     /**
-     * @param  string|array  $commands
-     * @return string
+     * @param  string|array<int, string>  $commands
      */
-    private function runCommandAndGetOutput($commands)
+    private function runCommandAndGetOutput(string|array $commands): string
     {
         $process = $this->runCommands($commands);
 
@@ -57,10 +50,8 @@ trait GitHelper
 
     /**
      * @read https://stackoverflow.com/questions/30733415/how-to-determine-if-git-merge-is-in-process#answer-30781568
-     *
-     * @return bool
      */
-    public function isMergeInProgress()
+    public function isMergeInProgress(): bool
     {
         $command = $this->runCommands('git merge HEAD', [
             'silent' => true,

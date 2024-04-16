@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 class ChangedFiles
 {
     /**
-     * @var Collection
+     * @var Collection<int, ChangedFile>
      */
     protected $files;
 
@@ -17,13 +17,13 @@ class ChangedFiles
 
         $this->files = collect($files)
             ->filter()
-            ->map(function (string $line) {
-                return new ChangedFile($line);
-            });
+            ->map(fn (string $line) => new ChangedFile($line));
     }
 
     /**
      * Get all files with changes
+     *
+     * @return Collection<int, ChangedFile>
      */
     public function getFiles(): Collection
     {
@@ -31,41 +31,34 @@ class ChangedFiles
     }
 
     /**
-     * Get list of staged files
-     *
-     * @return Collection|ChangedFile[]
+     * @return Collection<int, ChangedFile>
      */
     public function getStaged(): Collection
     {
-        return $this->files->filter(function (ChangedFile $file) {
-            return $file->isStaged();
-        });
+        return $this->files->filter(fn (ChangedFile $file) => $file->isStaged());
     }
 
     /**
-     * Get added to commit files
+     * @return Collection<int, ChangedFile>
      */
     public function getAddedToCommit(): Collection
     {
-        return $this->files->filter(function (ChangedFile $file) {
-            return $file->isInCommit();
-        });
-    }
-
-    public function getDeleted(): Collection
-    {
-        return $this->files->filter(function (ChangedFile $file) {
-            return $file->isDeleted();
-        });
+        return $this->files->filter(fn (ChangedFile $file) => $file->isInCommit());
     }
 
     /**
-     * Get untracked files
+     * @return Collection<int, ChangedFile>
+     */
+    public function getDeleted(): Collection
+    {
+        return $this->files->filter(fn (ChangedFile $file) => $file->isDeleted());
+    }
+
+    /**
+     * @return Collection<int, ChangedFile>
      */
     public function getUntracked(): Collection
     {
-        return $this->files->filter(function (ChangedFile $file) {
-            return $file->isUntracked();
-        });
+        return $this->files->filter(fn (ChangedFile $file) => $file->isUntracked());
     }
 }

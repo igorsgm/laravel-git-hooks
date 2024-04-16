@@ -39,7 +39,7 @@ it('Returns 1 on HookFailException', function ($logText) {
 
     $postCommitHook1 = Mockery::mock(PostCommitHook::class);
     $postCommitHook1->expects('handle')
-        ->andReturnUsing(function (Log $log, Closure $closure) {
+        ->andReturnUsing(function (Log $log, Closure $closure): never {
             throw new HookFailException();
         });
 

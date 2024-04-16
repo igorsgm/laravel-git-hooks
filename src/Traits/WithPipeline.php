@@ -11,10 +11,8 @@ trait WithPipeline
 {
     /**
      * Hook which is currently running in the Pipeline.
-     *
-     * @var Hook
      */
-    public $hookExecuting;
+    public ?Hook $hookExecuting;
 
     /**
      * Make pipeline instance
@@ -36,9 +34,7 @@ trait WithPipeline
     {
         $hooks = collect((array) config('git-hooks.'.$this->getHook()));
 
-        return $hooks->map(function ($hook, $i) {
-            return is_int($i) ? $hook : $i;
-        })->all();
+        return $hooks->map(fn ($hook, $i) => is_int($i) ? $hook : $i)->all();
     }
 
     /**
@@ -50,7 +46,7 @@ trait WithPipeline
             $this->hookExecuting = $hook;
 
             // Binding the Command instance to the Hook, so it can be used inside the Hook
-            $hook->command = $this;
+            $hook->setCommand($this);
 
             $taskTitle = $this->getHookTaskTitle($hook);
             $loadingText = 'loading...';
@@ -61,7 +57,7 @@ trait WithPipeline
     /**
      * Finish the console task of the Hook which just executed, with success or failure
      */
-    protected function finishHookConsoleTask(): Closure
+    protected function finishHookConsoleTask(): ?Closure
     {
         return function ($success) {
             if (empty($this->hookExecuting)) {

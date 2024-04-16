@@ -37,6 +37,7 @@
         "orchestra/testbench": "^v8.0.0|^v9.0.0",
         "pestphp/pest": "^2.0",
         "pestphp/pest-plugin-laravel": "^2.3",
+        "rector/rector": "^1.0",
         "squizlabs/php_codesniffer": "^3.7"
     },
     "autoload": {

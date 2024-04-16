@@ -4,7 +4,7 @@ use Igorsgm\GitHooks\HooksPipeline;
 use Illuminate\Container\Container;
 
 test('Data is sent through Pipes', function ($hook, ?array $parameters = null) {
-    $parameters = $parameters ?? [];
+    $parameters ??= [];
     $container = new Container();
 
     $hookConfig = ! empty($parameters) ? [$hook => $parameters] : [$hook];

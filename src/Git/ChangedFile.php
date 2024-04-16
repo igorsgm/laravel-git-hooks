@@ -2,23 +2,23 @@
 
 namespace Igorsgm\GitHooks\Git;
 
-class ChangedFile
+class ChangedFile implements \Stringable
 {
-    const A = 1; // added
+    public const A = 1; // added
 
-    const M = 2; // modified
+    public const M = 2; // modified
 
-    const D = 4; // deleted
+    public const D = 4; // deleted
 
-    const R = 8; // renamed
+    public const R = 8; // renamed
 
-    const C = 16; // copied
+    public const C = 16; // copied
 
-    const U = 32; // updated but unmerged
+    public const U = 32; // updated but unmerged
 
-    const N = 64; // untracked
+    public const N = 64; // untracked
 
-    const PATTERN = '/^\s?(?<X>[A|M|D|R|C|U|\?]{1,2}| )(?<Y>[A|M|D|R|C|U|\?]{1,2}| )\s(?<file>\S+)(\s->\S+)?$/';
+    public const PATTERN = '/^\s?(?<X>[A|M|D|R|C|U|\?]{1,2}| )(?<Y>[A|M|D|R|C|U|\?]{1,2}| )\s(?<file>\S+)(\s\->\S+)?$/';
 
     /**
      * @var string
@@ -41,7 +41,7 @@ class ChangedFile
     protected $Y = 0;
 
     /**
-     * @var array
+     * @var array<string, int>
      */
     protected $bitMap = [
         'A' => self::A,
@@ -116,10 +116,7 @@ class ChangedFile
         return $this->X & static::C || $this->Y & static::C;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->line;
     }

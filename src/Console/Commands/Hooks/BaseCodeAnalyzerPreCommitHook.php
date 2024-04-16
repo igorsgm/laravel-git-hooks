@@ -3,6 +3,7 @@
 namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 
 use Closure;
+use Igorsgm\GitHooks\Contracts\CodeAnalyzerPreCommitHook;
 use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFile;
@@ -14,66 +15,55 @@ use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
 use Symfony\Component\Console\Terminal;
 
-abstract class BaseCodeAnalyzerPreCommitHook
+abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
     use ProcessHelper;
     use WithPipelineFailCheck;
 
     /**
      * Command instance that is bound automatically by Hooks Pipeline, so it can be used inside the Hook.
-     *
-     * @var Command
      */
-    public $command;
+    public Command $command;
 
     /**
      * Name of the hook
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
-    /*
+    /**
      * List of files extensions that will be analyzed by the hook.
      * Can also be a regular expression.
-     * @var array|string
+     *
+     * @var array<int, string>|string
      */
-    public $fileExtensions = [];
+    public array|string $fileExtensions = [];
 
     /**
      * The path to the analyzer executable.
-     *
-     * @var string
      */
-    protected $analyzerExecutable;
+    protected string $analyzerExecutable;
 
     /**
      * The path to the fixer executable. In multiple cases it's the same of the analyzer executable.
-     *
-     * @var string
      */
-    protected $fixerExecutable;
+    protected string $fixerExecutable;
 
     /**
      * The list of paths of files that are badly formatted and should be fixed.
      *
-     * @var array
+     * @var array<int, string>
      */
-    protected $filesBadlyFormattedPaths = [];
+    protected array $filesBadlyFormattedPaths = [];
 
     /**
      * Run tool in docker
-     *
-     * @var bool
      */
-    protected $runInDocker = false;
+    protected bool $runInDocker = false;
 
     /**
      * Docker container on which to run
-     *
-     * @var string
      */
-    protected $dockerContainer = '';
+    protected string $dockerContainer = '';
 
     public function __construct()
     {
@@ -83,13 +73,9 @@ abstract class BaseCodeAnalyzerPreCommitHook
     /**
      * Handles the committed files and checks if they are properly formatted.
      *
-     * @param  ChangedFiles  $files  The instance of the changed files.
-     * @param  Closure  $next  The closure to be executed after the files are handled.
-     * @return mixed|void
-     *
      * @throws HookFailException If the hook fails to analyze the committed files.
      */
-    public function handleCommittedFiles(ChangedFiles $files, Closure $next)
+    public function handleCommittedFiles(ChangedFiles $files, Closure $next): mixed
     {
         $commitFiles = $files->getStaged();
 
@@ -115,10 +101,10 @@ abstract class BaseCodeAnalyzerPreCommitHook
      * whether it is properly formatted according to the configured analyzer, and collects
      * paths of any files that are not properly formatted.
      *
-     * @param  ChangedFile[]|Collection  $commitFiles  The files to analyze.
+     * @param  Collection<int, ChangedFile>  $commitFiles  The files to analyze.
      * @return $this
      */
-    protected function analizeCommittedFiles($commitFiles)
+    protected function analizeCommittedFiles(Collection $commitFiles): self
     {
         foreach ($commitFiles as $file) {
             if (! $this->canFileBeAnalyzed($file)) {
@@ -175,10 +161,8 @@ abstract class BaseCodeAnalyzerPreCommitHook
 
     /**
      * Returns the message to display when the commit fails.
-     *
-     * @return $this
      */
-    protected function commitFailMessage()
+    protected function commitFailMessage(): self
     {
         $this->command->newLine();
 
@@ -196,11 +180,9 @@ abstract class BaseCodeAnalyzerPreCommitHook
     /**
      * Check if the BaseCodeAnalyzerPreCommitHook is installed.
      *
-     * @return $this
-     *
      * @throws HookFailException
      */
-    protected function validateAnalyzerInstallation()
+    protected function validateAnalyzerInstallation(): self
     {
         if (file_exists($this->analyzerExecutable)) {
             return $this;
@@ -219,12 +201,9 @@ abstract class BaseCodeAnalyzerPreCommitHook
     /**
      * Validates the given configuration path.
      *
-     * @param  string  $path  The path to the configuration file.
-     * @return $this This instance for method chaining.
-     *
      * @throws HookFailException If the configuration file does not exist.
      */
-    protected function validateConfigPath($path)
+    protected function validateConfigPath(string $path): self
     {
         if (file_exists($path)) {
             return $this;
@@ -281,7 +260,6 @@ abstract class BaseCodeAnalyzerPreCommitHook
      * Automatically fixes any files in the `$filesBadlyFormattedPaths` array using the
      * configured fixer command. For each fixed file, adds it to Git and removes its path
      * from the `$filesBadlyFormattedPaths` array.
-     *
      *
      * @throws HookFailException if any files cannot be fixed.
      */
@@ -344,6 +322,11 @@ abstract class BaseCodeAnalyzerPreCommitHook
         return $this->command->getOutput();
     }
 
+    public function setCommand(Command $command): void
+    {
+        $this->command = $command;
+    }
+
     /**
      * Get the name of the hook.
      */
@@ -353,20 +336,16 @@ abstract class BaseCodeAnalyzerPreCommitHook
     }
 
     /**
-     * @param  array|string  $fileExtensions
-     * @return BaseCodeAnalyzerPreCommitHook
+     * @param  array<int, string>|string  $fileExtensions
      */
-    public function setFileExtensions($fileExtensions)
+    public function setFileExtensions(array|string $fileExtensions): self
     {
         $this->fileExtensions = $fileExtensions;
 
         return $this;
     }
 
-    /**
-     * @return BaseCodeAnalyzerPreCommitHook
-     */
-    public function setAnalyzerExecutable($executablePath, $isSameAsFixer = false)
+    public function setAnalyzerExecutable(string $executablePath, bool $isSameAsFixer = false): self
     {
         $this->analyzerExecutable = './'.trim($executablePath, '/');
 
@@ -378,12 +357,9 @@ abstract class BaseCodeAnalyzerPreCommitHook
         return $this->analyzerExecutable;
     }
 
-    /**
-     * @return BaseCodeAnalyzerPreCommitHook
-     */
-    public function setFixerExecutable($exacutablePath)
+    public function setFixerExecutable(string $executablePath): self
     {
-        $this->fixerExecutable = './'.trim($exacutablePath, '/');
+        $this->fixerExecutable = './'.trim($executablePath, '/');
 
         return $this;
     }
@@ -393,10 +369,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
         return $this->fixerExecutable;
     }
 
-    /**
-     * @return BaseCodeAnalyzerPreCommitHook
-     */
-    public function setRunInDocker($runInDocker)
+    public function setRunInDocker(bool $runInDocker): self
     {
         $this->runInDocker = (bool) $runInDocker;
 
@@ -408,11 +381,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
         return $this->runInDocker;
     }
 
-    /**
-     * @param  string  $dockerContainer
-     * @return BaseCodeAnalyzerPreCommitHook
-     */
-    public function setDockerContainer($dockerContainer)
+    public function setDockerContainer(string $dockerContainer): self
     {
         $this->dockerContainer = $dockerContainer;
 
