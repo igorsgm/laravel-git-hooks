@@ -8,17 +8,12 @@ use Igorsgm\GitHooks\Git\ChangedFiles;
 
 class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
-    /**
-     * @var string
-     */
-    protected $configParam;
+    protected string $configParam;
 
     /**
      * Name of the hook
-     *
-     * @var string
      */
-    protected $name = 'ESLint';
+    protected string $name = 'ESLint';
 
     /**
      * Analyze and fix committed JS files using ESLint.

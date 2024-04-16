@@ -8,17 +8,12 @@ use Igorsgm\GitHooks\Git\ChangedFiles;
 
 class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
-    /**
-     * @var string
-     */
-    protected $configParam;
+    protected string $configParam;
 
     /**
      * Name of the hook
-     *
-     * @var string
      */
-    protected $name = 'Prettier';
+    protected string $name = 'Prettier';
 
     /**
      * Analyze and fix committed JS files using Prettier.

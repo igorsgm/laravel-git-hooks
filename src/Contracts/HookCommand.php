@@ -11,6 +11,8 @@ interface HookCommand
 
     /**
      * Get array of registered hooks
+     *
+     * @return array<int, callable>
      */
     public function getRegisteredHooks(): array;
 }

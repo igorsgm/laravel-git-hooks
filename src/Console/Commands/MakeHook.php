@@ -51,7 +51,7 @@ class MakeHook extends GeneratorCommand
                 implode(', ', $supportedHooks)
             ));
 
-            return 1;
+            return true;
         }
 
         return parent::handle();
@@ -101,9 +101,9 @@ class MakeHook extends GeneratorCommand
     /**
      * Get the console command arguments.
      *
-     * @return array
+     * @return array<int, array<int, mixed>>
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [
             ['hookType', InputArgument::REQUIRED, 'The type of the Git Hook', null, GitHooks::getSupportedHooks()],
@@ -114,7 +114,7 @@ class MakeHook extends GeneratorCommand
     /**
      * Get the console command options.
      *
-     * @return array
+     * @return array<int, array<int, mixed>>
      */
     protected function getOptions()
     {
@@ -126,7 +126,7 @@ class MakeHook extends GeneratorCommand
     /**
      * Prompt for missing input arguments using the returned questions.
      *
-     * @return array
+     * @return array<string, string>
      */
     protected function promptForMissingArgumentsUsing()
     {

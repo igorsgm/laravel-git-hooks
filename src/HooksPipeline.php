@@ -9,44 +9,23 @@ use Throwable;
 
 class HooksPipeline extends Pipeline
 {
-    /**
-     * @var Closure
-     */
-    protected $pipeStartCallback;
+    protected ?Closure $pipeStartCallback = null;
 
-    /**
-     * @var Closure
-     */
-    protected $pipeEndCallback;
+    protected ?Closure $pipeEndCallback = null;
 
-    /**
-     * @var string
-     */
-    protected $hook;
-
-    /**
-     * @param  \Illuminate\Contracts\Container\Container|null  $container
-     */
-    public function __construct(Container $container, string $hook)
+    public function __construct(?Container $container, protected string $hook)
     {
         parent::__construct($container);
-        $this->hook = $hook;
     }
 
-    /**
-     * @return $this
-     */
-    public function withPipeStartCallback(Closure $callback)
+    public function withPipeStartCallback(Closure $callback): self
     {
         $this->pipeStartCallback = $callback;
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function withPipeEndCallback(Closure $callback)
+    public function withPipeEndCallback(Closure $callback): self
     {
         $this->pipeEndCallback = $callback;
 
@@ -55,10 +34,8 @@ class HooksPipeline extends Pipeline
 
     /**
      * Get a Closure that represents a slice of the application onion.
-     *
-     * @return Closure
      */
-    protected function carry()
+    protected function carry(): Closure
     {
         return function ($stack, $pipe) {
             return function ($passable) use ($stack, $pipe) {
@@ -104,11 +81,8 @@ class HooksPipeline extends Pipeline
 
     /**
      * Handle the call back call once a specific pipe has finished or errored.
-     *
-     * @param  bool  $success
-     * @return void
      */
-    protected function handlePipeEnd($success)
+    protected function handlePipeEnd(bool $success): void
     {
         if ($this->pipeEndCallback) {
             call_user_func_array($this->pipeEndCallback, [$success]);
@@ -117,11 +91,8 @@ class HooksPipeline extends Pipeline
 
     /**
      * Handle the value returned from each pipe before passing it to the next.
-     *
-     * @param  mixed  $carry
-     * @return mixed
      */
-    protected function handleCarry($carry)
+    protected function handleCarry(mixed $carry): mixed
     {
         $this->handlePipeEnd(true);
 
@@ -131,12 +102,10 @@ class HooksPipeline extends Pipeline
     /**
      * Handle the given exception.
      *
-     * @param  mixed  $passable
-     * @return mixed
      *
      * @throws \Throwable
      */
-    protected function handleException($passable, Throwable $e)
+    protected function handleException(mixed $passable, Throwable $e): mixed
     {
         $this->handlePipeEnd(false);
 

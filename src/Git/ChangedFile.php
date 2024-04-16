@@ -41,7 +41,7 @@ class ChangedFile
     protected $Y = 0;
 
     /**
-     * @var array
+     * @var array<string, int>
      */
     protected $bitMap = [
         'A' => self::A,

@@ -11,8 +11,10 @@ class GitHooks
 
     /**
      * Get all supported git hooks
+     *
+     * @return array<int, string>
      */
-    public function getSupportedHooks()
+    public function getSupportedHooks(): array
     {
         return [
             'pre-commit',
@@ -29,8 +31,10 @@ class GitHooks
 
     /**
      * Get all available git hooks being used
+     *
+     * @return array<int, string>
      */
-    public function getAvailableHooks()
+    public function getAvailableHooks(): array
     {
         $configGitHooks = config('git-hooks');
 
@@ -42,11 +46,9 @@ class GitHooks
     /**
      * Install git hook
      *
-     * @return void
-     *
      * @throws Exception
      */
-    public function install(string $hookName)
+    public function install(string $hookName): void
     {
         if (! is_dir($this->getGitHooksDir())) {
             throw new Exception('Git not initialized in this project.');
@@ -67,10 +69,8 @@ class GitHooks
 
     /**
      * Returns the content of the git hook stub.
-     *
-     * @return false|string
      */
-    public function getHookStub()
+    public function getHookStub(): ?string
     {
         $hookStubPath = __DIR__.str_replace('/', DIRECTORY_SEPARATOR, '/Console/Commands/stubs/hook');
 
@@ -79,10 +79,8 @@ class GitHooks
 
     /**
      * Returns the path to the git hooks directory.
-     *
-     * @return string
      */
-    public function getGitHooksDir()
+    public function getGitHooksDir(): string
     {
         return base_path('.git'.DIRECTORY_SEPARATOR.'hooks');
     }

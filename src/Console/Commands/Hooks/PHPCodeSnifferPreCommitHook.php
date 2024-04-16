@@ -8,17 +8,12 @@ use Igorsgm\GitHooks\Git\ChangedFiles;
 
 class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
-    /**
-     * @var string
-     */
-    protected $configParam;
+    protected string $configParam;
 
     /**
      * Name of the hook
-     *
-     * @var string
      */
-    protected $name = 'PHP_CodeSniffer';
+    protected string $name = 'PHP_CodeSniffer';
 
     /**
      * Analyze and fix committed PHP files using PHP Code Sniffer and PHP Code Beautifier and Fixer.

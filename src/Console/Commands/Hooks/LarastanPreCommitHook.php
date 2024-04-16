@@ -8,17 +8,12 @@ use Igorsgm\GitHooks\Git\ChangedFiles;
 
 class LarastanPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
-    /**
-     * @var string
-     */
-    protected $configParam;
+    protected string $configParam;
 
     /**
      * Name of the hook
-     *
-     * @var string
      */
-    protected $name = 'Larastan';
+    protected string $name = 'Larastan';
 
     /**
      * Analyzes committed files using Larastan

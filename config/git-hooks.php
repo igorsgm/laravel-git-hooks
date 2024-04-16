@@ -245,7 +245,7 @@ return [
     | during execution directly for easy debug.
     |
     */
-    'output_errors' => false,
+    'output_errors' => env('GITHOOKS_OUTPUT_ERRORS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -256,7 +256,7 @@ return [
     | automatically run the fixer without any CLI prompt.
     |
     */
-    'automatically_fix_errors' => false,
+    'automatically_fix_errors' => env('GITHOOKS_AUTOMATICALLY_FIX_ERRORS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -268,7 +268,7 @@ return [
     | The git hooks will not fail in case the re-run is succesful.
     |
     */
-    'rerun_analyzer_after_autofix' => false,
+    'rerun_analyzer_after_autofix' => env('GITHOOKS_RERUN_ANALYZER_AFTER_AUTOFIX', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -279,7 +279,7 @@ return [
     | stop (or not) at the first analyzer failure encountered.
     |
     */
-    'stop_at_first_analyzer_failure' => true,
+    'stop_at_first_analyzer_failure' => env('GITHOOKS_STOP_AT_FIRST_ANALYZER_FAILURE', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -290,7 +290,7 @@ return [
     | display the commands that are executed (usually for debug purpose).
     |
     */
-    'debug_commands' => false,
+    'debug_commands' => env('GITHOOKS_DEBUG_COMMANDS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -301,5 +301,5 @@ return [
     | command during execution directly for easy debug.
     |
     */
-    'debug_output' => false,
+    'debug_output' => env('GITHOOKS_DEBUG_OUTPUT', false),
 ];

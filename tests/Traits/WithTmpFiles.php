@@ -8,7 +8,7 @@ trait WithTmpFiles
 {
     private $tempDirectoryPath;
 
-    public function initializeTempDirectory(?string $path = '', bool $force = false)
+    public function initializeTempDirectory(?string $path = '', bool $force = false): void
     {
         if ($path) {
             $this->setTempDirectoryPath($path);

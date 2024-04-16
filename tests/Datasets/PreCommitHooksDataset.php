@@ -12,6 +12,8 @@ dataset('pintConfiguration', [
             'path' => '../../../bin/pint',
             'config' => __DIR__.'/../Fixtures/pintFixture.json',
             'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
     'Preset' => [
@@ -19,6 +21,8 @@ dataset('pintConfiguration', [
             'path' => '../../../bin/pint',
             'preset' => 'psr12',
             'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
 ]);
@@ -30,6 +34,8 @@ dataset('phpcsConfiguration', [
             'phpcbf_path' => '../../../bin/phpcbf',
             'config' => __DIR__.'/../Fixtures/phpcsFixture.xml',
             'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
 ]);
@@ -40,6 +46,8 @@ dataset('bladeFormatterConfiguration', [
             'path' => '../../../../node_modules/.bin/blade-formatter',
             'config' => __DIR__.'/../Fixtures/bladeFormatterFixture.json',
             'file_extensions' => '/\.blade\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
 ]);
@@ -50,6 +58,9 @@ dataset('larastanConfiguration', [
             'path' => '../../../bin/phpstan',
             'config' => __DIR__.'/../Fixtures/phpstanFixture.neon',
             'additional_params' => '--xdebug',
+            'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
 ]);
@@ -61,6 +72,8 @@ dataset('prettierConfiguration', [
             'config' => __DIR__.'/../Fixtures/.prettierrcFixture.json',
             'additional_params' => '--config --find-config-path',
             'file_extensions' => '/\.(jsx?|tsx?|vue)$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
 ]);
@@ -72,6 +85,8 @@ dataset('eslintConfiguration', [
             'config' => __DIR__.'/../Fixtures/.eslintrcFixture.js',
             'additional_params' => '--config',
             'file_extensions' => '/\.(jsx?|tsx?|vue)$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
 ]);
@@ -79,9 +94,12 @@ dataset('eslintConfiguration', [
 $nonExistentPath = [
     'path' => 'nonexistent/path',
     'phpcs_path' => 'nonexistent/path',
+    'phpcbf_path' => 'nonexistent/path',
     'preset' => null,
     'config' => __DIR__.'/../Fixtures/pintFixture.json',
-
+    'file_extensions' => '',
+    'run_in_docker' => false,
+    'docker_container' => '',
 ];
 
 dataset('codeAnalyzersList', [

@@ -3,6 +3,7 @@
 namespace Igorsgm\GitHooks\Traits;
 
 use RuntimeException;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Process\Process;
 
 /**
@@ -10,32 +11,21 @@ use Symfony\Component\Process\Process;
  */
 trait ProcessHelper
 {
-    private $cwd;
+    private string $cwd;
 
     /**
      * Run the given commands.
      *
-     *
-     * @param  array|string  $commands
-     * @param  array  $params
-     * @return Process
+     * @param  string|array<int, string>  $commands
+     * @param  array<string, mixed>  $params
      */
-    public function runCommands($commands, $params = [])
+    public function runCommands(string|array $commands, array $params = []): Process
     {
-        $input = $this->input ?? null;
         $output = method_exists($this, 'getOutput') ? $this->getOutput() : null;
 
         if ($output && ! $output->isDecorated()) {
             $commands = $this->transformCommands($commands, function ($value) {
                 return $value.' --no-ansi';
-            });
-        }
-
-        if (! empty($input->definition) && $input->definition->hasOption('quiet') &&
-            ! empty($input) && $input->getOption('quiet')
-        ) {
-            $commands = $this->transformCommands($commands, function ($value) {
-                return $value.' --quiet';
             });
         }
 
@@ -70,11 +60,10 @@ trait ProcessHelper
     }
 
     /**
-     * @param  array|string  $commands
-     * @param  callable  $callback
-     * @return array
+     * @param  string|array<int, string>  $commands
+     * @return array<int, string>
      */
-    public function transformCommands($commands, $callback)
+    public function transformCommands(string|array $commands, callable $callback): array
     {
         return array_map(function ($value) use ($callback) {
             if (substr($value, 0, 5) === 'chmod') {
@@ -87,20 +76,13 @@ trait ProcessHelper
 
     /**
      * Builds the string for a command without console output
-     *
-     * @param  string  $command
-     * @return string
      */
-    public function buildNoOutputCommand($command = '')
+    public function buildNoOutputCommand(string $command = ''): string
     {
         return trim($command).' > '.(PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null 2>&1');
     }
 
-    /**
-     * @param  string  $cwd
-     * @return $this
-     */
-    public function setCwd($cwd)
+    public function setCwd(string $cwd): self
     {
         $this->cwd = $cwd;
 

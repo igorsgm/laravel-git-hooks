@@ -8,17 +8,9 @@ use Igorsgm\GitHooks\Git\ChangedFiles;
 
 class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
-    /**
-     * @var string
-     */
-    protected $configParam;
+    protected string $configParam;
 
-    /**
-     * Name of the hook
-     *
-     * @var string
-     */
-    protected $name = 'Blade Formatter';
+    protected string $name = 'Blade Formatter';
 
     /**
      * Analyze and fix committed blade.php files using blade-formatter npm package

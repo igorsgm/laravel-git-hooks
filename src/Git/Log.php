@@ -28,7 +28,7 @@ class Log
     private $date;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     private $merge = [];
 
@@ -50,6 +50,8 @@ class Log
 
     /**
      * Parse current log into variables
+     *
+     * @param  array<int, string>  $lines
      */
     private function parse(array $lines): void
     {
@@ -109,6 +111,8 @@ class Log
 
     /**
      * Get merge information
+     *
+     * @return array<int, string>
      */
     public function getMerge(): array
     {

@@ -108,6 +108,12 @@ jobs:
       - name: Execute Code Sniffer via Laravel Pint
         run: vendor/bin/pint --test src config
 
+      - name: Execute PHP Stan
+        run: vendor/bin/phpstan
+
+      - name: Execute Rector
+        run: vendor/bin/rector
+
   laravel10-tests:
     runs-on: ubuntu-latest
 
@@ -202,6 +208,12 @@ jobs:
       - name: Execute Code Sniffer via Laravel Pint
         run: vendor/bin/pint --test src config
 
+      - name: Execute PHP Stan
+        run: vendor/bin/phpstan
+
+      - name: Execute Rector
+        run: vendor/bin/rector
+
   laravel11-tests:
     runs-on: ubuntu-latest
 
@@ -295,4 +307,10 @@ jobs:
 
       - name: Execute Code Sniffer via Laravel Pint
         run: vendor/bin/pint --test src config
+
+      - name: Execute PHP Stan
+        run: vendor/bin/phpstan
+
+      - name: Execute Rector
+        run: vendor/bin/rector
 

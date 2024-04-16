@@ -7,5 +7,5 @@ use Igorsgm\GitHooks\Git\CommitMessage;
 
 interface MessageHook extends Hook
 {
-    public function handle(CommitMessage $message, Closure $next);
+    public function handle(CommitMessage $message, Closure $next): mixed;
 }

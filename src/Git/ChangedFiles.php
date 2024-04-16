@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 class ChangedFiles
 {
     /**
-     * @var Collection
+     * @var Collection<int, ChangedFile>
      */
     protected $files;
 
@@ -24,6 +24,8 @@ class ChangedFiles
 
     /**
      * Get all files with changes
+     *
+     * @return Collection<int, ChangedFile>
      */
     public function getFiles(): Collection
     {
@@ -31,9 +33,7 @@ class ChangedFiles
     }
 
     /**
-     * Get list of staged files
-     *
-     * @return Collection|ChangedFile[]
+     * @return Collection<int, ChangedFile>
      */
     public function getStaged(): Collection
     {
@@ -43,7 +43,7 @@ class ChangedFiles
     }
 
     /**
-     * Get added to commit files
+     * @return Collection<int, ChangedFile>
      */
     public function getAddedToCommit(): Collection
     {
@@ -52,6 +52,9 @@ class ChangedFiles
         });
     }
 
+    /**
+     * @return Collection<int, ChangedFile>
+     */
     public function getDeleted(): Collection
     {
         return $this->files->filter(function (ChangedFile $file) {
@@ -60,7 +63,7 @@ class ChangedFiles
     }
 
     /**
-     * Get untracked files
+     * @return Collection<int, ChangedFile>
      */
     public function getUntracked(): Collection
     {
