@@ -24,7 +24,7 @@
 
 ## ✨ Features
 
-- **Pre-configured Hooks:** Laravel Git Hooks comes with pre-configured pre-commit hooks for popular tools, such as Laravel Pint, PHPCS, ESLint, Prettier, Larastan, Enlightn, and Blade Formatter, making it easy to enforce coding standards and style guidelines right away.
+- **Pre-configured Hooks:** Laravel Git Hooks comes with pre-configured pre-commit hooks for popular tools, such as Laravel Pint, PHPCS, ESLint, Prettier, Larastan, Enlightn, Rector, PHP Insights and Blade Formatter, making it easy to enforce coding standards and style guidelines right away.
 - **Manage Git Hooks:** Easily manage your Git hooks in your Laravel projects with a streamlined and organized approach.
 - **Edit Commit Messages:** Gain control over your commit messages by customizing them to meet your project requirements and maintain a clean Git history.
 - **Create Custom Hooks:** Add and integrate custom hooks tailored to your specific project needs, ensuring better code quality and adherence to guidelines.
@@ -62,6 +62,8 @@ To use the already created pre-commit hooks of this package, you can simply edit
     \Igorsgm\GitHooks\Console\Commands\Hooks\EnlightnPreCommitHook::class, // Enlightn
     \Igorsgm\GitHooks\Console\Commands\Hooks\ESLintPreCommitHook::class, // ESLint
     \Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook::class, // Prettier
+    \Igorsgm\GitHooks\Console\Commands\Hooks\PhpInsightsPreCommitHook::class, // PhpInsights
+    \Igorsgm\GitHooks\Console\Commands\Hooks\RectorPreCommitHook::class, // Rector
 ],
 ```
 

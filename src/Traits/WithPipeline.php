@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Traits;
 
 use Closure;
@@ -15,6 +17,23 @@ trait WithPipeline
     public ?Hook $hookExecuting;
 
     /**
+     * {@inheritDoc}
+     */
+    public function getRegisteredHooks(): array
+    {
+        $hooks = collect((array) config('git-hooks.'.$this->getHook()));
+
+        return $hooks->map(fn ($hook, $i) => is_int($i) ? $hook : $i)->all();
+    }
+
+    public function getHookTaskTitle(Hook $hook): string
+    {
+        $hookName = $hook->getName() ?? class_basename($hook);
+
+        return sprintf('  <bg=blue;fg=white> HOOK </> %s', $hookName);
+    }
+
+    /**
      * Make pipeline instance
      */
     protected function makePipeline(): Pipeline
@@ -28,21 +47,11 @@ trait WithPipeline
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getRegisteredHooks(): array
-    {
-        $hooks = collect((array) config('git-hooks.'.$this->getHook()));
-
-        return $hooks->map(fn ($hook, $i) => is_int($i) ? $hook : $i)->all();
-    }
-
-    /**
      * Show information about Hook which is being executed
      */
     protected function startHookConsoleTask(): Closure
     {
-        return function (Hook $hook) {
+        return function (Hook $hook): void {
             $this->hookExecuting = $hook;
 
             // Binding the Command instance to the Hook, so it can be used inside the Hook
@@ -50,16 +59,16 @@ trait WithPipeline
 
             $taskTitle = $this->getHookTaskTitle($hook);
             $loadingText = 'loading...';
-            $this->output->write("$taskTitle: <comment>{$loadingText}</comment>");
+            $this->output->write("{$taskTitle}: <comment>{$loadingText}</comment>");
         };
     }
 
     /**
      * Finish the console task of the Hook which just executed, with success or failure
      */
-    protected function finishHookConsoleTask(): ?Closure
+    protected function finishHookConsoleTask(): Closure
     {
-        return function ($success) {
+        return function ($success): void {
             if (empty($this->hookExecuting)) {
                 return;
             }
@@ -77,17 +86,10 @@ trait WithPipeline
             $taskTitle = $this->getHookTaskTitle($this->hookExecuting);
 
             $this->output->writeln(
-                "$taskTitle: ".($success ? '<info>✔</info>' : '<error>failed</error>')
+                "{$taskTitle}: ".($success ? '<info>✔</info>' : '<error>failed</error>')
             );
 
             $this->hookExecuting = null;
         };
-    }
-
-    public function getHookTaskTitle(Hook $hook): string
-    {
-        $hookName = $hook->getName() ?? class_basename($hook);
-
-        return sprintf('  <bg=blue;fg=white> HOOK </> %s', $hookName);
     }
 }

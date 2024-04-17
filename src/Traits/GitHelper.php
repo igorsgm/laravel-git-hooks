@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Traits;
 
+use Exception;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 trait GitHelper
@@ -19,25 +22,17 @@ trait GitHelper
     }
 
     /**
-     * @param  string|array<int, string>  $commands
-     */
-    private function runCommandAndGetOutput(string|array $commands): string
-    {
-        $process = $this->runCommands($commands);
-
-        if (! $process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
-        return $process->getOutput();
-    }
-
-    /**
      * Get commit message content form local file
      */
     public function getCommitMessageContentFromFile(string $filePath): string
     {
-        return file_get_contents($filePath);
+        $content = file_get_contents($filePath);
+
+        if ($content === false) {
+            throw new Exception('Fail to read file: '.$filePath);
+        }
+
+        return $content;
     }
 
     /**
@@ -59,5 +54,19 @@ trait GitHelper
 
         // If a merge is in progress, the process returns code 128
         return $command->getExitCode() === 128;
+    }
+
+    /**
+     * @param  string|array<int, string>  $commands
+     */
+    private function runCommandAndGetOutput(string|array $commands): string
+    {
+        $process = $this->runCommands($commands);
+
+        if (! $process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        return $process->getOutput();
     }
 }

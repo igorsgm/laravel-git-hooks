@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 
 use Closure;
@@ -20,9 +22,8 @@ class LarastanPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      *
      * @param  ChangedFiles  $files  The list of committed files to analyze.
      * @param  Closure  $next  The next hook in the chain to execute.
-     * @return mixed|null
      */
-    public function handle(ChangedFiles $files, Closure $next)
+    public function handle(ChangedFiles $files, Closure $next): mixed
     {
         $this->configParam = $this->configParam();
 
@@ -39,12 +40,12 @@ class LarastanPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      */
     public function analyzerCommand(): string
     {
-        $additionalParams = config('git-hooks.code_analyzers.larastan.additional_params');
+        $additionalParams = (string) config('git-hooks.code_analyzers.larastan.additional_params');
 
         if (! empty($additionalParams)) {
             // Removing configuration/c/xdebug parameters from additional parameters to avoid conflicts
             // because they are already set in the command by default.
-            $additionalParams = preg_replace('/\s*--(configuration|c|xdebug)\b(=\S*)?\s*/', '', (string) $additionalParams);
+            $additionalParams = (string) preg_replace('/\s*--(configuration|c|xdebug)\b(=\S*)?\s*/', '', (string) $additionalParams);
         }
 
         return trim(

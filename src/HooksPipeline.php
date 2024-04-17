@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks;
 
 use Closure;
@@ -44,7 +46,9 @@ class HooksPipeline extends Pipeline
                     // will resolve the pipes out of the dependency container and call it with
                     // the appropriate method and arguments, returning the results back out.
                     return $pipe($passable, $stack);
-                } elseif (! is_object($pipe)) {
+                }
+
+                if (! is_object($pipe)) {
                     $hookParameters = (array) config('git-hooks.'.$this->hook.'.'.$pipe);
 
                     // If the pipe is a string we will parse the string and resolve the class out
@@ -99,7 +103,6 @@ class HooksPipeline extends Pipeline
 
     /**
      * Handle the given exception.
-     *
      *
      * @throws \Throwable
      */

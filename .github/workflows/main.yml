@@ -112,7 +112,10 @@ jobs:
         run: vendor/bin/phpstan
 
       - name: Execute Rector
-        run: vendor/bin/rector
+        run: vendor/bin/rector --dry-run
+
+      - name: Execute PHP Insights
+        run: vendor/bin/phpinsights --no-interaction
 
   laravel10-tests:
     runs-on: ubuntu-latest
@@ -212,7 +215,10 @@ jobs:
         run: vendor/bin/phpstan
 
       - name: Execute Rector
-        run: vendor/bin/rector
+        run: vendor/bin/rector --dry-run
+
+      - name: Execute PHP Insights
+        run: vendor/bin/phpinsights --no-interaction
 
   laravel11-tests:
     runs-on: ubuntu-latest
@@ -312,5 +318,8 @@ jobs:
         run: vendor/bin/phpstan
 
       - name: Execute Rector
-        run: vendor/bin/rector
+        run: vendor/bin/rector --dry-run
+
+      - name: Execute PHP Insights
+        run: vendor/bin/phpinsights --no-interaction
 

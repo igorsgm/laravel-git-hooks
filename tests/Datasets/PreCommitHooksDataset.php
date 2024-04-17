@@ -3,8 +3,10 @@
 use Igorsgm\GitHooks\Console\Commands\Hooks\BladeFormatterPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\LarastanPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PHPCodeSnifferPreCommitHook;
+use Igorsgm\GitHooks\Console\Commands\Hooks\PhpInsightsPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PintPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook;
+use Igorsgm\GitHooks\Console\Commands\Hooks\RectorPreCommitHook;
 
 dataset('pintConfiguration', [
     'Config File' => [
@@ -33,6 +35,32 @@ dataset('phpcsConfiguration', [
             'phpcs_path' => '../../../bin/phpcs',
             'phpcbf_path' => '../../../bin/phpcbf',
             'config' => __DIR__.'/../Fixtures/phpcsFixture.xml',
+            'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
+        ],
+    ],
+]);
+
+dataset('phpinsightsConfiguration', [
+    'phpinsights.php file' => [
+        [
+            'path' => '../../../bin/phpinsights',
+            'config' => __DIR__.'/../Fixtures/phpinsightsFixture.php',
+            'additional_params' => '',
+            'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
+        ],
+    ],
+]);
+
+dataset('rectorConfiguration', [
+    'rector.php file' => [
+        [
+            'path' => '../../../bin/rector',
+            'config' => __DIR__.'/../Fixtures/rectorFixture.php',
+            'additional_params' => '',
             'file_extensions' => '/\.php$/',
             'run_in_docker' => false,
             'docker_container' => '',
@@ -127,5 +155,15 @@ dataset('codeAnalyzersList', [
         'prettier',
         $nonExistentPath,
         PrettierPreCommitHook::class,
+    ],
+    'PHP Insights' => [
+        'phpinsights',
+        $nonExistentPath,
+        PhpInsightsPreCommitHook::class,
+    ],
+    'Rector' => [
+        'rector',
+        $nonExistentPath,
+        RectorPreCommitHook::class,
     ],
 ]);

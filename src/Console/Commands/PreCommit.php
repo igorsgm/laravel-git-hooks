@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands;
 
 use Igorsgm\GitHooks\Contracts\HookCommand;
@@ -29,9 +31,6 @@ class PreCommit extends Command implements HookCommand
      */
     protected $description = 'Run hook pre-commit';
 
-    /**
-     * {@inheritDoc}
-     */
     public function getHook(): string
     {
         return 'pre-commit';
@@ -39,10 +38,8 @@ class PreCommit extends Command implements HookCommand
 
     /**
      * Execute the console command.
-     *
-     * @return int|void
      */
-    public function handle()
+    public function handle(): int
     {
         try {
             $this->clearPipelineFailed();
@@ -60,6 +57,8 @@ class PreCommit extends Command implements HookCommand
         } catch (HookFailException) {
             return 1;
         }
+
+        return 0;
     }
 
     /**

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Traits;
 
 use RuntimeException;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Process\Process;
 
 /**
@@ -39,8 +40,8 @@ trait ProcessHelper
             data_get($params, 'timeout')
         );
 
-        $showOutput = data_get($params, 'tty') === true || data_get($params, 'show-output') === true;
-        if ($showOutput && '\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
+        $showOutput = (data_get($params, 'tty') === true || data_get($params, 'show-output') === true) && $output;
+        if ($showOutput && DIRECTORY_SEPARATOR !== '\\' && file_exists('/dev/tty') && is_readable('/dev/tty')) {
             try {
                 $process->setTty(true);
             } catch (RuntimeException $e) {
@@ -48,8 +49,10 @@ trait ProcessHelper
             }
         }
 
-        $process->run(! $showOutput ? null : function ($type, $line) use ($output) {
-            $output->write('    '.$line);
+        $process->run(! $showOutput ? null : function (string $line) use ($output): void {
+            if ($output !== null) {
+                $output->write('    '.$line);
+            }
         });
 
         return $process;

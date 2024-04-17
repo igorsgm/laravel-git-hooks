@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks;
 
 use Exception;
@@ -72,7 +74,13 @@ class GitHooks
     {
         $hookStubPath = __DIR__.str_replace('/', DIRECTORY_SEPARATOR, '/Console/Commands/stubs/hook');
 
-        return file_get_contents($hookStubPath);
+        $stub = file_get_contents($hookStubPath);
+
+        if ($stub === false) {
+            throw new Exception('Hook stub not found: '.$hookStubPath);
+        }
+
+        return $stub;
     }
 
     /**

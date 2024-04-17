@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 
 use Closure;
@@ -20,9 +22,8 @@ class EnlightnPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      *
      * @param  ChangedFiles  $files  The list of committed files to analyze.
      * @param  Closure  $next  The next hook in the chain to execute.
-     * @return mixed|null
      */
-    public function handle(ChangedFiles $files, Closure $next)
+    public function handle(ChangedFiles $files, Closure $next): mixed
     {
         $commitFiles = $files->getAddedToCommit();
 
@@ -64,7 +65,8 @@ class EnlightnPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
         $message = '<bg=red;fg=white> COMMIT FAILED </> ';
         $message .= sprintf(
             'You can check which %s errors happened by executing: <comment>%s</comment>',
-            $this->getName(), $this->analyzerCommand()
+            $this->getName(),
+            $this->analyzerCommand()
         );
 
         $this->command->getOutput()->writeln($message);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 
 use Closure;
@@ -26,17 +28,17 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
     public Command $command;
 
     /**
-     * Name of the hook
-     */
-    protected string $name;
-
-    /**
      * List of files extensions that will be analyzed by the hook.
      * Can also be a regular expression.
      *
      * @var array<int, string>|string
      */
     public array|string $fileExtensions = [];
+
+    /**
+     * Name of the hook
+     */
+    protected string $name;
 
     /**
      * The path to the analyzer executable.
@@ -94,6 +96,89 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
             ->suggestAutoFixOrExit();
 
         return $next($files);
+    }
+
+    /**
+     * Get output method
+     */
+    public function getOutput(): ?OutputStyle
+    {
+        if (! config('git-hooks.debug_output')) {
+            return null;
+        }
+
+        return $this->command->getOutput();
+    }
+
+    public function setCommand(Command $command): void
+    {
+        $this->command = $command;
+    }
+
+    /**
+     * Get the name of the hook.
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param  array<int, string>|string  $fileExtensions
+     */
+    public function setFileExtensions(array|string $fileExtensions): self
+    {
+        $this->fileExtensions = $fileExtensions;
+
+        return $this;
+    }
+
+    public function setAnalyzerExecutable(string $executablePath, bool $isSameAsFixer = false): self
+    {
+        $this->analyzerExecutable = './'.trim($executablePath, '/');
+
+        return $isSameAsFixer ? $this->setFixerExecutable($executablePath) : $this;
+    }
+
+    public function getAnalyzerExecutable(): string
+    {
+        return $this->analyzerExecutable;
+    }
+
+    public function setFixerExecutable(string $executablePath): self
+    {
+        $this->fixerExecutable = './'.trim($executablePath, '/');
+
+        return $this;
+    }
+
+    public function getFixerExecutable(): string
+    {
+        return $this->fixerExecutable;
+    }
+
+    public function setRunInDocker(bool $runInDocker): self
+    {
+        $this->runInDocker = (bool) $runInDocker;
+
+        return $this;
+    }
+
+    public function getRunInDocker(): bool
+    {
+        return $this->runInDocker;
+    }
+
+    public function setDockerContainer(string $dockerContainer): self
+    {
+        $this->dockerContainer = $dockerContainer;
+
+        return $this;
+    }
+
+    public function getDockerContainer(): string
+    {
+        return $this->dockerContainer;
     }
 
     /**
@@ -167,10 +252,15 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
         $this->command->newLine();
 
         $message = '<bg=red;fg=white> COMMIT FAILED </> ';
-        $message .= sprintf("Your commit contains files that should pass %s but do not. Please fix the errors in the files above and try again.\n",
-            $this->getName());
-        $message .= sprintf('You can check which %s errors happened in them by executing: <comment>%s {filePath}</comment>',
-            $this->getName(), $this->analyzerCommand());
+        $message .= sprintf(
+            "Your commit contains files that should pass %s but do not. Please fix the errors in the files above and try again.\n",
+            $this->getName()
+        );
+        $message .= sprintf(
+            'You can check which %s errors happened in them by executing: <comment>%s {filePath}</comment>',
+            $this->getName(),
+            $this->analyzerCommand()
+        );
 
         $this->command->getOutput()->writeln($message);
 
@@ -190,8 +280,10 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
 
         $this->command->newLine(2);
         $this->command->getOutput()->writeln(
-            sprintf('<bg=red;fg=white> ERROR </> %s is not installed. Please install it and try again.',
-                $this->getName())
+            sprintf(
+                '<bg=red;fg=white> ERROR </> %s is not installed. Please install it and try again.',
+                $this->getName()
+            )
         );
         $this->command->newLine();
 
@@ -211,8 +303,10 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
 
         $this->command->newLine(2);
         $this->command->getOutput()->writeln(
-            sprintf('<bg=red;fg=white> ERROR </> %s config file does not exist. Please check the path and try again.',
-                $this->getName())
+            sprintf(
+                '<bg=red;fg=white> ERROR </> %s config file does not exist. Please check the path and try again.',
+                $this->getName()
+            )
         );
         $this->command->newLine();
 
@@ -308,89 +402,6 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
         }
 
         return empty($this->filesBadlyFormattedPaths);
-    }
-
-    /**
-     * Get output method
-     */
-    public function getOutput(): ?OutputStyle
-    {
-        if (! config('git-hooks.debug_output')) {
-            return null;
-        }
-
-        return $this->command->getOutput();
-    }
-
-    public function setCommand(Command $command): void
-    {
-        $this->command = $command;
-    }
-
-    /**
-     * Get the name of the hook.
-     */
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param  array<int, string>|string  $fileExtensions
-     */
-    public function setFileExtensions(array|string $fileExtensions): self
-    {
-        $this->fileExtensions = $fileExtensions;
-
-        return $this;
-    }
-
-    public function setAnalyzerExecutable(string $executablePath, bool $isSameAsFixer = false): self
-    {
-        $this->analyzerExecutable = './'.trim($executablePath, '/');
-
-        return $isSameAsFixer ? $this->setFixerExecutable($executablePath) : $this;
-    }
-
-    public function getAnalyzerExecutable(): string
-    {
-        return $this->analyzerExecutable;
-    }
-
-    public function setFixerExecutable(string $executablePath): self
-    {
-        $this->fixerExecutable = './'.trim($executablePath, '/');
-
-        return $this;
-    }
-
-    public function getFixerExecutable(): string
-    {
-        return $this->fixerExecutable;
-    }
-
-    public function setRunInDocker(bool $runInDocker): self
-    {
-        $this->runInDocker = (bool) $runInDocker;
-
-        return $this;
-    }
-
-    public function getRunInDocker(): bool
-    {
-        return $this->runInDocker;
-    }
-
-    public function setDockerContainer(string $dockerContainer): self
-    {
-        $this->dockerContainer = $dockerContainer;
-
-        return $this;
-    }
-
-    public function getDockerContainer(): string
-    {
-        return $this->dockerContainer;
     }
 
     private function dockerCommand(string $command): string

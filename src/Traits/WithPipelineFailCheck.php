@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Traits;
 
 use Igorsgm\GitHooks\Exceptions\HookFailException;
@@ -32,8 +34,6 @@ trait WithPipelineFailCheck
 
     protected function getPipelineFailedTempFile(): string
     {
-        $tmpFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.'githooks-pipeline-fail-'.getmypid();
-
-        return $tmpFile;
+        return sys_get_temp_dir().DIRECTORY_SEPARATOR.'githooks-pipeline-fail-'.getmypid();
     }
 }

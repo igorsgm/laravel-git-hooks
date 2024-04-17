@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Git;
 
 use Illuminate\Support\Collection;
@@ -9,7 +11,7 @@ class ChangedFiles
     /**
      * @var Collection<int, ChangedFile>
      */
-    protected $files;
+    protected Collection $files;
 
     public function __construct(string $log)
     {
@@ -17,7 +19,7 @@ class ChangedFiles
 
         $this->files = collect($files)
             ->filter()
-            ->map(fn (string $line) => new ChangedFile($line));
+            ->map(fn (bool|string $line) => new ChangedFile($line));
     }
 
     /**

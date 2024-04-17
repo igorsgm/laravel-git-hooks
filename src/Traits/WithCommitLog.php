@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Traits;
 
 use Igorsgm\GitHooks\Exceptions\HookFailException;
@@ -12,10 +14,8 @@ trait WithCommitLog
 
     /**
      * Execute the console command.
-     *
-     * @return int|void
      */
-    public function handle()
+    public function handle(): int
     {
         try {
             $this->sendLogCommitThroughHooks(
@@ -26,6 +26,8 @@ trait WithCommitLog
         } catch (HookFailException) {
             return 1;
         }
+
+        return 0;
     }
 
     /**

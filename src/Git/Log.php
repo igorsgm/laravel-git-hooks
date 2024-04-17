@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Git;
 
 use Carbon\Carbon;
@@ -7,45 +9,29 @@ use Illuminate\Support\Str;
 
 class Log implements \Stringable
 {
-    /**
-     * @var string
-     */
-    protected $log;
+    private ?string $hash = null;
 
-    /**
-     * @var false|string
-     */
-    private $hash;
+    private ?string $author = null;
 
-    /**
-     * @var false|string
-     */
-    private $author;
-
-    /**
-     * @var Carbon
-     */
-    private $date;
+    private ?Carbon $date = null;
 
     /**
      * @var array<int, string>
      */
-    private $merge = [];
+    private array $merge = [];
 
-    /**
-     * @var string
-     */
-    private $message = '';
+    private string $message = '';
 
     /**
      * Log constructor.
      */
-    public function __construct(string $log)
+    public function __construct(protected string $log)
     {
-        $this->log = $log;
-        $lines = preg_split("/\r\n|\n|\r/", $log);
+        $lines = preg_split("/\r\n|\n|\r/", $this->log);
 
-        $this->parse($lines);
+        if ($lines !== false) {
+            $this->parse($lines);
+        }
     }
 
     /**
@@ -56,17 +42,17 @@ class Log implements \Stringable
     private function parse(array $lines): void
     {
         $handlers = collect([
-            'commit' => function ($line) {
+            'commit' => function ($line): void {
                 preg_match('/(?<hash>[a-z0-9]{40})/', $line, $matches);
                 $this->hash = $matches['hash'] ?? null;
             },
-            'Author' => function ($line) {
+            'Author' => function ($line): void {
                 $this->author = substr($line, strlen('Author:') + 1);
             },
-            'Date' => function ($line) {
+            'Date' => function ($line): void {
                 $this->date = Carbon::parse(substr($line, strlen('Date:') + 3));
             },
-            'Merge' => function ($line) {
+            'Merge' => function ($line): void {
                 $merge = substr($line, strlen('Merge:') + 1);
                 $this->merge = explode(' ', $merge);
             },
@@ -86,7 +72,7 @@ class Log implements \Stringable
     /**
      * Get commit hash
      */
-    public function getHash(): string
+    public function getHash(): ?string
     {
         return $this->hash;
     }
@@ -102,7 +88,7 @@ class Log implements \Stringable
     /**
      * Get commit date
      */
-    public function getDate(): Carbon
+    public function getDate(): ?Carbon
     {
         return $this->date;
     }
@@ -127,7 +113,7 @@ class Log implements \Stringable
 
     public function __toString(): string
     {
-        return $this->getHash();
+        return $this->getHash() ?? '';
     }
 
     public function getLog(): string

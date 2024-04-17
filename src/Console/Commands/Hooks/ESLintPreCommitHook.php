@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 
 use Closure;
@@ -20,9 +22,8 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
      *
      * @param  ChangedFiles  $files  The files that have been changed in the current commit.
      * @param  Closure  $next  A closure that represents the next middleware in the pipeline.
-     * @return mixed|null
      */
-    public function handle(ChangedFiles $files, Closure $next)
+    public function handle(ChangedFiles $files, Closure $next): mixed
     {
         $this->configParam = $this->configParam();
 
@@ -74,11 +75,11 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
      */
     protected function additionalParams(): ?string
     {
-        $additionalParams = config('git-hooks.code_analyzers.eslint.additional_params');
+        $additionalParams = (string) config('git-hooks.code_analyzers.eslint.additional_params');
 
         if (! empty($additionalParams)) {
-            $additionalParams = preg_replace('/\s+\.(?:(\s)|$)/', '$1', (string) $additionalParams);
-            $additionalParams = preg_replace('/\s*--(config|c)\b(=\S*)?\s*/', '', (string) $additionalParams);
+            $additionalParams = (string) preg_replace('/\s+\.(?:(\s)|$)/', '$1', (string) $additionalParams);
+            $additionalParams = (string) preg_replace('/\s*--(config|c)\b(=\S*)?\s*/', '', (string) $additionalParams);
         }
 
         return $additionalParams;

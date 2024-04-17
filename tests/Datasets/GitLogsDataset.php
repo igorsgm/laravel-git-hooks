@@ -31,6 +31,13 @@ dataset('listOfFixablePhpFiles', [
     ]),
 ]);
 
+dataset('listOfRectorPhpFiles', [
+    'List of Rector Files' => implode(PHP_EOL, [
+        'AM temp/ClassWithRectorIssues.php',
+        'AM temp/fixable-blade-file.blade.php',
+    ]),
+]);
+
 dataset('listOfFixableJSFiles', [
     'List of Fixable Files' => implode(PHP_EOL, [
         'AM temp/fixable-js-file.js',

@@ -14,7 +14,7 @@ class PreCommitFixtureHook implements PreCommitHook
         return 'MyPreCommitHook1';
     }
 
-    public function handle(ChangedFiles $files, Closure $next)
+    public function handle(ChangedFiles $files, Closure $next): mixed
     {
         return $next($files);
     }

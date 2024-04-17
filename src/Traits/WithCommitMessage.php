@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Traits;
 
 use Closure;
@@ -14,10 +16,8 @@ trait WithCommitMessage
 
     /**
      * Execute the console command.
-     *
-     * @return int|void
      */
-    public function handle()
+    public function handle(): int
     {
         try {
             $message = GitHooks::getCommitMessageContentFromFile(
@@ -35,16 +35,8 @@ trait WithCommitMessage
         } catch (HookFailException) {
             return 1;
         }
-    }
 
-    /**
-     * Get the git message path (By default .git/COMMIT_MESSAGE)
-     */
-    private function getMessagePath(): string
-    {
-        $file = $this->argument('file');
-
-        return base_path($file);
+        return 0;
     }
 
     /**
@@ -62,11 +54,25 @@ trait WithCommitMessage
      */
     protected function storeMessage(): Closure
     {
-        return function (CommitMessage $message) {
+        return function (CommitMessage $message): void {
             GitHooks::updateCommitMessageContentInFile(
                 $this->getMessagePath(),
                 (string) $message
             );
         };
+    }
+
+    /**
+     * Get the git message path (By default .git/COMMIT_MESSAGE)
+     */
+    private function getMessagePath(): string
+    {
+        $file = $this->argument('file');
+
+        if (! is_string($file)) {
+            throw new HookFailException('Invalid file argument provided');
+        }
+
+        return base_path($file);
     }
 }

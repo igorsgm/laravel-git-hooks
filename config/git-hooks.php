@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -199,6 +201,22 @@ return [
             'file_extensions' => env('BLADE_FORMATTER_FILE_EXTENSIONS', '/\.blade\.php$/'),
             'run_in_docker' => env('BLADE_FORMATTER_RUN_IN_DOCKER', false),
             'docker_container' => env('BLADE_FORMATTER_DOCKER_CONTAINER', ''),
+        ],
+        'rector' => [
+            'path' => env('RECTOR_PATH', 'vendor/bin/rector'),
+            'config' => env('RECTOR_CONFIG', 'rector.php'),
+            'file_extensions' => env('RECTOR_FILE_EXTENSIONS', '/\.php$/'),
+            'additional_params' => env('RECTOR_ADDITIONAL_PARAMS', ''),
+            'run_in_docker' => env('RECTOR_RUN_IN_DOCKER', false),
+            'docker_container' => env('RECTOR_DOCKER_CONTAINER', ''),
+        ],
+        'phpinsights' => [
+            'path' => env('PHPINSIGHTS_PATH', 'vendor/bin/phpinsights'),
+            'config' => env('PHPINSIGHTS_CONFIG', 'phpinsights.php'),
+            'file_extensions' => env('PHPINSIGHTS_FILE_EXTENSIONS', '/\.php$/'),
+            'additional_params' => env('PHPINSIGHTS_ADDITIONAL_PARAMS', ''),
+            'run_in_docker' => env('PHPINSIGHTS_RUN_IN_DOCKER', false),
+            'docker_container' => env('PHPINSIGHTS_DOCKER_CONTAINER', ''),
         ],
         'prettier' => [
             'path' => env('PRETTIER_PATH', 'node_modules/.bin/prettier'),

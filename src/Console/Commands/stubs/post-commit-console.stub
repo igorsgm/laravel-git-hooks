@@ -23,7 +23,7 @@ class {{ class }} implements PostCommitHook
      * @param  Closure  $next The next hook in the chain to execute.
      * @return mixed|null
      */
-    public function handle(Log $log, Closure $next)
+    public function handle(Log $log, Closure $next): mixed
     {
         // TODO: Implement post commit hook logic here.
 

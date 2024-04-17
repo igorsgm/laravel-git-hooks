@@ -1,23 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Git;
 
 class CommitMessage implements \Stringable
 {
-    /**
-     * @var string
-     */
-    protected $message;
+    protected string $message;
 
-    /**
-     * @var ChangedFiles
-     */
-    protected $files;
-
-    public function __construct(string $message, ChangedFiles $files)
+    public function __construct(string $message, protected ChangedFiles $files)
     {
         $this->setMessage($message);
-        $this->files = $files;
+    }
+
+    public function __toString(): string
+    {
+        return $this->message;
     }
 
     /**
@@ -42,10 +40,5 @@ class CommitMessage implements \Stringable
     public function getFiles(): ChangedFiles
     {
         return $this->files;
-    }
-
-    public function __toString(): string
-    {
-        return $this->message;
     }
 }
