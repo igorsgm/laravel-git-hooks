@@ -191,12 +191,26 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
      */
     protected function analizeCommittedFiles(Collection $commitFiles): self
     {
-        foreach ($commitFiles as $file) {
-            if (! $this->canFileBeAnalyzed($file)) {
+        $chunkSize = config('git-hooks.analyzer_chunk_size');
+
+        /** @var Collection<int, ChangedFile> $chunk */
+        foreach ($commitFiles->chunk($chunkSize) as $chunk) {
+            $filePaths = [];
+
+            /** @var ChangedFile $file */
+            foreach ($chunk as $file) {
+                if (! $this->canFileBeAnalyzed($file)) {
+                    continue;
+                }
+
+                $filePaths[] = $file->getFilePath();
+            }
+
+            if (empty($filePaths)) {
                 continue;
             }
 
-            $filePath = $file->getFilePath();
+            $filePath = implode(' ', $filePaths);
             $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
 
             $params = [

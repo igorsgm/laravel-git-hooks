@@ -268,6 +268,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Analyzer chunk size
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to set the number of files to be
+    | sent in chunks to the analyzers. Can also be set to 1 to send them
+    | one by one.
+    |
+    */
+    'analyzer_chunk_size' => env('GITHOOKS_ANALYZER_CHUNK_SIZE', 100),
+
+    /*
+    |--------------------------------------------------------------------------
     | Output errors
     |--------------------------------------------------------------------------
     |
