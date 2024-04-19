@@ -52,6 +52,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'code_analyzers' => [],
             'artisan_path' => base_path('artisan'),
             'output_errors' => false,
+            'validate_paths' => true,
             'automatically_fix_errors' => false,
             'rerun_analyzer_after_autofix' => false,
             'stop_at_first_analyzer_failure' => true,

@@ -135,7 +135,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
 
     public function setAnalyzerExecutable(string $executablePath, bool $isSameAsFixer = false): self
     {
-        $this->analyzerExecutable = './'.trim($executablePath, '/');
+        $this->analyzerExecutable = $executablePath;
 
         return $isSameAsFixer ? $this->setFixerExecutable($executablePath) : $this;
     }
@@ -147,7 +147,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
 
     public function setFixerExecutable(string $executablePath): self
     {
-        $this->fixerExecutable = './'.trim($executablePath, '/');
+        $this->fixerExecutable = $executablePath;
 
         return $this;
     }
@@ -274,7 +274,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
      */
     protected function validateAnalyzerInstallation(): self
     {
-        if (file_exists($this->analyzerExecutable)) {
+        if (! config('git-hooks.validate_paths') || file_exists($this->analyzerExecutable)) {
             return $this;
         }
 
@@ -297,7 +297,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
      */
     protected function validateConfigPath(string $path): self
     {
-        if (file_exists($path)) {
+        if (! config('git-hooks.validate_paths') || file_exists($path)) {
             return $this;
         }
 

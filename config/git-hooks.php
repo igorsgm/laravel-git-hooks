@@ -256,6 +256,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Validate paths
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you enable (or not) validation
+    | of paths. This can be useful when binary files are not part of the
+    | project directly.
+    |
+    */
+    'validate_paths' => env('GITHOOKS_VALIDATE_PATHS', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Output errors
     |--------------------------------------------------------------------------
     |
