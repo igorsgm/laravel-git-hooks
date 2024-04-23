@@ -236,7 +236,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
                 );
                 $this->filesBadlyFormattedPaths[] = $filePath;
 
-                if (config('git-hooks.output_errors') && ! config('git-hooks.debug_commands')) {
+                if (config('git-hooks.output_errors') && ! config('git-hooks.debug_output')) {
                     $this->command->newLine();
                     $this->command->getOutput()->write($process->getOutput());
                 }
@@ -409,7 +409,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
                 sprintf('<fg=red> %s Autofix Failed:</> %s', $this->getName(), $filePath)
             );
 
-            if (config('git-hooks.output_errors') && ! config('git-hooks.debug_commands')) {
+            if (config('git-hooks.output_errors') && ! config('git-hooks.debug_output')) {
                 $this->command->newLine();
                 $this->command->getOutput()->write($process->getOutput());
             }
