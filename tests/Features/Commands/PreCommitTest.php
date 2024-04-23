@@ -43,7 +43,7 @@ it('Returns 1 on HookFailException', function ($listOfChangedFiles) {
     //    );
     $preCommitHook1 = Mockery::mock(PreCommitHook::class);
     $preCommitHook1->expects('handle')
-        ->andReturnUsing(function (ChangedFiles $files, Closure $closure) {
+        ->andReturnUsing(function (ChangedFiles $files, Closure $closure): never {
             throw new HookFailException();
         });
 

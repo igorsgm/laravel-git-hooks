@@ -29,9 +29,8 @@ class TestCase extends \Orchestra\Testbench\TestCase
      * Define environment setup.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     * @return void
      */
-    public function defineEnvironment($app)
+    public function defineEnvironment($app): void
     {
         $app['config']->set('database.default', 'sqlite');
         $app['config']->set('database.connections.sqlite', [
@@ -53,10 +52,13 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'code_analyzers' => [],
             'artisan_path' => base_path('artisan'),
             'output_errors' => false,
+            'analyzer_chunk_size' => 100,
+            'validate_paths' => true,
             'automatically_fix_errors' => false,
             'rerun_analyzer_after_autofix' => false,
             'stop_at_first_analyzer_failure' => true,
             'debug_commands' => false,
+            'debug_output' => false,
             'run_in_docker' => false,
             'docker_command' => '',
         ]);
@@ -99,10 +101,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
         return $this;
     }
 
-    /**
-     * @return void
-     */
-    public function initializeGitAsTempDirectory()
+    public function initializeGitAsTempDirectory(): void
     {
         $this->gitInit()
             ->initializeTempDirectory(base_path('.git'));

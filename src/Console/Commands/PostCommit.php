@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands;
 
 use Igorsgm\GitHooks\Contracts\HookCommand;
@@ -24,9 +26,6 @@ class PostCommit extends Command implements HookCommand
      */
     protected $description = 'Run hook post-commit';
 
-    /**
-     * {@inheritDoc}
-     */
     public function getHook(): string
     {
         return 'post-commit';

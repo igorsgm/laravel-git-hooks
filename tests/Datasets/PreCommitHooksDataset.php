@@ -3,8 +3,10 @@
 use Igorsgm\GitHooks\Console\Commands\Hooks\BladeFormatterPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\LarastanPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PHPCodeSnifferPreCommitHook;
+use Igorsgm\GitHooks\Console\Commands\Hooks\PhpInsightsPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PintPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook;
+use Igorsgm\GitHooks\Console\Commands\Hooks\RectorPreCommitHook;
 
 dataset('pintConfiguration', [
     'Config File' => [
@@ -12,6 +14,8 @@ dataset('pintConfiguration', [
             'path' => '../../../bin/pint',
             'config' => __DIR__.'/../Fixtures/pintFixture.json',
             'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
     'Preset' => [
@@ -19,6 +23,8 @@ dataset('pintConfiguration', [
             'path' => '../../../bin/pint',
             'preset' => 'psr12',
             'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
 ]);
@@ -30,6 +36,34 @@ dataset('phpcsConfiguration', [
             'phpcbf_path' => '../../../bin/phpcbf',
             'config' => __DIR__.'/../Fixtures/phpcsFixture.xml',
             'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
+        ],
+    ],
+]);
+
+dataset('phpinsightsConfiguration', [
+    'phpinsights.php file' => [
+        [
+            'path' => '../../../bin/phpinsights',
+            'config' => __DIR__.'/../Fixtures/phpinsightsFixture.php',
+            'additional_params' => '',
+            'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
+        ],
+    ],
+]);
+
+dataset('rectorConfiguration', [
+    'rector.php file' => [
+        [
+            'path' => '../../../bin/rector',
+            'config' => __DIR__.'/../Fixtures/rectorFixture.php',
+            'additional_params' => '',
+            'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
 ]);
@@ -40,6 +74,8 @@ dataset('bladeFormatterConfiguration', [
             'path' => '../../../../node_modules/.bin/blade-formatter',
             'config' => __DIR__.'/../Fixtures/bladeFormatterFixture.json',
             'file_extensions' => '/\.blade\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
 ]);
@@ -50,6 +86,9 @@ dataset('larastanConfiguration', [
             'path' => '../../../bin/phpstan',
             'config' => __DIR__.'/../Fixtures/phpstanFixture.neon',
             'additional_params' => '--xdebug',
+            'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
 ]);
@@ -61,6 +100,8 @@ dataset('prettierConfiguration', [
             'config' => __DIR__.'/../Fixtures/.prettierrcFixture.json',
             'additional_params' => '--config --find-config-path',
             'file_extensions' => '/\.(jsx?|tsx?|vue)$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
 ]);
@@ -72,6 +113,8 @@ dataset('eslintConfiguration', [
             'config' => __DIR__.'/../Fixtures/.eslintrcFixture.js',
             'additional_params' => '--config',
             'file_extensions' => '/\.(jsx?|tsx?|vue)$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
         ],
     ],
 ]);
@@ -79,9 +122,12 @@ dataset('eslintConfiguration', [
 $nonExistentPath = [
     'path' => 'nonexistent/path',
     'phpcs_path' => 'nonexistent/path',
+    'phpcbf_path' => 'nonexistent/path',
     'preset' => null,
     'config' => __DIR__.'/../Fixtures/pintFixture.json',
-
+    'file_extensions' => '',
+    'run_in_docker' => false,
+    'docker_container' => '',
 ];
 
 dataset('codeAnalyzersList', [
@@ -109,5 +155,15 @@ dataset('codeAnalyzersList', [
         'prettier',
         $nonExistentPath,
         PrettierPreCommitHook::class,
+    ],
+    'PHP Insights' => [
+        'phpinsights',
+        $nonExistentPath,
+        PhpInsightsPreCommitHook::class,
+    ],
+    'Rector' => [
+        'rector',
+        $nonExistentPath,
+        RectorPreCommitHook::class,
     ],
 ]);

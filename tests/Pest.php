@@ -28,9 +28,7 @@ uses(GitHelper::class)->in(__DIR__.'/Features/Hooks');
 |
 */
 
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
+expect()->extend('toBeOne', fn () => $this->toBe(1));
 
 expect()->extend('toContainHookArtisanCommand', function ($hookName) {
     $this->value = file_get_contents($this->value);

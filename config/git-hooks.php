@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -189,6 +191,7 @@ return [
             'path' => env('LARASTAN_PATH', 'vendor/bin/phpstan'),
             'config' => env('LARASTAN_CONFIG', 'phpstan.neon'),
             'additional_params' => env('LARASTAN_ADDITIONAL_PARAMS', '--xdebug'),
+            'file_extensions' => env('LARASTAN_FILE_EXTENSIONS', '/\.php$/'),
             'run_in_docker' => env('LARAVEL_LARASTAN_RUN_IN_DOCKER', false),
             'docker_container' => env('LARAVEL_LARASTAN_DOCKER_CONTAINER', ''),
         ],
@@ -198,6 +201,22 @@ return [
             'file_extensions' => env('BLADE_FORMATTER_FILE_EXTENSIONS', '/\.blade\.php$/'),
             'run_in_docker' => env('BLADE_FORMATTER_RUN_IN_DOCKER', false),
             'docker_container' => env('BLADE_FORMATTER_DOCKER_CONTAINER', ''),
+        ],
+        'rector' => [
+            'path' => env('RECTOR_PATH', 'vendor/bin/rector'),
+            'config' => env('RECTOR_CONFIG', 'rector.php'),
+            'file_extensions' => env('RECTOR_FILE_EXTENSIONS', '/\.php$/'),
+            'additional_params' => env('RECTOR_ADDITIONAL_PARAMS', ''),
+            'run_in_docker' => env('RECTOR_RUN_IN_DOCKER', false),
+            'docker_container' => env('RECTOR_DOCKER_CONTAINER', ''),
+        ],
+        'phpinsights' => [
+            'path' => env('PHPINSIGHTS_PATH', 'vendor/bin/phpinsights'),
+            'config' => env('PHPINSIGHTS_CONFIG', 'phpinsights.php'),
+            'file_extensions' => env('PHPINSIGHTS_FILE_EXTENSIONS', '/\.php$/'),
+            'additional_params' => env('PHPINSIGHTS_ADDITIONAL_PARAMS', ''),
+            'run_in_docker' => env('PHPINSIGHTS_RUN_IN_DOCKER', false),
+            'docker_container' => env('PHPINSIGHTS_DOCKER_CONTAINER', ''),
         ],
         'prettier' => [
             'path' => env('PRETTIER_PATH', 'node_modules/.bin/prettier'),
@@ -237,6 +256,30 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Validate paths
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you enable (or not) validation
+    | of paths. This can be useful when binary files are not part of the
+    | project directly.
+    |
+    */
+    'validate_paths' => env('GITHOOKS_VALIDATE_PATHS', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Analyzer chunk size
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to set the number of files to be
+    | sent in chunks to the analyzers. Can also be set to 1 to send them
+    | one by one.
+    |
+    */
+    'analyzer_chunk_size' => env('GITHOOKS_ANALYZER_CHUNK_SIZE', 100),
+
+    /*
+    |--------------------------------------------------------------------------
     | Output errors
     |--------------------------------------------------------------------------
     |
@@ -244,7 +287,7 @@ return [
     | during execution directly for easy debug.
     |
     */
-    'output_errors' => false,
+    'output_errors' => env('GITHOOKS_OUTPUT_ERRORS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -255,7 +298,7 @@ return [
     | automatically run the fixer without any CLI prompt.
     |
     */
-    'automatically_fix_errors' => false,
+    'automatically_fix_errors' => env('GITHOOKS_AUTOMATICALLY_FIX_ERRORS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -267,7 +310,7 @@ return [
     | The git hooks will not fail in case the re-run is succesful.
     |
     */
-    'rerun_analyzer_after_autofix' => false,
+    'rerun_analyzer_after_autofix' => env('GITHOOKS_RERUN_ANALYZER_AFTER_AUTOFIX', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -278,7 +321,7 @@ return [
     | stop (or not) at the first analyzer failure encountered.
     |
     */
-    'stop_at_first_analyzer_failure' => true,
+    'stop_at_first_analyzer_failure' => env('GITHOOKS_STOP_AT_FIRST_ANALYZER_FAILURE', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -289,5 +332,16 @@ return [
     | display the commands that are executed (usually for debug purpose).
     |
     */
-    'debug_commands' => false,
+    'debug_commands' => env('GITHOOKS_DEBUG_COMMANDS', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Debug output
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you display the output of each
+    | command during execution directly for easy debug.
+    |
+    */
+    'debug_output' => env('GITHOOKS_DEBUG_OUTPUT', false),
 ];

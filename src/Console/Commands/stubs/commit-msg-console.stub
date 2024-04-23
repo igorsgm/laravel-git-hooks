@@ -21,9 +21,9 @@ class {{ class }} implements MessageHook
      *
      * @param  CommitMessage  $message The commit message.
      * @param  Closure  $next The next hook in the chain to execute.
-     * @return mixed|null
+     * @return mixed
      */
-    public function handle(CommitMessage $message, Closure $next)
+    public function handle(CommitMessage $message, Closure $next): mixed
     {
         // TODO: Implement your commit msg hook logic here.
 

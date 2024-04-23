@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks;
 
 use Illuminate\Support\ServiceProvider;
@@ -9,7 +11,7 @@ class GitHooksServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -32,13 +34,11 @@ class GitHooksServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    public function register()
+    public function register(): void
     {
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/git-hooks.php', 'laravel-git-hooks');
 
-        $this->app->singleton('laravel-git-hooks', function () {
-            return new GitHooks;
-        });
+        $this->app->singleton('laravel-git-hooks', fn () => new GitHooks());
     }
 }

@@ -1,76 +1,71 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 
 use Closure;
+use Igorsgm\GitHooks\Contracts\CodeAnalyzerPreCommitHook;
 use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFile;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Traits\ProcessHelper;
+use Igorsgm\GitHooks\Traits\WithPipelineFailCheck;
 use Illuminate\Console\Command;
+use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
 use Symfony\Component\Console\Terminal;
 
-abstract class BaseCodeAnalyzerPreCommitHook
+abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
     use ProcessHelper;
+    use WithPipelineFailCheck;
 
     /**
      * Command instance that is bound automatically by Hooks Pipeline, so it can be used inside the Hook.
-     *
-     * @var Command
      */
-    public $command;
+    public Command $command;
+
+    /**
+     * List of files extensions that will be analyzed by the hook.
+     * Can also be a regular expression.
+     *
+     * @var array<int, string>|string
+     */
+    public array|string $fileExtensions = [];
 
     /**
      * Name of the hook
-     *
-     * @var string
      */
-    protected $name;
-
-    /*
-     * List of files extensions that will be analyzed by the hook.
-     * Can also be a regular expression.
-     * @var array|string
-     */
-    public $fileExtensions = [];
+    protected string $name;
 
     /**
      * The path to the analyzer executable.
-     *
-     * @var string
      */
-    protected $analyzerExecutable;
+    protected string $analyzerExecutable;
 
     /**
      * The path to the fixer executable. In multiple cases it's the same of the analyzer executable.
-     *
-     * @var string
      */
-    protected $fixerExecutable;
+    protected string $fixerExecutable;
 
     /**
      * The list of paths of files that are badly formatted and should be fixed.
      *
-     * @var array
+     * @var array<int, string>
      */
-    protected $filesBadlyFormattedPaths = [];
+    protected array $filesBadlyFormattedPaths = [];
 
     /**
      * Run tool in docker
-     *
-     * @var bool
      */
-    protected $runInDocker = false;
+    protected bool $runInDocker = false;
 
     /**
      * Docker container on which to run
-     *
-     * @var string
      */
-    protected $dockerContainer = '';
+    protected string $dockerContainer = '';
 
     public function __construct()
     {
@@ -80,13 +75,9 @@ abstract class BaseCodeAnalyzerPreCommitHook
     /**
      * Handles the committed files and checks if they are properly formatted.
      *
-     * @param  ChangedFiles  $files  The instance of the changed files.
-     * @param  Closure  $next  The closure to be executed after the files are handled.
-     * @return mixed|void
-     *
      * @throws HookFailException If the hook fails to analyze the committed files.
      */
-    public function handleCommittedFiles(ChangedFiles $files, Closure $next)
+    public function handleCommittedFiles(ChangedFiles $files, Closure $next): mixed
     {
         $commitFiles = $files->getStaged();
 
@@ -108,26 +99,128 @@ abstract class BaseCodeAnalyzerPreCommitHook
     }
 
     /**
+     * Get output method
+     */
+    public function getOutput(): ?OutputStyle
+    {
+        if (! config('git-hooks.debug_output')) {
+            return null;
+        }
+
+        return $this->command->getOutput();
+    }
+
+    public function setCommand(Command $command): void
+    {
+        $this->command = $command;
+    }
+
+    /**
+     * Get the name of the hook.
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param  array<int, string>|string  $fileExtensions
+     */
+    public function setFileExtensions(array|string $fileExtensions): self
+    {
+        $this->fileExtensions = $fileExtensions;
+
+        return $this;
+    }
+
+    public function setAnalyzerExecutable(string $executablePath, bool $isSameAsFixer = false): self
+    {
+        $this->analyzerExecutable = $executablePath;
+
+        return $isSameAsFixer ? $this->setFixerExecutable($executablePath) : $this;
+    }
+
+    public function getAnalyzerExecutable(): string
+    {
+        return $this->analyzerExecutable;
+    }
+
+    public function setFixerExecutable(string $executablePath): self
+    {
+        $this->fixerExecutable = $executablePath;
+
+        return $this;
+    }
+
+    public function getFixerExecutable(): string
+    {
+        return $this->fixerExecutable;
+    }
+
+    public function setRunInDocker(bool $runInDocker): self
+    {
+        $this->runInDocker = (bool) $runInDocker;
+
+        return $this;
+    }
+
+    public function getRunInDocker(): bool
+    {
+        return $this->runInDocker;
+    }
+
+    public function setDockerContainer(string $dockerContainer): self
+    {
+        $this->dockerContainer = $dockerContainer;
+
+        return $this;
+    }
+
+    public function getDockerContainer(): string
+    {
+        return $this->dockerContainer;
+    }
+
+    /**
      * Analyzes an array of ChangedFile objects and checks whether each file can be analyzed,
      * whether it is properly formatted according to the configured analyzer, and collects
      * paths of any files that are not properly formatted.
      *
-     * @param  ChangedFile[]|Collection  $commitFiles  The files to analyze.
+     * @param  Collection<int, ChangedFile>  $commitFiles  The files to analyze.
      * @return $this
      */
-    protected function analizeCommittedFiles($commitFiles)
+    protected function analizeCommittedFiles(Collection $commitFiles): self
     {
-        foreach ($commitFiles as $file) {
-            if (! $this->canFileBeAnalyzed($file)) {
+        $chunkSize = config('git-hooks.analyzer_chunk_size');
+
+        /** @var Collection<int, ChangedFile> $chunk */
+        foreach ($commitFiles->chunk($chunkSize) as $chunk) {
+            $filePaths = [];
+
+            /** @var ChangedFile $file */
+            foreach ($chunk as $file) {
+                if (! $this->canFileBeAnalyzed($file)) {
+                    continue;
+                }
+
+                $filePaths[] = $file->getFilePath();
+            }
+
+            if (empty($filePaths)) {
                 continue;
             }
 
-            $filePath = $file->getFilePath();
+            $filePath = implode(' ', $filePaths);
             $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
 
-            $process = $this->runCommands($command);
+            $params = [
+                'show-output' => config('git-hooks.debug_output'),
+            ];
+
+            $process = $this->runCommands($command, $params);
 
             if (config('git-hooks.debug_commands')) {
+                $this->command->newLine();
                 $this->command->getOutput()->write(PHP_EOL.' <bg=yellow;fg=white> DEBUG </> Executed command: '.$process->getCommandLine().PHP_EOL);
             }
 
@@ -143,7 +236,7 @@ abstract class BaseCodeAnalyzerPreCommitHook
                 );
                 $this->filesBadlyFormattedPaths[] = $filePath;
 
-                if (config('git-hooks.output_errors')) {
+                if (config('git-hooks.output_errors') && ! config('git-hooks.debug_output')) {
                     $this->command->newLine();
                     $this->command->getOutput()->write($process->getOutput());
                 }
@@ -167,18 +260,21 @@ abstract class BaseCodeAnalyzerPreCommitHook
 
     /**
      * Returns the message to display when the commit fails.
-     *
-     * @return $this
      */
-    protected function commitFailMessage()
+    protected function commitFailMessage(): self
     {
         $this->command->newLine();
 
         $message = '<bg=red;fg=white> COMMIT FAILED </> ';
-        $message .= sprintf("Your commit contains files that should pass %s but do not. Please fix the errors in the files above and try again.\n",
-            $this->getName());
-        $message .= sprintf('You can check which %s errors happened in them by executing: <comment>%s {filePath}</comment>',
-            $this->getName(), $this->analyzerCommand());
+        $message .= sprintf(
+            "Your commit contains files that should pass %s but do not. Please fix the errors in the files above and try again.\n",
+            $this->getName()
+        );
+        $message .= sprintf(
+            'You can check which %s errors happened in them by executing: <comment>%s {filePath}</comment>',
+            $this->getName(),
+            $this->analyzerCommand()
+        );
 
         $this->command->getOutput()->writeln($message);
 
@@ -188,20 +284,20 @@ abstract class BaseCodeAnalyzerPreCommitHook
     /**
      * Check if the BaseCodeAnalyzerPreCommitHook is installed.
      *
-     * @return $this
-     *
      * @throws HookFailException
      */
-    protected function validateAnalyzerInstallation()
+    protected function validateAnalyzerInstallation(): self
     {
-        if (file_exists($this->analyzerExecutable)) {
+        if (! config('git-hooks.validate_paths') || file_exists($this->analyzerExecutable)) {
             return $this;
         }
 
         $this->command->newLine(2);
         $this->command->getOutput()->writeln(
-            sprintf('<bg=red;fg=white> ERROR </> %s is not installed. Please install it and try again.',
-                $this->getName())
+            sprintf(
+                '<bg=red;fg=white> ERROR </> %s is not installed. Please install it and try again.',
+                $this->getName()
+            )
         );
         $this->command->newLine();
 
@@ -211,21 +307,20 @@ abstract class BaseCodeAnalyzerPreCommitHook
     /**
      * Validates the given configuration path.
      *
-     * @param  string  $path  The path to the configuration file.
-     * @return $this This instance for method chaining.
-     *
      * @throws HookFailException If the configuration file does not exist.
      */
-    protected function validateConfigPath($path)
+    protected function validateConfigPath(string $path): self
     {
-        if (file_exists($path)) {
+        if (! config('git-hooks.validate_paths') || file_exists($path)) {
             return $this;
         }
 
         $this->command->newLine(2);
         $this->command->getOutput()->writeln(
-            sprintf('<bg=red;fg=white> ERROR </> %s config file does not exist. Please check the path and try again.',
-                $this->getName())
+            sprintf(
+                '<bg=red;fg=white> ERROR </> %s config file does not exist. Please check the path and try again.',
+                $this->getName()
+            )
         );
         $this->command->newLine();
 
@@ -260,6 +355,8 @@ abstract class BaseCodeAnalyzerPreCommitHook
             }
         }
 
+        $this->markPipelineFailed();
+
         if (config('git-hooks.stop_at_first_analyzer_failure')) {
             throw new HookFailException();
         }
@@ -272,18 +369,31 @@ abstract class BaseCodeAnalyzerPreCommitHook
      * configured fixer command. For each fixed file, adds it to Git and removes its path
      * from the `$filesBadlyFormattedPaths` array.
      *
-     *
      * @throws HookFailException if any files cannot be fixed.
      */
     private function autoFixFiles(): bool
     {
+        $params = [
+            'show-output' => config('git-hooks.debug_output'),
+        ];
+
         foreach ($this->filesBadlyFormattedPaths as $key => $filePath) {
             $fixerCommand = $this->dockerCommand($this->fixerCommand().' '.$filePath);
-            $process = $this->runCommands($fixerCommand);
+            $process = $this->runCommands($fixerCommand, $params);
+
+            if (config('git-hooks.debug_commands')) {
+                $this->command->newLine();
+                $this->command->getOutput()->write(PHP_EOL.' <bg=yellow;fg=white> DEBUG </> Executed command: '.$process->getCommandLine().PHP_EOL);
+            }
 
             if (config('git-hooks.rerun_analyzer_after_autofix')) {
                 $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
-                $process = $this->runCommands($command);
+                $process = $this->runCommands($command, $params);
+
+                if (config('git-hooks.debug_commands')) {
+                    $this->command->newLine();
+                    $this->command->getOutput()->write(PHP_EOL.' <bg=yellow;fg=white> DEBUG </> Executed command: '.$process->getCommandLine().PHP_EOL);
+                }
             }
 
             $wasProperlyFixed = $process->isSuccessful();
@@ -299,93 +409,13 @@ abstract class BaseCodeAnalyzerPreCommitHook
                 sprintf('<fg=red> %s Autofix Failed:</> %s', $this->getName(), $filePath)
             );
 
-            if (config('git-hooks.output_errors')) {
+            if (config('git-hooks.output_errors') && ! config('git-hooks.debug_output')) {
                 $this->command->newLine();
                 $this->command->getOutput()->write($process->getOutput());
             }
         }
 
         return empty($this->filesBadlyFormattedPaths);
-    }
-
-    /**
-     * Get the name of the hook.
-     */
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param  array|string  $fileExtensions
-     * @return BaseCodeAnalyzerPreCommitHook
-     */
-    public function setFileExtensions($fileExtensions)
-    {
-        $this->fileExtensions = $fileExtensions;
-
-        return $this;
-    }
-
-    /**
-     * @return BaseCodeAnalyzerPreCommitHook
-     */
-    public function setAnalyzerExecutable($executablePath, $isSameAsFixer = false)
-    {
-        $this->analyzerExecutable = './'.trim($executablePath, '/');
-
-        return $isSameAsFixer ? $this->setFixerExecutable($executablePath) : $this;
-    }
-
-    public function getAnalyzerExecutable(): string
-    {
-        return $this->analyzerExecutable;
-    }
-
-    /**
-     * @return BaseCodeAnalyzerPreCommitHook
-     */
-    public function setFixerExecutable($exacutablePath)
-    {
-        $this->fixerExecutable = './'.trim($exacutablePath, '/');
-
-        return $this;
-    }
-
-    public function getFixerExecutable(): string
-    {
-        return $this->fixerExecutable;
-    }
-
-    /**
-     * @return BaseCodeAnalyzerPreCommitHook
-     */
-    public function setRunInDocker($runInDocker)
-    {
-        $this->runInDocker = (bool) $runInDocker;
-
-        return $this;
-    }
-
-    public function getRunInDocker(): bool
-    {
-        return $this->runInDocker;
-    }
-
-    /**
-     * @param  string  $dockerContainer
-     * @return BaseCodeAnalyzerPreCommitHook
-     */
-    public function setDockerContainer($dockerContainer)
-    {
-        $this->dockerContainer = $dockerContainer;
-
-        return $this;
-    }
-
-    public function getDockerContainer(): string
-    {
-        return $this->dockerContainer;
     }
 
     private function dockerCommand(string $command): string

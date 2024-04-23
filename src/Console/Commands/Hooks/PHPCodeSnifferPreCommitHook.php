@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 
 use Closure;
@@ -8,26 +10,20 @@ use Igorsgm\GitHooks\Git\ChangedFiles;
 
 class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
-    /**
-     * @var string
-     */
-    protected $configParam;
+    protected string $configParam;
 
     /**
      * Name of the hook
-     *
-     * @var string
      */
-    protected $name = 'PHP_CodeSniffer';
+    protected string $name = 'PHP_CodeSniffer';
 
     /**
      * Analyze and fix committed PHP files using PHP Code Sniffer and PHP Code Beautifier and Fixer.
      *
      * @param  ChangedFiles  $files  The files that have been changed in the current commit.
      * @param  Closure  $next  A closure that represents the next middleware in the pipeline.
-     * @return mixed|null
      */
-    public function handle(ChangedFiles $files, Closure $next)
+    public function handle(ChangedFiles $files, Closure $next): mixed
     {
         $this->configParam = $this->configParam();
 
@@ -64,7 +60,7 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function configParam(): string
     {
-        $phpCSStandard = rtrim(config('git-hooks.code_analyzers.php_code_sniffer.config'), '/');
+        $phpCSStandard = rtrim((string) config('git-hooks.code_analyzers.php_code_sniffer.config'), '/');
         $this->validateConfigPath($phpCSStandard);
 
         return empty($phpCSStandard) ? '' : '--standard='.$phpCSStandard;

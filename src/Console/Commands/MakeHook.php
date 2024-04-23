@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands;
 
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Illuminate\Console\Concerns\CreatesMatchingTest;
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -51,7 +54,7 @@ class MakeHook extends GeneratorCommand
                 implode(', ', $supportedHooks)
             ));
 
-            return 1;
+            return true;
         }
 
         return parent::handle();
@@ -80,7 +83,13 @@ class MakeHook extends GeneratorCommand
      */
     protected function getStub()
     {
-        $relativePath = '/stubs/'.$this->argument('hookType').'-console.stub';
+        $hookType = $this->argument('hookType');
+
+        if (! is_string($hookType) || empty($hookType)) {
+            throw new FileNotFoundException('Invalid hook type provided');
+        }
+
+        $relativePath = '/stubs/'.$hookType.'-console.stub';
 
         return file_exists($customPath = $this->laravel->basePath(trim($relativePath, '/')))
             ? $customPath
@@ -101,9 +110,9 @@ class MakeHook extends GeneratorCommand
     /**
      * Get the console command arguments.
      *
-     * @return array
+     * @return array<int, array<int, mixed>>
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [
             ['hookType', InputArgument::REQUIRED, 'The type of the Git Hook', null, GitHooks::getSupportedHooks()],
@@ -114,9 +123,9 @@ class MakeHook extends GeneratorCommand
     /**
      * Get the console command options.
      *
-     * @return array
+     * @return array<int, array<int, mixed>>
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the Git Hook already exists'],
@@ -126,15 +135,15 @@ class MakeHook extends GeneratorCommand
     /**
      * Prompt for missing input arguments using the returned questions.
      *
-     * @return array
+     * @return array<string, string>
      */
-    protected function promptForMissingArgumentsUsing()
+    protected function promptForMissingArgumentsUsing(): array
     {
         $supportedHooks = implode(', ', GitHooks::getSupportedHooks());
 
         return [
             'name' => 'What should the '.strtolower($this->type).' be named?',
-            'hookType' => 'What type of the '.strtolower($this->type)."? Possible values: ($supportedHooks)",
+            'hookType' => 'What type of the '.strtolower($this->type)."? Possible values: ({$supportedHooks})",
         ];
     }
 }

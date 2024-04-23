@@ -20,9 +20,7 @@ it('Handles invalid hook types', function () {
 
 test('Generates a hook file with a valid hook type', function () {
     $filesystem = Mockery::mock(Filesystem::class)
-        ->expects('put')->withArgs(function ($path, $contents) {
-            return Str::contains($path, 'MyCustomPreCommitHook.php');
-        })->andReturns(true)
+        ->expects('put')->withArgs(fn ($path, $contents) => Str::contains($path, 'MyCustomPreCommitHook.php'))->andReturns(true)
         ->shouldReceive([
             'isDirectory' => true,
             'exists' => false,
@@ -55,7 +53,7 @@ test('Does not overwrite existing hook file', function () {
 test('Uses custom stub if available', function () {
     $customStubContent = 'Custom stub content';
     $customStubPath = $this->app->basePath('stubs/pre-commit-console.stub');
-    File::ensureDirectoryExists(dirname($customStubPath));
+    File::ensureDirectoryExists(dirname((string) $customStubPath));
     File::put($customStubPath, $customStubContent);
 
     $hookPath = $this->app->basePath('app/Console/GitHooks/PreCommitHook.php');
