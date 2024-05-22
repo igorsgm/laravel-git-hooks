@@ -290,4 +290,15 @@ return [
     |
     */
     'debug_commands' => false,
+
+   /*
+   |--------------------------------------------------------------------------
+   | Git hooks path
+   |--------------------------------------------------------------------------
+   |
+   | This configuration option allows you to configure where the git hooks
+   | are stored for this project, you might need to change this if you
+   | are using git submodules as part of a wider project.
+   */
+    'git_hooks_path' => base_path('.git'.DIRECTORY_SEPARATOR.'hooks'),
 ];
