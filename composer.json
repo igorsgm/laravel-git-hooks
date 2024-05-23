@@ -34,7 +34,7 @@
         "laravel/pint": "^1.2",
         "mockery/mockery": "^1.5.1",
         "larastan/larastan": "^2.9",
-        "orchestra/testbench": "^v8.0.0|^v9.0.0",
+        "orchestra/testbench": "^v7.0.0|^v8.0.0|^v9.0.0",
         "pestphp/pest": "^2.0",
         "squizlabs/php_codesniffer": "^3.7"
     },

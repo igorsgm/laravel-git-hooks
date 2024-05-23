@@ -84,6 +84,6 @@ class GitHooks
      */
     public function getGitHooksDir()
     {
-        return base_path('.git'.DIRECTORY_SEPARATOR.'hooks');
+        return config('git-hooks.git_hooks_path', base_path('.git'.DIRECTORY_SEPARATOR.'hooks'));
     }
 }
