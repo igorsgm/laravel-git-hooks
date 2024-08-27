@@ -67,9 +67,16 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
      */
     protected string $dockerContainer = '';
 
+    /**
+     * @var Chunk size used for analyze
+     */
+    protected int $chunkSize = 100;
+
     public function __construct()
     {
         $this->setCwd(base_path());
+
+        $this->chunkSize = config('git-hooks.analyzer_chunk_size');
     }
 
     /**
@@ -191,10 +198,8 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
      */
     protected function analizeCommittedFiles(Collection $commitFiles): self
     {
-        $chunkSize = config('git-hooks.analyzer_chunk_size');
-
         /** @var Collection<int, ChangedFile> $chunk */
-        foreach ($commitFiles->chunk($chunkSize) as $chunk) {
+        foreach ($commitFiles->chunk($this->chunkSize) as $chunk) {
             $filePaths = [];
 
             /** @var ChangedFile $file */
