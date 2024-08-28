@@ -6,6 +6,4 @@ namespace Igorsgm\GitHooks\Exceptions;
 
 use RuntimeException;
 
-class HookFailException extends RuntimeException
-{
-}
+class HookFailException extends RuntimeException {}

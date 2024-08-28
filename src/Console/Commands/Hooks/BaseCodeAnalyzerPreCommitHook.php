@@ -68,7 +68,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
     protected string $dockerContainer = '';
 
     /**
-     * @var Chunk size used for analyze
+     * Chunk size used for analyze
      */
     protected int $chunkSize = 100;
 
@@ -306,7 +306,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
         );
         $this->command->newLine();
 
-        throw new HookFailException();
+        throw new HookFailException;
     }
 
     /**
@@ -329,7 +329,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
         );
         $this->command->newLine();
 
-        throw new HookFailException();
+        throw new HookFailException;
     }
 
     /**
@@ -363,7 +363,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
         $this->markPipelineFailed();
 
         if (config('git-hooks.stop_at_first_analyzer_failure')) {
-            throw new HookFailException();
+            throw new HookFailException;
         }
 
         return false;

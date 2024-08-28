@@ -22,7 +22,7 @@ test('Skips Enlightn check if there are no files added to commit', function () {
 
     $next = fn ($files) => 'passed';
 
-    $hook = new EnlightnPreCommitHook();
+    $hook = new EnlightnPreCommitHook;
     $result = $hook->handle($changedFiles, $next);
     expect($result)->toBe('passed');
 });
@@ -44,7 +44,7 @@ test('Fails commit when Enlightn is not passing', function ($listOfChangedFiles)
     $command = $commands['git-hooks:pre-commit'];
 
     $input = new ArrayInput([]);
-    $output = new BufferedOutput();
+    $output = new BufferedOutput;
 
     $exitCode = $command->run($input, $output);
     $outputText = $output->fetch();

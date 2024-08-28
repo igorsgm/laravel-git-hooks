@@ -17,7 +17,7 @@ test('Skips check if there are no staged files in commit', function () {
 
     $next = fn ($files) => 'passed';
 
-    $hook = new ConcreteBaseCodeAnalyzerFixture();
+    $hook = new ConcreteBaseCodeAnalyzerFixture;
     $result = $hook->handleCommittedFiles($changedFiles, $next);
     expect($result)->toBe('passed');
 });
@@ -28,7 +28,7 @@ test('Skips check during a Merge process', function ($modifiedFilesList) {
 
     $next = fn ($files) => 'passed';
 
-    $hook = new ConcreteBaseCodeAnalyzerFixture();
+    $hook = new ConcreteBaseCodeAnalyzerFixture;
     $result = $hook->handleCommittedFiles($changedFiles, $next);
     expect($result)->toBe('passed');
 })->with('modifiedFilesList');
@@ -44,7 +44,7 @@ test('Throws HookFailException and notifies when Code Analyzer is not installed'
         GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
         GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixablePhpFiles);
 
-        $preCommitHook = new $preCommitHookClass();
+        $preCommitHook = new $preCommitHookClass;
         $this->artisan('git-hooks:pre-commit')
             ->expectsOutputToContain($preCommitHook->getName().' is not installed.')
             ->assertExitCode(1);
@@ -62,7 +62,7 @@ test('Throws HookFailException and notifies when config path does not exist',
         GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
         GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixablePhpFiles);
 
-        $preCommitHook = new $preCommitHookClass();
+        $preCommitHook = new $preCommitHookClass;
         $this->artisan('git-hooks:pre-commit')
             ->expectsOutputToContain($preCommitHook->getName().' config file does not exist.')
             ->assertExitCode(1);

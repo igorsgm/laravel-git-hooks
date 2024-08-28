@@ -5,7 +5,7 @@ use Illuminate\Container\Container;
 
 test('Data is sent through Pipes', function ($hook, ?array $parameters = null) {
     $parameters ??= [];
-    $container = new Container();
+    $container = new Container;
 
     $hookConfig = ! empty($parameters) ? [$hook => $parameters] : [$hook];
     $this->config->set('git-hooks.pre-commit', $hookConfig);
@@ -21,7 +21,7 @@ test('Data is sent through Pipes', function ($hook, ?array $parameters = null) {
 })->with('pipelineHooks');
 
 test('Data is sent through Pipes with Closure', function () {
-    $container = new Container();
+    $container = new Container;
 
     $closureHook = function ($message, $next) {
         $message .= ' Hook 4';

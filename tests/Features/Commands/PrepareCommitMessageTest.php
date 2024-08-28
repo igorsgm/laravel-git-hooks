@@ -45,7 +45,7 @@ it('Returns 1 on HookFailException', function ($listOfChangedFiles) {
     $postCommitHook1 = Mockery::mock(MessageHook::class);
     $postCommitHook1->expects('handle')
         ->andReturnUsing(function (CommitMessage $commitMessage, Closure $closure): never {
-            throw new HookFailException();
+            throw new HookFailException;
         });
 
     $this->config->set('git-hooks.prepare-commit-msg', [

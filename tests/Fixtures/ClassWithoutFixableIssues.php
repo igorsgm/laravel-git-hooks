@@ -2,6 +2,4 @@
 
 namespace Igorsgm\GitHooks\Tests\Fixtures;
 
-class ClassWithoutFixableIssues
-{
-}
+class ClassWithoutFixableIssues {}

@@ -6,17 +6,9 @@ use Igorsgm\GitHooks\Console\Commands\Hooks\BaseCodeAnalyzerPreCommitHook;
 
 class ConcreteBaseCodeAnalyzerFixture extends BaseCodeAnalyzerPreCommitHook
 {
-    public function analyzerCommand(): string
-    {
+    public function analyzerCommand(): string {}
 
-    }
+    public function fixerCommand(): string {}
 
-    public function fixerCommand(): string
-    {
-    }
-
-    public function handle(\Igorsgm\GitHooks\Git\ChangedFiles $files, \Closure $next): mixed
-    {
-
-    }
+    public function handle(\Igorsgm\GitHooks\Git\ChangedFiles $files, \Closure $next): mixed {}
 }

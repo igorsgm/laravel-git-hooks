@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Rector\Config\RectorConfig;
 use Rector\CodeQuality\Rector\Empty_\SimplifyEmptyCheckOnEmptyArrayRector;
+use Rector\Config\RectorConfig;
 
 return RectorConfig::configure()
     ->withPaths([
