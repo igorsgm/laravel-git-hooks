@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace Igorsgm\GitHooks\Tests\Fixtures;
 
@@ -9,6 +9,10 @@ class ClassWithRectorIssues
     protected function test()
     {
         $a = [];
+        
+        if (empty($a)) {
+            $a = ["string", 'another string'];
+        }
 
         return $a;
     }
