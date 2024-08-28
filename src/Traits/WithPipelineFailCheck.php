@@ -12,7 +12,7 @@ trait WithPipelineFailCheck
     {
         $tmpFile = $this->getPipelineFailedTempFile();
         if (touch($tmpFile) === false) {
-            throw new HookFailException;
+            throw new HookFailException();
         }
     }
 

@@ -26,7 +26,7 @@ jobs:
         laravel: [ '9.*' ]
         include:
           - laravel: 9.*
-            testbench: 8.*
+            testbench: 7.*
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependency-stability }} - ${{ matrix.operating-system}}
 
