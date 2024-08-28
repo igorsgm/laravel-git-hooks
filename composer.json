@@ -37,7 +37,7 @@
         "nunomaduro/phpinsights": "^2.11",
         "orchestra/testbench": "^v7.0.0|^v8.0.0|^v9.0.0",
         "pestphp/pest": "^2.0",
-        "pestphp/pest-plugin-laravel": "^2.3",
+        "pestphp/pest-plugin-laravel": "^2.2",
         "rector/rector": "^1.0",
         "squizlabs/php_codesniffer": "^3.7"
     },
