@@ -27,7 +27,13 @@ return [
         NunoMaduro\PhpInsights\Domain\Insights\ForbiddenTraits::class,
         PHP_CodeSniffer\Standards\Generic\Sniffs\Commenting\TodoSniff::class,
         PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineLengthSniff::class,
+        PHP_CodeSniffer\Standards\Squiz\Sniffs\WhiteSpace\ScopeClosingBraceSniff::class,
+        PHP_CodeSniffer\Standards\PEAR\Sniffs\WhiteSpace\ScopeClosingBraceSniff::class,
+        PHP_CodeSniffer\Standards\PSR12\Sniffs\Classes\ClassInstantiationSniff::class,
+        PhpCsFixer\Fixer\Basic\BracesFixer::class,
+        PhpCsFixer\Fixer\ClassNotation\ClassDefinitionFixer::class,
         PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer::class,
+        PhpCsFixer\Fixer\Operator\NewWithBracesFixer::class,
     ],
     'config' => [
         //  ExampleInsight::class => [
