@@ -149,7 +149,7 @@ There are also several debug options which can be adjusted using the following p
 If you are using Laravel Sail and maybe not lokal PHP is installed, you can adjust the following parameters in the git-hooks.php config file:
 
 ```php
-        'use_sail' => env('GITHOOKS_USE_SAIL', false),
+    'use_sail' => env('GITHOOKS_USE_SAIL', false),
 ```
 This will force the local git hooks to use the `sail` command to execute the hooks.
 
@@ -158,8 +158,8 @@ This will force the local git hooks to use the `sail` command to execute the hoo
 By default commands are executed locally, however this behavior can be adjusted for each hook using the parameters `run_in_docker` and `docker_container`:
 
 ```php
-        'run_in_docker' => env('LARAVEL_PINT_RUN_IN_DOCKER', true),
-        'docker_container' => env('LARAVEL_PINT_DOCKER_CONTAINER', 'app'),
+    'run_in_docker' => env('LARAVEL_PINT_RUN_IN_DOCKER', true),
+    'docker_container' => env('LARAVEL_PINT_DOCKER_CONTAINER', 'app'),
 ```
 
 ### Creating Custom Git Hooks

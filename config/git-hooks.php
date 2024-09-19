@@ -294,17 +294,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Output errors
-    |--------------------------------------------------------------------------
-    |
-    | This configuration option allows you output any errors encountered
-    | during execution directly for easy debug.
-    |
-    */
-    'output_errors' => env('GITHOOKS_OUTPUT_ERRORS', false),
-
-    /*
-    |--------------------------------------------------------------------------
     | Automatically fix errors
     |--------------------------------------------------------------------------
     |
@@ -336,6 +325,17 @@ return [
     |
     */
     'stop_at_first_analyzer_failure' => env('GITHOOKS_STOP_AT_FIRST_ANALYZER_FAILURE', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Output errors
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you output any errors encountered
+    | during execution directly for easy debug.
+    |
+    */
+    'output_errors' => env('GITHOOKS_OUTPUT_ERRORS', false),
 
     /*
     |--------------------------------------------------------------------------
