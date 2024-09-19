@@ -266,7 +266,7 @@ return [
     | The `artisan_path` configuration is ignored.
     |
     */
-    'use_sail' => false,
+    'use_sail' => env('GITHOOKS_USE_SAIL', false),
 
     /*
     |--------------------------------------------------------------------------
