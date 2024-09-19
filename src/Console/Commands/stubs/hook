@@ -4,4 +4,4 @@ if sh -c ": >/dev/tty" >/dev/null 2>/dev/null; then
     exec < /dev/tty
 fi
 
-php {artisanPath} {command} $@ >&2
+{php|sail} {artisanPath} {command} $@ >&2
