@@ -256,6 +256,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Laravel Sail
+    |--------------------------------------------------------------------------
+    |
+    | If you are using Laravel Sail you may not have local PHP or Composer.
+    |
+    | This configuration option allows you to use local Git but still run Artisan commands with `sail` in front of them.
+    |
+    | The `artisan_path` configuration is ignored.
+    |
+    */
+    'use_sail' => false,
+
+    /*
+    |--------------------------------------------------------------------------
     | Validate paths
     |--------------------------------------------------------------------------
     |
