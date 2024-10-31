@@ -256,6 +256,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Laravel Sail
+    |--------------------------------------------------------------------------
+    |
+    | If you are using Laravel Sail you may not have local PHP or Composer.
+    |
+    | This configuration option allows you to use local Git but still run Artisan commands with `sail` in front of them.
+    |
+    | The `artisan_path` configuration is ignored.
+    |
+    */
+    'use_sail' => env('GITHOOKS_USE_SAIL', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Validate paths
     |--------------------------------------------------------------------------
     |
@@ -277,17 +291,6 @@ return [
     |
     */
     'analyzer_chunk_size' => env('GITHOOKS_ANALYZER_CHUNK_SIZE', 100),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Output errors
-    |--------------------------------------------------------------------------
-    |
-    | This configuration option allows you output any errors encountered
-    | during execution directly for easy debug.
-    |
-    */
-    'output_errors' => env('GITHOOKS_OUTPUT_ERRORS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -322,6 +325,17 @@ return [
     |
     */
     'stop_at_first_analyzer_failure' => env('GITHOOKS_STOP_AT_FIRST_ANALYZER_FAILURE', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Output errors
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you output any errors encountered
+    | during execution directly for easy debug.
+    |
+    */
+    'output_errors' => env('GITHOOKS_OUTPUT_ERRORS', false),
 
     /*
     |--------------------------------------------------------------------------

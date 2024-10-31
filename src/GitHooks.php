@@ -58,10 +58,24 @@ class GitHooks
 
         $hookPath = $this->getGitHooksDir().'/'.$hookName;
         $hookScript = str_replace(
-            ['{command}', '{artisanPath}'],
-            [$command, config('git-hooks.artisan_path')],
+            '{command}',
+            $command,
             (string) $this->getHookStub()
         );
+
+        if (config('git-hooks.use_sail')) {
+            $hookScript = str_replace(
+                ['{php|sail}', '{artisanPath}'],
+                ['vendor/bin/sail', 'artisan'],
+                $hookScript
+            );
+        } else {
+            $hookScript = str_replace(
+                ['{php|sail}', '{artisanPath}'],
+                ['php', config('git-hooks.artisan_path')],
+                $hookScript
+            );
+        }
 
         file_put_contents($hookPath, $hookScript);
         chmod($hookPath, 0777);
