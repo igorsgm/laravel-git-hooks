@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "blade-formatter": "^1.32.9",
+    "blade-formatter": "^1.42.0",
     "eslint": "^8.37.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-standard": "^17.0.0",
