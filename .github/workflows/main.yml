@@ -12,6 +12,11 @@ on:
       - master
       - main
       - develop
+  schedule:
+    - cron: "0 6 * * 3"
+
+permissions:
+  contents: read
 
 jobs:
   laravel10-tests:
