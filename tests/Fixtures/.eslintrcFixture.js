@@ -1,35 +1,25 @@
-module.exports = {
-  env: {
-    browser: true,
-    es2021: true, // Supports ECMAScript 2021
-  },
-  extends: [
-    'plugin:vue/vue3-essential', // Essential linting rules for Vue 3
-    'eslint:recommended', // Recommended ESLint rules
-  ],
-  overrides: [
-    {
-      files: ['*.vue'],
-      parser: 'vue-eslint-parser', // Ensure proper parsing of Vue files
-      parserOptions: {
-        parser: '@babel/eslint-parser', // Use Babel for JavaScript within Vue templates
-        ecmaVersion: 'latest', // Latest ECMAScript features
-        sourceType: 'module',
+export default [
+  {
+    files: ["**/*.js"], // Target only JavaScript files
+    languageOptions: {
+      ecmaVersion: "latest", // Use the latest ECMAScript features
+      sourceType: "module", // Enable ES Modules
+      globals: {
+        window: true,
+        document: true,
+        console: true,
+        navigator: true,
+        process: true,
+        module: true,
       },
     },
-  ],
-  parserOptions: {
-    ecmaVersion: 'latest', // Latest ECMAScript features
-    sourceType: 'module', // Support ES modules
+    rules: {
+      // General JavaScript rules
+      "no-unused-vars": "warn", // Warn about unused variables
+      "no-console": "warn", // Warn about console statements
+      "semi": ["error", "always"], // Enforce semicolons
+      "indent": ["error", 2], // Enforce 2-space indentation
+      "quotes": ["error", "double"], // Enforce double quotes
+    },
   },
-  plugins: [
-    'vue', // Vue-specific linting rules
-  ],
-  rules: {
-    // Example rules
-    'vue/multi-word-component-names': 'off', // Disable enforcing multi-word names
-    'no-unused-vars': 'warn', // Warn about unused variables
-    'vue/no-mutating-props': 'error', // Disallow mutating props directly
-    'vue/no-v-html': 'warn', // Warn about potential XSS via v-html
-  },
-};
+];
