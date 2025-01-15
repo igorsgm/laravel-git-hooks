@@ -65,16 +65,16 @@ jobs:
         id: actions-cache
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-laravel-10-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-laravel-10-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-composer-laravel-10-${{ matrix.php-version }}-
+            ${{ runner.os }}-composer-laravel-10-${{ matrix.php }}-
 
       - name: Cache PHP dependencies (vendor)
         uses: actions/cache@v4
         id: vendor-cache
         with:
           path: vendor
-          key: ${{ runner.os }}-build-laravel-10-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-build-laravel-10-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
 
       - name: Install Laravel Dependencies
         if: steps.vendor-cache.outputs.cache-hit != 'true'
@@ -168,16 +168,16 @@ jobs:
         id: actions-cache
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-laravel-11-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-laravel-11-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-composer-laravel-11-${{ matrix.php-version }}-
+            ${{ runner.os }}-composer-laravel-11-${{ matrix.php }}-
 
       - name: Cache PHP dependencies (vendor)
         uses: actions/cache@v4
         id: vendor-cache
         with:
           path: vendor
-          key: ${{ runner.os }}-build-laravel-11-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-build-laravel-11-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
 
       - name: Install Laravel Dependencies
         if: steps.vendor-cache.outputs.cache-hit != 'true'
