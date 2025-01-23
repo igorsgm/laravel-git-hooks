@@ -2,7 +2,14 @@ build:
   environment:
     php:
       version: 8.2
-    node: "v18.20.5"
+    node: "v20.18.2"
+  dependencies:
+    before:
+      - command: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use --delete-prefix v20.18.2 --silent
+          npm config delete prefix
   nodes:
     analysis:
       project_setup:
