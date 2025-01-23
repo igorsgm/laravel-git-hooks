@@ -1,29 +1,9 @@
 build:
+  image: default-jammy
   environment:
+    node: v20
     php:
-      version: 8.2
-  dependencies:
-    before:
-      - command: |
-          # Update GLIBC
-          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-          sudo apt-get update
-          sudo apt-get install -y libc6
-          
-          # Install NVM
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-          
-          # Load NVM
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          
-          # Install and use Node.js 20
-          nvm install 20
-          nvm use 20
-          
-          # Verify installation
-          node --version
-          npm --version
+      version: 8.3.3
   nodes:
     analysis:
       project_setup:
