@@ -5,10 +5,18 @@ build:
   dependencies:
     before:
       - command: |
-          curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-          sudo apt-get install -y nodejs
-          sudo npm install -g n
-          sudo n 20
+          # Install NVM
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+          
+          # Load NVM
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          
+          # Install and use Node.js 20
+          nvm install 20
+          nvm use 20
+          
+          # Verify installation
           node --version
           npm --version
   nodes:
