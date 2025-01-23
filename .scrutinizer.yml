@@ -2,7 +2,7 @@ build:
   environment:
     php:
       version: 8.2
-    node: "v19.4.0"
+    node: "v20.18.2"
   nodes:
     analysis:
       project_setup:
