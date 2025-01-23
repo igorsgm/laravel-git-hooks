@@ -1,8 +1,8 @@
 build:
   environment:
     php:
-      version: 8.1
-    node: "v16.20.0"
+      version: 8.3
+    node: "v19.4.0"
   nodes:
     analysis:
       project_setup:
