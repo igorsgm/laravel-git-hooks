@@ -5,6 +5,11 @@ build:
   dependencies:
     before:
       - command: |
+          # Update GLIBC
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install -y libc6
+          
           # Install NVM
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
           
