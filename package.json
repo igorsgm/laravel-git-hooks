@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "blade-formatter": "^1.42.0",
+    "blade-formatter": "^1.42.1",
     "eslint": "^9.15.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-n": "^15.7.0",
