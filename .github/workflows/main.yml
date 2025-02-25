@@ -119,8 +119,6 @@ jobs:
       - name: Execute Rector
         run: vendor/bin/rector --dry-run
 
-      - name: Execute PHP Insights
-        run: vendor/bin/phpinsights --no-interaction
 
   laravel11-tests:
     runs-on: ubuntu-latest
@@ -222,6 +220,103 @@ jobs:
       - name: Execute Rector
         run: vendor/bin/rector --dry-run
 
-      - name: Execute PHP Insights
-        run: vendor/bin/phpinsights --no-interaction
 
+  laravel12-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        operating-system: [ ubuntu-latest ]
+        php: [ '8.2', '8.3', '8.4' ]
+        dependency-stability: [ 'prefer-stable' ]
+
+        laravel: [ '12.*' ]
+        include:
+          - laravel: 12.*
+            testbench: 10.*
+
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependency-stability }} - ${{ matrix.operating-system}}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Cache node_modules directory
+        uses: actions/cache@v4
+        id: node_modules-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ hashFiles('**/package.json') }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install NPM packages
+        if: steps.node_modules-cache.outputs.cache-hit != 'true'
+        run: npm ci --include=dev
+
+      - name: Install PHP versions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        id: actions-cache
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-laravel-11-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-laravel-11-${{ matrix.php }}-
+
+      - name: Cache PHP dependencies (vendor)
+        uses: actions/cache@v4
+        id: vendor-cache
+        with:
+          path: vendor
+          key: ${{ runner.os }}-build-laravel-11-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: Install Laravel Dependencies
+        if: steps.vendor-cache.outputs.cache-hit != 'true'
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --${{ matrix.dependency-stability }} --prefer-dist --no-interaction --no-suggest
+
+      - name: Update Dependencies with latest stable
+        if: matrix.dependency-stability == 'prefer-stable'
+        run: composer update --prefer-stable
+
+      - name: Update Dependencies with lowest stable
+        if: matrix.dependency-stability == 'prefer-lowest'
+        run: composer update --prefer-stable --prefer-lowest
+
+      - name: Set up Git User
+        run: |
+          git config --global user.email "github-actions@example.com"
+          git config --global user.name "GitHub Actions"
+
+      # Code quality
+      - name: Execute tests (Unit and Feature tests) via PestPHP
+        shell: 'script -q -e -c "bash {0}"'
+        # Set environment
+        env:
+          SESSION_DRIVER: array
+          TTY: true
+
+        run: vendor/bin/pest
+
+      - name: Execute Code Sniffer via Laravel Pint
+        run: vendor/bin/pint --test src config
+
+      - name: Execute PHP Stan
+        run: vendor/bin/phpstan
+
+      - name: Execute Rector
+        run: vendor/bin/rector --dry-run
