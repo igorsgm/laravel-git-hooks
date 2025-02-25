@@ -34,6 +34,7 @@
         "larastan/larastan": "^2 || ^3",
         "laravel/pint": "^1",
         "mockery/mockery": "^1",
+        "nunomaduro/phpinsights": "^2",
         "orchestra/testbench": "^v8 || ^v9 || ^v10",
         "pestphp/pest": "^2 || ^3",
         "pestphp/pest-plugin-laravel": "^2 || ^3",
