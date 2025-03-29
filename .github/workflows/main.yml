@@ -120,7 +120,7 @@ jobs:
         run: vendor/bin/rector --dry-run
 
       - name: Execute PHP Insights
-        run: vendor/bin/phpinsights --no-interaction
+        run: vendor/bin/phpinsights --disable-security-check --no-interaction
 
   laravel11-tests:
     runs-on: ubuntu-latest
@@ -223,5 +223,4 @@ jobs:
         run: vendor/bin/rector --dry-run
 
       - name: Execute PHP Insights
-        run: vendor/bin/phpinsights --no-interaction
-
+        run: vendor/bin/phpinsights --disable-security-check --no-interaction

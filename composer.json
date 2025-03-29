@@ -22,23 +22,23 @@
     ],
     "require": {
         "php": "^8.1",
-        "illuminate/config": "^10 || ^11",
-        "illuminate/console": "^10 || ^11",
-        "illuminate/container": "^10 || ^11",
-        "illuminate/contracts": "^10 || ^11",
-        "illuminate/pipeline": "^10 || ^11",
-        "illuminate/support": "^10 || ^11"
+        "illuminate/config": "^10 || ^11 || ^12",
+        "illuminate/console": "^10 || ^11 || ^12",
+        "illuminate/container": "^10 || ^11 || ^12",
+        "illuminate/contracts": "^10 || ^11 || ^12",
+        "illuminate/pipeline": "^10 || ^11 || ^12",
+        "illuminate/support": "^10 || ^11 || ^12"
     },
     "require-dev": {
         "enlightn/enlightn": "^2",
-        "larastan/larastan": "^2",
+        "larastan/larastan": "^2 || ^3",
         "laravel/pint": "^1",
         "mockery/mockery": "^1",
         "nunomaduro/phpinsights": "^2",
-        "orchestra/testbench": "^v8 || ^v9",
+        "orchestra/testbench": "^v8 || ^v9 || ^v10",
         "pestphp/pest": "^2 || ^3",
         "pestphp/pest-plugin-laravel": "^2 || ^3",
-        "rector/rector": "^1 || ^2 || ^3",
+        "rector/rector": "^1 || ^2",
         "squizlabs/php_codesniffer": "^3"
     },
     "autoload": {
