@@ -2,7 +2,7 @@
   "devDependencies": {
     "blade-formatter": "^1.42.2",
     "eslint": "^9.27.0",
-    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
     "prettier": "2.8.8"
