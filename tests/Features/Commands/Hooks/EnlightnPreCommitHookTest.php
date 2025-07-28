@@ -15,7 +15,7 @@ beforeEach(function () {
 });
 
 test('Skips Enlightn check if there are no files added to commit', function () {
-    $changedFiles = mock(ChangedFiles::class)
+    $changedFiles = Mockery::mock(ChangedFiles::class)
         ->shouldReceive('getAddedToCommit')
         ->andReturn(collect())
         ->getMock();

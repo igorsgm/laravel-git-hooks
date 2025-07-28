@@ -32,6 +32,8 @@ class LarastanPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
         $this->configParam = $this->configParam();
 
         return $this->setAnalyzerExecutable(config('git-hooks.code_analyzers.larastan.path'))
+            ->setRunInDocker(config('git-hooks.code_analyzers.larastan.run_in_docker'))
+            ->setDockerContainer(config('git-hooks.code_analyzers.larastan.docker_container'))
             ->handleCommittedFiles($files, $next);
     }
 

@@ -18,7 +18,7 @@ trait ProcessHelper
      *
      * @param  array|string  $commands
      * @param  array  $params
-     * @return \Symfony\Component\Process\Process
+     * @return Process
      */
     public function runCommands($commands, $params = [])
     {
@@ -93,7 +93,7 @@ trait ProcessHelper
      */
     public function buildNoOutputCommand($command = '')
     {
-        return trim($command).' > '.(PHP_OS_FAMILY == 'Windows' ? 'NUL' : '/dev/null 2>&1');
+        return trim($command).' > '.(PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null 2>&1');
     }
 
     /**

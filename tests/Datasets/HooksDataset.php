@@ -8,7 +8,7 @@ use Igorsgm\GitHooks\Tests\Fixtures\PrepareCommitMessageFixtureHook1;
 
 dataset('registrableHookTypes', [
     'pre-commit' => [
-        mock(PreCommitHook::class),
+        Mockery::mock(PreCommitHook::class),
         'pre-commit',
     ],
     'prepare-commit-msg' => [
@@ -20,11 +20,11 @@ dataset('registrableHookTypes', [
         'commit-msg',
     ],
     'post-commit' => [
-        mock(PostCommitHook::class),
+        Mockery::mock(PostCommitHook::class),
         'post-commit',
     ],
     'pre-push' => [
-        mock(PrePushHook::class),
+        Mockery::mock(PrePushHook::class),
         'pre-push',
     ],
 ]);

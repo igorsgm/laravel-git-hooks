@@ -64,7 +64,7 @@ test('isMergeInProgress returns true when a merge is in progress', function () {
         'git checkout -b main',
         $gitAddCommand,
         'git commit -m "Add test file"',
-        'git push main',
+        'git push --set-upstream main main',
         'git checkout -b test-branch',
         'git checkout main',
         "echo 'Test merge (edit on main)' > $testFileName",
@@ -82,7 +82,7 @@ test('isMergeInProgress returns true when a merge is in progress', function () {
 
     chdir(base_path());
 
-    $noOutputSuffix = ' > '.(PHP_OS_FAMILY == 'Windows' ? 'NUL' : '/dev/null 2>&1');
+    $noOutputSuffix = ' > '.(PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null 2>&1');
     foreach ($commandsToGenerateFakeMerge as $command) {
         if (strpos($command, 'git') === 0) {
             $command .= $noOutputSuffix;
