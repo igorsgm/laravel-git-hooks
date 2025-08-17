@@ -49,12 +49,10 @@ class MakeHook extends GeneratorCommand
         $supportedHooks = GitHooks::getSupportedHooks();
 
         if (! in_array($this->argument('hookType'), $supportedHooks)) {
-            $this->getOutput()->writeln(
-                sprintf(
-                    '<bg=red;fg=white> ERROR </> Invalid hook type. Valid types are: <comment>%s</comment>',
-                    implode(', ', $supportedHooks)
-                )
-            );
+            $this->getOutput()->writeln(sprintf(
+                '<bg=red;fg=white> ERROR </> Invalid hook type. Valid types are: <comment>%s</comment>',
+                implode(', ', $supportedHooks)
+            ));
 
             return true;
         }

@@ -6,15 +6,11 @@ use Rector\CodeQuality\Rector\Empty_\SimplifyEmptyCheckOnEmptyArrayRector;
 use Rector\Config\RectorConfig;
 
 return RectorConfig::configure()
-    ->withPaths(
-        [
-            './',
-        ]
-    )
+    ->withPaths([
+        './',
+    ])
     // uncomment to reach your current PHP version
     ->withPhpSets(php81: true)
-    ->withRules(
-        [
-            SimplifyEmptyCheckOnEmptyArrayRector::class,
-        ]
-    );
+    ->withRules([
+        SimplifyEmptyCheckOnEmptyArrayRector::class,
+    ]);

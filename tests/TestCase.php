@@ -33,39 +33,35 @@ class TestCase extends \Orchestra\Testbench\TestCase
     public function defineEnvironment($app): void
     {
         $app['config']->set('database.default', 'sqlite');
-        $app['config']->set(
-            'database.connections.sqlite', [
-                'driver' => 'sqlite',
-                'database' => ':memory:',
-                'prefix' => '',
-            ]
-        );
+        $app['config']->set('database.connections.sqlite', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
 
-        $app['config']->set(
-            'git-hooks', [
-                'pre-commit' => [],
-                'prepare-commit-msg' => [],
-                'commit-msg' => [],
-                'post-commit' => [],
-                'pre-rebase' => [],
-                'post-rewrite' => [],
-                'post-checkout' => [],
-                'post-merge' => [],
-                'pre-push' => [],
-                'code_analyzers' => [],
-                'artisan_path' => base_path('artisan'),
-                'output_errors' => false,
-                'analyzer_chunk_size' => 100,
-                'validate_paths' => true,
-                'automatically_fix_errors' => false,
-                'rerun_analyzer_after_autofix' => false,
-                'stop_at_first_analyzer_failure' => true,
-                'debug_commands' => false,
-                'debug_output' => false,
-                'run_in_docker' => false,
-                'docker_command' => '',
-            ]
-        );
+        $app['config']->set('git-hooks', [
+            'pre-commit' => [],
+            'prepare-commit-msg' => [],
+            'commit-msg' => [],
+            'post-commit' => [],
+            'pre-rebase' => [],
+            'post-rewrite' => [],
+            'post-checkout' => [],
+            'post-merge' => [],
+            'pre-push' => [],
+            'code_analyzers' => [],
+            'artisan_path' => base_path('artisan'),
+            'output_errors' => false,
+            'analyzer_chunk_size' => 100,
+            'validate_paths' => true,
+            'automatically_fix_errors' => false,
+            'rerun_analyzer_after_autofix' => false,
+            'stop_at_first_analyzer_failure' => true,
+            'debug_commands' => false,
+            'debug_output' => false,
+            'run_in_docker' => false,
+            'docker_command' => '',
+        ]);
 
         $this->config = $app['config'];
     }

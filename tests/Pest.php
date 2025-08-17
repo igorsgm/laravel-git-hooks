@@ -30,14 +30,12 @@ uses(GitHelper::class)->in(__DIR__.'/Features/Hooks');
 
 expect()->extend('toBeOne', fn () => $this->toBe(1));
 
-expect()->extend(
-    'toContainHookArtisanCommand', function ($hookName) {
-        $this->value = file_get_contents($this->value);
-        $artisanCommand = sprintf('php %s git-hooks:%s $@ >&2', config('git-hooks.artisan_path'), $hookName);
+expect()->extend('toContainHookArtisanCommand', function ($hookName) {
+    $this->value = file_get_contents($this->value);
+    $artisanCommand = sprintf('php %s git-hooks:%s $@ >&2', config('git-hooks.artisan_path'), $hookName);
 
-        return $this->toContain($artisanCommand);
-    }
-);
+    return $this->toContain($artisanCommand);
+});
 
 /*
 |--------------------------------------------------------------------------
