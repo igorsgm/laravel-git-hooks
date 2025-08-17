@@ -377,6 +377,10 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
 
+- [Cristian Radu](https://github.com/indy2kro)
+
+Original authors:
+
 - [Igor Moraes](https://github.com/igorsgm)
 - [Pavel Buchnev](https://github.com/butschster)
 
