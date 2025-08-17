@@ -91,7 +91,7 @@ jobs:
           SESSION_DRIVER: array
           TTY: true
 
-        run: vendor/bin/pest
+        run: vendor/bin/pest --no-parallel
 
       - name: Execute Code Sniffer via Laravel Pint
         run: vendor/bin/pint --test src config
