@@ -20,16 +20,17 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "illuminate/config": "^10 || ^11 || ^12",
-        "illuminate/console": "^10 || ^11 || ^12",
-        "illuminate/container": "^10 || ^11 || ^12",
-        "illuminate/contracts": "^10 || ^11 || ^12",
-        "illuminate/pipeline": "^10 || ^11 || ^12",
-        "illuminate/support": "^10 || ^11 || ^12"
+        "php": "^8.2",
+        "illuminate/config": "^11 || ^12",
+        "illuminate/console": "^11 || ^12",
+        "illuminate/container": "^11 || ^12",
+        "illuminate/contracts": "^11 || ^12",
+        "illuminate/pipeline": "^11 || ^12",
+        "illuminate/support": "^11 || ^12"
     },
     "require-dev": {
         "enlightn/enlightn": "^2",
+        "friendsofphp/php-cs-fixer": "^3",
         "larastan/larastan": "^2 || ^3",
         "laravel/pint": "^1",
         "mockery/mockery": "^1",

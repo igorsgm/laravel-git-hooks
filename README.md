@@ -60,6 +60,7 @@ To use the already created pre-commit hooks of this package, you can simply edit
 'pre-commit' => [
     \Igorsgm\GitHooks\Console\Commands\Hooks\PintPreCommitHook::class, // Laravel Pint
     \Igorsgm\GitHooks\Console\Commands\Hooks\PHPCodeSnifferPreCommitHook::class, // PHPCS (with PHPCBF autofixer) 
+    \Igorsgm\GitHooks\Console\Commands\Hooks\PHPCSFixerPreCommitHook::class, // PHP CS Fixer
     \Igorsgm\GitHooks\Console\Commands\Hooks\LarastanPreCommitHook::class, // Larastan
     \Igorsgm\GitHooks\Console\Commands\Hooks\EnlightnPreCommitHook::class, // Enlightn
     \Igorsgm\GitHooks\Console\Commands\Hooks\ESLintPreCommitHook::class, // ESLint
@@ -375,6 +376,10 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
+
+- [Cristian Radu](https://github.com/indy2kro)
+
+Original authors:
 
 - [Igor Moraes](https://github.com/igorsgm)
 - [Pavel Buchnev](https://github.com/butschster)
