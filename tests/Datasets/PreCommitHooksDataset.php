@@ -8,7 +8,6 @@ use Igorsgm\GitHooks\Console\Commands\Hooks\PhpInsightsPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PintPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\RectorPreCommitHook;
-use Igorsgm\GitHooks\Console\Commands\Hooks\VitestPreCommitHook;
 
 dataset('pintConfiguration', [
     'Config File' => [
@@ -133,18 +132,6 @@ dataset('eslintConfiguration', [
     ],
 ]);
 
-dataset('vitestConfiguration', [
-    'vitest configuration' => [
-        [
-            'path' => '../../../../node_modules/.bin/vitest',
-            'additional_params' => '--changed -- ',
-            'file_extensions' => '/\.(jsx?|tsx?|vue)$/',
-            'run_in_docker' => false,
-            'docker_container' => '',
-        ],
-    ],
-]);
-
 $nonExistentPath = [
     'path' => 'nonexistent/path',
     'phpcs_path' => 'nonexistent/path',
@@ -196,10 +183,5 @@ dataset('codeAnalyzersList', [
         'rector',
         $nonExistentPath,
         RectorPreCommitHook::class,
-    ],
-    'Vitest' => [
-        'vitest',
-        $nonExistentPath,
-        VitestPreCommitHook::class,
     ],
 ]);

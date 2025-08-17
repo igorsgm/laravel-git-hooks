@@ -65,7 +65,6 @@ To use the already created pre-commit hooks of this package, you can simply edit
     \Igorsgm\GitHooks\Console\Commands\Hooks\EnlightnPreCommitHook::class, // Enlightn
     \Igorsgm\GitHooks\Console\Commands\Hooks\ESLintPreCommitHook::class, // ESLint
     \Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook::class, // Prettier
-    \Igorsgm\GitHooks\Console\Commands\Hooks\Vitest::class, // Vitest
     \Igorsgm\GitHooks\Console\Commands\Hooks\PhpInsightsPreCommitHook::class, // PhpInsights
     \Igorsgm\GitHooks\Console\Commands\Hooks\RectorPreCommitHook::class, // Rector
 ],

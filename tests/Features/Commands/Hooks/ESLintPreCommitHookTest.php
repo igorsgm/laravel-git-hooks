@@ -43,8 +43,7 @@ test('Fails commit when ESLint is not passing and user does not autofix the file
             ->expectsOutputToContain('COMMIT FAILED')
             ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'no')
             ->assertExitCode(1);
-    })->with('eslintConfiguration', 'listOfFixableJSFiles')
-    ->skip('ESLint broken during upgrades');
+    })->with('eslintConfiguration', 'listOfFixableJSFiles');
 
 test('Fails commit when ESLint autofixer does not fix the files completely',
     function ($eslintConfiguration, $listOfFixableNonJSFiles) {
@@ -65,8 +64,7 @@ test('Fails commit when ESLint autofixer does not fix the files completely',
             ->expectsOutputToContain('COMMIT FAILED')
             ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'yes')
             ->expectsOutputToContain('ESLint Autofix Failed');
-    })->with('eslintConfiguration', 'listOfNonFixableJSFiles')
-    ->skip('ESLint broken during upgrades');
+    })->with('eslintConfiguration', 'listOfNonFixableJSFiles');
 
 test('Commit passes when ESLint fixes the files', function ($eslintConfiguration, $listOfFixableJSFiles) {
     $this->config->set('git-hooks.code_analyzers.eslint', $eslintConfiguration);
@@ -89,4 +87,4 @@ test('Commit passes when ESLint fixes the files', function ($eslintConfiguration
     $this->artisan('git-hooks:pre-commit')
         ->doesntExpectOutputToContain('ESLint Failed')
         ->assertSuccessful();
-})->with('eslintConfiguration', 'listOfFixableJSFiles')->skip();
+})->with('eslintConfiguration', 'listOfFixableJSFiles');
