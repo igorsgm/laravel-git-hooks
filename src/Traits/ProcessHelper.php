@@ -49,11 +49,13 @@ trait ProcessHelper
             }
         }
 
-        $process->run(! $showOutput ? null : function (string $line) use ($output): void {
-            if ($output !== null) {
-                $output->write('    '.$line);
+        $process->run(
+            ! $showOutput ? null : function (string $line) use ($output): void {
+                if ($output !== null) {
+                    $output->write('    '.$line);
+                }
             }
-        });
+        );
 
         return $process;
     }
@@ -64,13 +66,15 @@ trait ProcessHelper
      */
     public function transformCommands(string|array $commands, callable $callback): array
     {
-        return array_map(function ($value) use ($callback) {
-            if (str_starts_with($value, 'chmod')) {
-                return $value;
-            }
+        return array_map(
+            function ($value) use ($callback) {
+                if (str_starts_with($value, 'chmod')) {
+                    return $value;
+                }
 
-            return $callback($value);
-        }, (array) $commands);
+                return $callback($value);
+            }, (array) $commands
+        );
     }
 
     /**

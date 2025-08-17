@@ -1,8 +1,7 @@
 {
-    "name": "igorsgm/laravel-git-hooks",
+    "name": "indy2kro/laravel-git-hooks",
     "description": "🪝• Efficiently manage Git hooks in Laravel projects. Enhance code quality, save time on reviews, and prevent bugs from entering your repository.",
     "keywords": [
-        "igorsgm",
         "laravel-git-hooks",
         "git",
         "git-hooks",
@@ -11,7 +10,7 @@
         "pre-commit-hook",
         "pint-pre-commit"
     ],
-    "homepage": "https://github.com/igorsgm/laravel-git-hooks",
+    "homepage": "https://github.com/indy2kro/laravel-git-hooks",
     "license": "MIT",
     "type": "library",
     "authors": [

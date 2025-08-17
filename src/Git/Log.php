@@ -41,22 +41,24 @@ class Log implements \Stringable
      */
     private function parse(array $lines): void
     {
-        $handlers = collect([
-            'commit' => function ($line): void {
-                preg_match('/(?<hash>[a-z0-9]{40})/', $line, $matches);
-                $this->hash = $matches['hash'] ?? null;
-            },
-            'Author' => function ($line): void {
-                $this->author = substr($line, strlen('Author:') + 1);
-            },
-            'Date' => function ($line): void {
-                $this->date = Carbon::parse(substr($line, strlen('Date:') + 3));
-            },
-            'Merge' => function ($line): void {
-                $merge = substr($line, strlen('Merge:') + 1);
-                $this->merge = explode(' ', $merge);
-            },
-        ]);
+        $handlers = collect(
+            [
+                'commit' => function ($line): void {
+                    preg_match('/(?<hash>[a-z0-9]{40})/', $line, $matches);
+                    $this->hash = $matches['hash'] ?? null;
+                },
+                'Author' => function ($line): void {
+                    $this->author = substr($line, strlen('Author:') + 1);
+                },
+                'Date' => function ($line): void {
+                    $this->date = Carbon::parse(substr($line, strlen('Date:') + 3));
+                },
+                'Merge' => function ($line): void {
+                    $merge = substr($line, strlen('Merge:') + 1);
+                    $this->merge = explode(' ', $merge);
+                },
+            ]
+        );
 
         foreach ($lines as $line) {
             $handler = $handlers->first(fn ($handler, $prefix) => Str::startsWith($line, $prefix));

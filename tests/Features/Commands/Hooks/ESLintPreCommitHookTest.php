@@ -3,35 +3,66 @@
 use Igorsgm\GitHooks\Console\Commands\Hooks\ESLintPreCommitHook;
 use Igorsgm\GitHooks\Facades\GitHooks;
 
-beforeEach(function () {
-    $this->gitInit();
-    $this->initializeTempDirectory(base_path('temp'));
-});
+beforeEach(
+    function () {
+        $this->gitInit();
+        $this->initializeTempDirectory(base_path('temp'));
 
-test('Skips ESLint check when there is none JS files added to commit', function ($eslintConfiguration, $listOfFixablePHPFiles) {
-    $this->config->set('git-hooks.code_analyzers.eslint', $eslintConfiguration);
-    $this->config->set('git-hooks.pre-commit', [
-        ESLintPreCommitHook::class,
-    ]);
+        copy(__DIR__.'/../../../Fixtures/fake-tool', __DIR__.'/../../../Fixtures/fake-ESLint');
+        copy(__DIR__.'/../../../Fixtures/fake-tool.bat', __DIR__.'/../../../Fixtures/fake-ESLint.bat');
 
-    $this->makeTempFile('ClassWithFixableIssues.php',
-        file_get_contents(__DIR__.'/../../../Fixtures/ClassWithFixableIssues.php')
-    );
+        // Always start clean
+        @unlink(__DIR__.'/../../../Fixtures/.ESLint_mode');
 
-    GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
-    GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixablePHPFiles);
+        // Force Terminal::hasSttyAvailable() to return true
+        $reflection = new ReflectionClass(\Symfony\Component\Console\Terminal::class);
+        $property = $reflection->getProperty('stty');
+        $property->setAccessible(true);
+        $property->setValue(true); // force stty as available
+    }
+);
 
-    $this->artisan('git-hooks:pre-commit')->assertSuccessful();
-})->with('eslintConfiguration', 'listOfFixablePhpFiles');
+afterEach(
+    function () {
+        @unlink(__DIR__.'/../../../Fixtures/.ESLint_mode');
+        @unlink(__DIR__.'/../../../Fixtures/fake-ESLint');
+        @unlink(__DIR__.'/../../../Fixtures/fake-ESLint.bat');
+    }
+);
 
-test('Fails commit when ESLint is not passing and user does not autofix the files',
+test(
+    'Skips ESLint check when there is none JS files added to commit', function ($eslintConfiguration, $listOfFixablePHPFiles) {
+        $this->config->set('git-hooks.code_analyzers.eslint', $eslintConfiguration);
+        $this->config->set(
+            'git-hooks.pre-commit', [
+                ESLintPreCommitHook::class,
+            ]
+        );
+
+        $this->makeTempFile(
+            'ClassWithFixableIssues.php',
+            file_get_contents(__DIR__.'/../../../Fixtures/ClassWithFixableIssues.php')
+        );
+
+        GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
+        GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixablePHPFiles);
+
+        $this->artisan('git-hooks:pre-commit')->assertSuccessful();
+    }
+)->with('eslintConfiguration', 'listOfFixablePhpFiles');
+
+test(
+    'Fails commit when ESLint is not passing and user does not autofix the files',
     function ($eslintConfiguration, $listOfFixableJSFiles) {
         $this->config->set('git-hooks.code_analyzers.eslint', $eslintConfiguration);
-        $this->config->set('git-hooks.pre-commit', [
-            ESLintPreCommitHook::class,
-        ]);
+        $this->config->set(
+            'git-hooks.pre-commit', [
+                ESLintPreCommitHook::class,
+            ]
+        );
 
-        $this->makeTempFile('fixable-js-file.js',
+        $this->makeTempFile(
+            'fixable-js-file.js',
             file_get_contents(__DIR__.'/../../../Fixtures/fixable-js-file.js')
         );
 
@@ -43,17 +74,21 @@ test('Fails commit when ESLint is not passing and user does not autofix the file
             ->expectsOutputToContain('COMMIT FAILED')
             ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'no')
             ->assertExitCode(1);
-    })->with('eslintConfiguration', 'listOfFixableJSFiles')
-    ->skip('ESLint broken during upgrades');
+    }
+)->with('eslintConfiguration', 'listOfFixableJSFiles');
 
-test('Fails commit when ESLint autofixer does not fix the files completely',
+test(
+    'Fails commit when ESLint autofixer does not fix the files completely',
     function ($eslintConfiguration, $listOfFixableNonJSFiles) {
         $this->config->set('git-hooks.code_analyzers.eslint', $eslintConfiguration);
-        $this->config->set('git-hooks.pre-commit', [
-            ESLintPreCommitHook::class,
-        ]);
+        $this->config->set(
+            'git-hooks.pre-commit', [
+                ESLintPreCommitHook::class,
+            ]
+        );
 
-        $this->makeTempFile('not-fully-fixable-js-file.js',
+        $this->makeTempFile(
+            'not-fully-fixable-js-file.js',
             file_get_contents(__DIR__.'/../../../Fixtures/not-fully-fixable-js-file.js')
         );
 
@@ -65,28 +100,36 @@ test('Fails commit when ESLint autofixer does not fix the files completely',
             ->expectsOutputToContain('COMMIT FAILED')
             ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'yes')
             ->expectsOutputToContain('ESLint Autofix Failed');
-    })->with('eslintConfiguration', 'listOfNonFixableJSFiles')
-    ->skip('ESLint broken during upgrades');
+    }
+)->with('eslintConfiguration', 'listOfNonFixableJSFiles');
 
-test('Commit passes when ESLint fixes the files', function ($eslintConfiguration, $listOfFixableJSFiles) {
-    $this->config->set('git-hooks.code_analyzers.eslint', $eslintConfiguration);
-    $this->config->set('git-hooks.pre-commit', [
-        ESLintPreCommitHook::class,
-    ]);
+test(
+    'Commit passes when ESLint fixes the files', function ($eslintConfiguration, $listOfFixableJSFiles) {
+        $this->config->set('git-hooks.code_analyzers.eslint', $eslintConfiguration);
+        $this->config->set(
+            'git-hooks.pre-commit', [
+                ESLintPreCommitHook::class,
+            ]
+        );
 
-    $this->makeTempFile('fixable-js-file.js',
-        file_get_contents(__DIR__.'/../../../Fixtures/fixable-js-file.js')
-    );
+        $this->makeTempFile(
+            'fixable-js-file.js',
+            file_get_contents(__DIR__.'/../../../Fixtures/fixable-js-file.js')
+        );
 
-    GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
-    GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixableJSFiles);
+        GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
+        GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfFixableJSFiles);
 
-    $this->artisan('git-hooks:pre-commit')
-        ->expectsOutputToContain('ESLint Failed')
-        ->expectsOutputToContain('COMMIT FAILED')
-        ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'yes');
+        $this->artisan('git-hooks:pre-commit')
+            ->expectsOutputToContain('ESLint Failed')
+            ->expectsOutputToContain('COMMIT FAILED')
+            ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'yes');
 
-    $this->artisan('git-hooks:pre-commit')
-        ->doesntExpectOutputToContain('ESLint Failed')
-        ->assertSuccessful();
-})->with('eslintConfiguration', 'listOfFixableJSFiles')->skip();
+        // Switch to success
+        touch(__DIR__.'/../../../Fixtures/.ESLint_mode');
+
+        $this->artisan('git-hooks:pre-commit')
+            ->doesntExpectOutputToContain('ESLint Failed')
+            ->assertSuccessful();
+    }
+)->with('eslintConfiguration', 'listOfFixableJSFiles');

@@ -198,11 +198,15 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
      */
     protected function analizeCommittedFiles(Collection $commitFiles): self
     {
-        /** @var Collection<int, ChangedFile> $chunk */
+        /**
+         * @var Collection<int, ChangedFile> $chunk
+         */
         foreach ($commitFiles->chunk($this->chunkSize) as $chunk) {
             $filePaths = [];
 
-            /** @var ChangedFile $file */
+            /**
+             * @var ChangedFile $file
+             */
             foreach ($chunk as $file) {
                 if (! $this->canFileBeAnalyzed($file)) {
                     continue;
@@ -351,9 +355,9 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
                     return true;
                 }
             } else {
-                if (Terminal::hasSttyAvailable() &&
-                    $this->command->confirm('Would you like to attempt to correct files automagically?') &&
-                    $this->autoFixFiles()
+                if (Terminal::hasSttyAvailable()
+                    && $this->command->confirm('Would you like to attempt to correct files automagically?')
+                    && $this->autoFixFiles()
                 ) {
                     return true;
                 }

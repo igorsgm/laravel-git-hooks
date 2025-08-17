@@ -1,6 +1,5 @@
 function test()
-
 {
-  return false;
+    return false;
 
 }
