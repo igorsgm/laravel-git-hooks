@@ -40,18 +40,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-
-      - name: Cache node_modules directory
-        uses: actions/cache@v4
-        id: node_modules-cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-build-${{ hashFiles('**/package.json') }}-${{ hashFiles('**/package-lock.json') }}
-
       - name: Install PHP versions
         uses: shivammathur/setup-php@v2
         with:
@@ -68,8 +56,6 @@ jobs:
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-laravel-10-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-laravel-10-${{ matrix.php }}-
 
       - name: Cache PHP dependencies (vendor)
         uses: actions/cache@v4
@@ -123,6 +109,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         operating-system: [ ubuntu-latest ]
         php: [ '8.2', '8.3', '8.4' ]
@@ -138,18 +125,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-
-      - name: Cache node_modules directory
-        uses: actions/cache@v4
-        id: node_modules-cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-build-${{ hashFiles('**/package.json') }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install PHP versions
         uses: shivammathur/setup-php@v2
@@ -167,8 +142,6 @@ jobs:
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-laravel-11-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-laravel-11-${{ matrix.php }}-
 
       - name: Cache PHP dependencies (vendor)
         uses: actions/cache@v4
