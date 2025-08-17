@@ -60,10 +60,12 @@ To use the already created pre-commit hooks of this package, you can simply edit
 'pre-commit' => [
     \Igorsgm\GitHooks\Console\Commands\Hooks\PintPreCommitHook::class, // Laravel Pint
     \Igorsgm\GitHooks\Console\Commands\Hooks\PHPCodeSnifferPreCommitHook::class, // PHPCS (with PHPCBF autofixer) 
+    \Igorsgm\GitHooks\Console\Commands\Hooks\PHPCSFixerPreCommitHook::class, // PHP CS Fixer
     \Igorsgm\GitHooks\Console\Commands\Hooks\LarastanPreCommitHook::class, // Larastan
     \Igorsgm\GitHooks\Console\Commands\Hooks\EnlightnPreCommitHook::class, // Enlightn
     \Igorsgm\GitHooks\Console\Commands\Hooks\ESLintPreCommitHook::class, // ESLint
     \Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook::class, // Prettier
+    \Igorsgm\GitHooks\Console\Commands\Hooks\Vitest::class, // Vitest
     \Igorsgm\GitHooks\Console\Commands\Hooks\PhpInsightsPreCommitHook::class, // PhpInsights
     \Igorsgm\GitHooks\Console\Commands\Hooks\RectorPreCommitHook::class, // Rector
 ],

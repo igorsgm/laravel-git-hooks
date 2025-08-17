@@ -3,10 +3,12 @@
 use Igorsgm\GitHooks\Console\Commands\Hooks\BladeFormatterPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\LarastanPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PHPCodeSnifferPreCommitHook;
+use Igorsgm\GitHooks\Console\Commands\Hooks\PHPCSFixerPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PhpInsightsPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PintPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\RectorPreCommitHook;
+use Igorsgm\GitHooks\Console\Commands\Hooks\VitestPreCommitHook;
 
 dataset('pintConfiguration', [
     'Config File' => [
@@ -35,6 +37,18 @@ dataset('phpcsConfiguration', [
             'phpcs_path' => '../../../bin/phpcs',
             'phpcbf_path' => '../../../bin/phpcbf',
             'config' => __DIR__.'/../Fixtures/phpcsFixture.xml',
+            'file_extensions' => '/\.php$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
+        ],
+    ],
+]);
+
+dataset('phpcsFixerConfiguration', [
+    '.php-cs-fixer.php file' => [
+        [
+            'path' => '../../../bin/php-cs-fixer',
+            'config' => __DIR__.'/../Fixtures/phpcsFixerFixture.php',
             'file_extensions' => '/\.php$/',
             'run_in_docker' => false,
             'docker_container' => '',
@@ -119,6 +133,18 @@ dataset('eslintConfiguration', [
     ],
 ]);
 
+dataset('vitestConfiguration', [
+    'vitest configuration' => [
+        [
+            'path' => '../../../../node_modules/.bin/vitest',
+            'additional_params' => '--changed -- ',
+            'file_extensions' => '/\.(jsx?|tsx?|vue)$/',
+            'run_in_docker' => false,
+            'docker_container' => '',
+        ],
+    ],
+]);
+
 $nonExistentPath = [
     'path' => 'nonexistent/path',
     'phpcs_path' => 'nonexistent/path',
@@ -140,6 +166,11 @@ dataset('codeAnalyzersList', [
         'php_code_sniffer',
         $nonExistentPath,
         PHPCodeSnifferPreCommitHook::class,
+    ],
+    'PHP CS Fixer' => [
+        'php_cs_fixer',
+        $nonExistentPath,
+        PHPCSFixerPreCommitHook::class,
     ],
     'Blade Formatter' => [
         'blade_formatter',
@@ -165,5 +196,10 @@ dataset('codeAnalyzersList', [
         'rector',
         $nonExistentPath,
         RectorPreCommitHook::class,
+    ],
+    'Vitest' => [
+        'vitest',
+        $nonExistentPath,
+        VitestPreCommitHook::class,
     ],
 ]);

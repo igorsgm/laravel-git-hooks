@@ -29,7 +29,6 @@
         "illuminate/support": "^11 || ^12"
     },
     "require-dev": {
-        "codeception/codeception": "^4 || ^5",
         "enlightn/enlightn": "^2",
         "friendsofphp/php-cs-fixer": "^3",
         "larastan/larastan": "^2 || ^3",
