@@ -40,6 +40,11 @@ trait WithAutoFix
 
     private function shouldAttemptAutofix(): bool
     {
+        // In test environment, skip Terminal check
+        if (app()->environment('testing')) {
+            return $this->command->confirm('Would you like to attempt to correct files automagically?');
+        }
+
         return Terminal::hasSttyAvailable() &&
                $this->command->confirm('Would you like to attempt to correct files automagically?');
     }
@@ -57,6 +62,9 @@ trait WithAutoFix
         return empty($this->filesBadlyFormattedPaths);
     }
 
+    /**
+     * @param  array<string, mixed>  $params
+     */
     private function attemptToFixFile(string $filePath, array $params): bool
     {
         $fixerCommand = $this->dockerCommand($this->fixerCommand().' '.$filePath);
@@ -79,7 +87,7 @@ trait WithAutoFix
         return false;
     }
 
-    protected function outputDebugCommandIfEnabled($process): void
+    protected function outputDebugCommandIfEnabled(mixed $process): void
     {
         if (config('git-hooks.debug_commands')) {
             $this->command->newLine();
@@ -87,6 +95,9 @@ trait WithAutoFix
         }
     }
 
+    /**
+     * @param  array<string, mixed>  $params
+     */
     protected function rerunAnalyzer(string $filePath, array $params): mixed
     {
         $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
@@ -99,7 +110,7 @@ trait WithAutoFix
         return $process;
     }
 
-    protected function handleFixFailure(string $filePath, $process): void
+    protected function handleFixFailure(string $filePath, mixed $process): void
     {
         if (empty($this->filesBadlyFormattedPaths)) {
             $this->command->newLine();

@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see \Igorsgm\GitHooks\GitHooks
  *
- * @method static array getSupportedHooks()
- * @method static array getAvailableHooks()
+ * @method static array<string> getSupportedHooks()
+ * @method static array<string> getAvailableHooks()
  * @method static void install()
  * @method static ?string getHookStub()
  * @method static string getGitHooksDir()

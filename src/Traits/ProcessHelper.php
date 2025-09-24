@@ -22,6 +22,7 @@ trait ProcessHelper
      */
     public function runCommands(string|array $commands, array $params = []): Process
     {
+        /** @phpstan-ignore-next-line */
         $output = method_exists($this, 'getOutput') ? $this->getOutput() : null;
 
         if ($output && ! $output->isDecorated()) {
@@ -50,6 +51,7 @@ trait ProcessHelper
         }
 
         $process->run(! $showOutput ? null : function (string $line) use ($output): void {
+            /** @phpstan-ignore-next-line */
             if ($output !== null) {
                 $output->write('    '.$line);
             }

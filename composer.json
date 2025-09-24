@@ -30,7 +30,6 @@
         "illuminate/support": "^11.0|^12.0"
     },
     "require-dev": {
-        "enlightn/enlightn": "^2.3",
         "friendsofphp/php-cs-fixer": "^3.0",
         "larastan/larastan": "^2.0|^3.0",
         "laravel/pint": "^1.2",

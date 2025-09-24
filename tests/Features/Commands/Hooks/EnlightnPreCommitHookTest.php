@@ -12,7 +12,7 @@ uses(GitHelper::class);
 beforeEach(function () {
     $this->gitInit();
     $this->initializeTempDirectory(base_path('temp'));
-});
+})->skip('Enligthn package is not actively maintained anymore.');
 
 test('Skips Enlightn check if there are no files added to commit', function () {
     $changedFiles = Mockery::mock(ChangedFiles::class)

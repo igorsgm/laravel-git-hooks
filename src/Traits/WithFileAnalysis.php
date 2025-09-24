@@ -37,11 +37,13 @@ trait WithFileAnalysis
         return $this;
     }
 
+    /**
+     * @param  Collection<int, ChangedFile>  $files
+     * @return array<int, string>
+     */
     protected function getAnalyzableFilePaths(Collection $files): array
     {
-        return $files->filter(function ($file) {
-            return $this->canFileBeAnalyzed($file);
-        })->map->getFilePath()->toArray();
+        return $files->filter(fn ($file) => $this->canFileBeAnalyzed($file))->map(fn ($file) => $file->getFilePath())->toArray();
     }
 
     public function canFileBeAnalyzed(ChangedFile $file): bool
@@ -55,6 +57,9 @@ trait WithFileAnalysis
         return is_string($fileExtensions) && preg_match($fileExtensions, $file->getFilePath());
     }
 
+    /**
+     * @param  array<int, string>  $filePaths
+     */
     protected function analyzeFiles(array $filePaths): void
     {
         $filePath = implode(' ', $filePaths);
@@ -67,7 +72,7 @@ trait WithFileAnalysis
         $process = $this->runCommands($command, $params);
 
         if (config('git-hooks.debug_commands')) {
-            $this->outputDebugCommand($process->getCommandLine());
+            $this->outputDebugCommandIfEnabled($process);
         }
 
         if (! $process->isSuccessful()) {
@@ -75,7 +80,7 @@ trait WithFileAnalysis
         }
     }
 
-    protected function handleAnalysisFailure(string $filePath, $process): void
+    protected function handleAnalysisFailure(string $filePath, mixed $process): void
     {
         if (empty($this->filesBadlyFormattedPaths)) {
             $this->command->newLine();
