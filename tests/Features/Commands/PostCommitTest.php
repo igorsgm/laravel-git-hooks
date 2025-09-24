@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Contracts\PostCommitHook;
 use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Facades\GitHooks;
@@ -39,8 +41,8 @@ it('Returns 1 on HookFailException', function ($logText) {
 
     $postCommitHook1 = Mockery::mock(PostCommitHook::class);
     $postCommitHook1->expects('handle')
-        ->andReturnUsing(function (Log $log, Closure $closure) {
-            throw new HookFailException();
+        ->andReturnUsing(function (Log $log, Closure $closure): never {
+            throw new HookFailException;
         });
 
     $this->config->set('git-hooks.post-commit', [

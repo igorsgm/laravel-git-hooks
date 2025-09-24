@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands;
 
 use Exception;
@@ -25,11 +27,9 @@ class RegisterHooks extends Command
     /**
      * Execute the console command.
      *
-     * @return void
-     *
      * @throws Exception
      */
-    public function handle(GitHooks $gitHooks)
+    public function handle(GitHooks $gitHooks): void
     {
         $availableHooks = $gitHooks->getAvailableHooks();
 

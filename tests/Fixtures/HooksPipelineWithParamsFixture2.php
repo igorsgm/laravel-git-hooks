@@ -1,20 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Tests\Fixtures;
 
 use Igorsgm\GitHooks\Contracts\Hook;
+use Illuminate\Console\Command;
 
 class HooksPipelineWithParamsFixture2 implements Hook
 {
-    /**
-     * @var array
-     */
-    private $parameters;
-
-    public function __construct(array $parameters)
-    {
-        $this->parameters = $parameters;
-    }
+    public function __construct(private array $parameters) {}
 
     /**
      * Get hook name
@@ -29,5 +24,10 @@ class HooksPipelineWithParamsFixture2 implements Hook
         $message .= ' '.$this->parameters['param'];
 
         return $next($message);
+    }
+
+    public function setCommand(Command $command): void
+    {
+        // nothing to do
     }
 }

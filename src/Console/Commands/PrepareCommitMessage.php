@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands;
 
 use Igorsgm\GitHooks\Contracts\HookCommand;

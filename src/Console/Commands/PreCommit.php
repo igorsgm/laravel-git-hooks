@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands;
 
 use Igorsgm\GitHooks\Contracts\HookCommand;
@@ -7,11 +9,13 @@ use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Traits\WithPipeline;
+use Igorsgm\GitHooks\Traits\WithPipelineFailCheck;
 use Illuminate\Console\Command;
 
 class PreCommit extends Command implements HookCommand
 {
     use WithPipeline;
+    use WithPipelineFailCheck;
 
     /**
      * The name and signature of the console command.
@@ -27,9 +31,6 @@ class PreCommit extends Command implements HookCommand
      */
     protected $description = 'Run hook pre-commit';
 
-    /**
-     * {@inheritDoc}
-     */
     public function getHook(): string
     {
         return 'pre-commit';
@@ -37,20 +38,27 @@ class PreCommit extends Command implements HookCommand
 
     /**
      * Execute the console command.
-     *
-     * @return int|void
      */
-    public function handle()
+    public function handle(): int
     {
         try {
+            $this->clearPipelineFailed();
+
             $this->sendChangedFilesThroughHooks(
                 new ChangedFiles(
                     GitHooks::getListOfChangedFiles()
                 )
             );
-        } catch (HookFailException $e) {
+
+            if ($this->checkPipelineFailed()) {
+                $this->clearPipelineFailed();
+                throw new HookFailException;
+            }
+        } catch (HookFailException) {
             return 1;
         }
+
+        return 0;
     }
 
     /**

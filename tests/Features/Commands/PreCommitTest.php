@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Contracts\PreCommitHook;
 use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Facades\GitHooks;
@@ -43,8 +45,8 @@ it('Returns 1 on HookFailException', function ($listOfChangedFiles) {
     //    );
     $preCommitHook1 = Mockery::mock(PreCommitHook::class);
     $preCommitHook1->expects('handle')
-        ->andReturnUsing(function (ChangedFiles $files, Closure $closure) {
-            throw new HookFailException();
+        ->andReturnUsing(function (ChangedFiles $files, Closure $closure): never {
+            throw new HookFailException;
         });
 
     $this->config->set('git-hooks.pre-commit', [

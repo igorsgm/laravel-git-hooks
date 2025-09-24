@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks;
 
 use Illuminate\Support\ServiceProvider;
@@ -9,7 +11,7 @@ class GitHooksServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -18,13 +20,13 @@ class GitHooksServiceProvider extends ServiceProvider
 
             // Registering package commands.
             $this->commands([
-                \Igorsgm\GitHooks\Console\Commands\RegisterHooks::class,
-                \Igorsgm\GitHooks\Console\Commands\CommitMessage::class,
-                \Igorsgm\GitHooks\Console\Commands\PreCommit::class,
-                \Igorsgm\GitHooks\Console\Commands\PrepareCommitMessage::class,
-                \Igorsgm\GitHooks\Console\Commands\PostCommit::class,
-                \Igorsgm\GitHooks\Console\Commands\PrePush::class,
-                \Igorsgm\GitHooks\Console\Commands\MakeHook::class,
+                Console\Commands\RegisterHooks::class,
+                Console\Commands\CommitMessage::class,
+                Console\Commands\PreCommit::class,
+                Console\Commands\PrepareCommitMessage::class,
+                Console\Commands\PostCommit::class,
+                Console\Commands\PrePush::class,
+                Console\Commands\MakeHook::class,
             ]);
         }
     }
@@ -32,13 +34,11 @@ class GitHooksServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    public function register()
+    public function register(): void
     {
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/git-hooks.php', 'laravel-git-hooks');
 
-        $this->app->singleton('laravel-git-hooks', function () {
-            return new GitHooks;
-        });
+        $this->app->singleton('laravel-git-hooks', fn () => new GitHooks());
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks;
 
 use Closure;
@@ -9,44 +11,23 @@ use Throwable;
 
 class HooksPipeline extends Pipeline
 {
-    /**
-     * @var Closure
-     */
-    protected $pipeStartCallback;
+    protected ?Closure $pipeStartCallback = null;
 
-    /**
-     * @var Closure
-     */
-    protected $pipeEndCallback;
+    protected ?Closure $pipeEndCallback = null;
 
-    /**
-     * @var string
-     */
-    protected $hook;
-
-    /**
-     * @param  \Illuminate\Contracts\Container\Container|null  $container
-     */
-    public function __construct(Container $container, string $hook)
+    public function __construct(?Container $container, protected string $hook)
     {
         parent::__construct($container);
-        $this->hook = $hook;
     }
 
-    /**
-     * @return $this
-     */
-    public function withPipeStartCallback(Closure $callback)
+    public function withPipeStartCallback(Closure $callback): self
     {
         $this->pipeStartCallback = $callback;
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function withPipeEndCallback(Closure $callback)
+    public function withPipeEndCallback(Closure $callback): self
     {
         $this->pipeEndCallback = $callback;
 
@@ -55,60 +36,55 @@ class HooksPipeline extends Pipeline
 
     /**
      * Get a Closure that represents a slice of the application onion.
-     *
-     * @return Closure
      */
-    protected function carry()
+    protected function carry(): Closure
     {
-        return function ($stack, $pipe) {
-            return function ($passable) use ($stack, $pipe) {
-                try {
-                    if (is_callable($pipe)) {
-                        // If the pipe is a callable, then we will call it directly, but otherwise we
-                        // will resolve the pipes out of the dependency container and call it with
-                        // the appropriate method and arguments, returning the results back out.
-                        return $pipe($passable, $stack);
-                    } elseif (! is_object($pipe)) {
-                        $hookParameters = (array) config('git-hooks.'.$this->hook.'.'.$pipe);
+        return fn ($stack, $pipe) => function ($passable) use ($stack, $pipe) {
+            try {
+                if (is_callable($pipe)) {
+                    // If the pipe is a callable, then we will call it directly, but otherwise we
+                    // will resolve the pipes out of the dependency container and call it with
+                    // the appropriate method and arguments, returning the results back out.
+                    return $pipe($passable, $stack);
+                }
 
-                        // If the pipe is a string we will parse the string and resolve the class out
-                        // of the dependency injection container. We can then build a callable and
-                        // execute the pipe function giving in the parameters that are required.
-                        $pipe = $this->getContainer()->make($pipe, ['parameters' => $hookParameters]);
+                if (!is_object($pipe)) {
+                    $hookParameters = (array) config('git-hooks.'.$this->hook.'.'.$pipe);
 
-                        $this->handlePipeEnd(true);
+                    // If the pipe is a string we will parse the string and resolve the class out
+                    // of the dependency injection container. We can then build a callable and
+                    // execute the pipe function giving in the parameters that are required.
+                    $pipe = $this->getContainer()->make($pipe, ['parameters' => $hookParameters]);
 
-                        if ($this->pipeStartCallback) {
-                            call_user_func_array($this->pipeStartCallback, [$pipe]);
-                        }
+                    $this->handlePipeEnd(true);
 
-                        $parameters = [$passable, $stack];
-                    } else {
-                        // If the pipe is already an object we'll just make a callable and pass it to
-                        // the pipe as-is. There is no need to do any extra parsing and formatting
-                        // since the object we're given was already a fully instantiated object.
-                        $parameters = [$passable, $stack];
+                    if ($this->pipeStartCallback) {
+                        call_user_func_array($this->pipeStartCallback, [$pipe]);
                     }
 
-                    $carry = method_exists($pipe, $this->method)
-                                ? $pipe->{$this->method}(...$parameters)
-                                : $pipe(...$parameters);
-
-                    return $this->handleCarry($carry);
-                } catch (Throwable $e) {
-                    return $this->handleException($passable, $e);
+                    $parameters = [$passable, $stack];
+                } else {
+                    // If the pipe is already an object we'll just make a callable and pass it to
+                    // the pipe as-is. There is no need to do any extra parsing and formatting
+                    // since the object we're given was already a fully instantiated object.
+                    $parameters = [$passable, $stack];
                 }
-            };
+
+                $carry = method_exists($pipe, $this->method)
+                            ? $pipe->{$this->method}(...$parameters)
+                            : $pipe(...$parameters);
+
+                return $this->handleCarry($carry);
+            } catch (Throwable $e) {
+                return $this->handleException($passable, $e);
+            }
         };
     }
 
     /**
      * Handle the call back call once a specific pipe has finished or errored.
-     *
-     * @param  bool  $success
-     * @return void
      */
-    protected function handlePipeEnd($success)
+    protected function handlePipeEnd(bool $success): void
     {
         if ($this->pipeEndCallback) {
             call_user_func_array($this->pipeEndCallback, [$success]);
@@ -117,11 +93,8 @@ class HooksPipeline extends Pipeline
 
     /**
      * Handle the value returned from each pipe before passing it to the next.
-     *
-     * @param  mixed  $carry
-     * @return mixed
      */
-    protected function handleCarry($carry)
+    protected function handleCarry(mixed $carry): mixed
     {
         $this->handlePipeEnd(true);
 
@@ -131,12 +104,9 @@ class HooksPipeline extends Pipeline
     /**
      * Handle the given exception.
      *
-     * @param  mixed  $passable
-     * @return mixed
-     *
-     * @throws \Throwable
+     * @throws Throwable
      */
-    protected function handleException($passable, Throwable $e)
+    protected function handleException(mixed $passable, Throwable $e): mixed
     {
         $this->handlePipeEnd(false);
 

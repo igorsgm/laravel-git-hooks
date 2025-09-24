@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands;
 
 use Igorsgm\GitHooks\Contracts\HookCommand;
@@ -24,9 +26,6 @@ class PrePush extends Command implements HookCommand
      */
     protected $description = 'Run hook pre-push';
 
-    /**
-     * {@inheritDoc}
-     */
     public function getHook(): string
     {
         return 'pre-push';

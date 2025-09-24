@@ -3,16 +3,16 @@
 <p align="center">A powerful and easy-to-use package for managing Git hooks within your Laravel projects. Improve your code quality, reduce the time spent on code reviews, and catch potential bugs before they make it into your repository.</p>
 
 <p align="center">
-    <a href="https://packagist.org/packages/igorsgm/laravel-git-hooks">
-        <img src="https://img.shields.io/packagist/v/igorsgm/laravel-git-hooks.svg?style=flat-square" alt="Latest Version on Packagist">
+    <a href="https://packagist.org/packages/indy2kro/laravel-git-hooks">
+        <img src="https://img.shields.io/packagist/v/indy2kro/laravel-git-hooks.svg?style=flat-square" alt="Latest Version on Packagist">
     </a>
-    <a href="https://github.com/igorsgm/laravel-git-hooks/actions/workflows/main.yml/badge.svg">
-        <img src="https://img.shields.io/github/actions/workflow/status/igorsgm/laravel-git-hooks/main.yml?style=flat-square" alt="Build Status">
+    <a href="https://github.com/indy2kro/laravel-git-hooks/actions/workflows/main.yml/badge.svg">
+        <img src="https://img.shields.io/github/actions/workflow/status/indy2kro/laravel-git-hooks/main.yml?style=flat-square" alt="Build Status">
     </a>
-    <img src="https://img.shields.io/scrutinizer/coverage/g/igorsgm/laravel-git-hooks/master?style=flat-square" alt="Test Coverage">
-    <img src="https://img.shields.io/scrutinizer/quality/g/igorsgm/laravel-git-hooks/master?style=flat-square" alt="Code Quality">
-    <a href="https://packagist.org/packages/igorsgm/laravel-git-hooks">
-        <img src="https://img.shields.io/packagist/dt/igorsgm/laravel-git-hooks.svg?style=flat-square" alt="Total Downloads">
+    <img src="https://img.shields.io/scrutinizer/coverage/g/indy2kro/laravel-git-hooks/master?style=flat-square" alt="Test Coverage">
+    <img src="https://img.shields.io/scrutinizer/quality/g/indy2kro/laravel-git-hooks/master?style=flat-square" alt="Code Quality">
+    <a href="https://packagist.org/packages/indy2kro/laravel-git-hooks">
+        <img src="https://img.shields.io/packagist/dt/indy2kro/laravel-git-hooks.svg?style=flat-square" alt="Total Downloads">
     </a>
 </p>
 
@@ -22,20 +22,23 @@
     <img src="https://user-images.githubusercontent.com/14129843/234191523-859b962d-bfdf-4df7-88da-9c80ddb93607.png" alt="Laravel Git Hooks usage sample">
 </p>
 
+This is a fork of <a href="https://github.com/igorsgm/laravel-git-hooks">igorsgm/laravel-git-hooks</a> maintained for latest versions.
+
 ## ✨ Features
 
-- **Pre-configured Hooks:** Laravel Git Hooks comes with pre-configured pre-commit hooks for popular tools, such as Laravel Pint, PHPCS, ESLint, Prettier, Larastan, Enlightn, and Blade Formatter, making it easy to enforce coding standards and style guidelines right away.
+- **Pre-configured Hooks:** Laravel Git Hooks comes with pre-configured pre-commit hooks for popular tools, such as Laravel Pint, PHPCS, ESLint, Prettier, Larastan, Enlightn, Rector, PHP Insights and Blade Formatter, making it easy to enforce coding standards and style guidelines right away.
 - **Manage Git Hooks:** Easily manage your Git hooks in your Laravel projects with a streamlined and organized approach.
 - **Edit Commit Messages:** Gain control over your commit messages by customizing them to meet your project requirements and maintain a clean Git history.
 - **Create Custom Hooks:** Add and integrate custom hooks tailored to your specific project needs, ensuring better code quality and adherence to guidelines.
 - **Artisan Command for Hook Generation:** The package includes a convenient Artisan command that allows you to effortlessly generate new hooks of various types. Such as: `pre-commit`, `prepare-commit-msg`, `commit-msg`, `post-commit`, `pre-push`
-- **Code Quality:** The package is thoroughly tested, with 100% of code coverage, ensuring its reliability and stability in a wide range of Laravel projects.
+- **Code Quality:** The package is thoroughly tested, with >95% of code coverage, ensuring its reliability and stability in a wide range of Laravel projects.
+- **Docker support:** Each hook can be configured to either run locally or inside a docker container.
 
 ## 1️⃣ Installation
 
 - You can install the package via composer:
 ```bash
-composer require igorsgm/laravel-git-hooks --dev
+composer require indy2kro/laravel-git-hooks --dev
 ```
 
 - Publish the config file and customize it in the way you want:
@@ -57,11 +60,109 @@ To use the already created pre-commit hooks of this package, you can simply edit
 'pre-commit' => [
     \Igorsgm\GitHooks\Console\Commands\Hooks\PintPreCommitHook::class, // Laravel Pint
     \Igorsgm\GitHooks\Console\Commands\Hooks\PHPCodeSnifferPreCommitHook::class, // PHPCS (with PHPCBF autofixer) 
+    \Igorsgm\GitHooks\Console\Commands\Hooks\PHPCSFixerPreCommitHook::class, // PHP CS Fixer
     \Igorsgm\GitHooks\Console\Commands\Hooks\LarastanPreCommitHook::class, // Larastan
     \Igorsgm\GitHooks\Console\Commands\Hooks\EnlightnPreCommitHook::class, // Enlightn
     \Igorsgm\GitHooks\Console\Commands\Hooks\ESLintPreCommitHook::class, // ESLint
     \Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook::class, // Prettier
+    \Igorsgm\GitHooks\Console\Commands\Hooks\PhpInsightsPreCommitHook::class, // PhpInsights
+    \Igorsgm\GitHooks\Console\Commands\Hooks\RectorPreCommitHook::class, // Rector
 ],
+```
+
+By default the pre-commit hooks will stop at first failure and will not continue with the remaining tools.
+
+If the tool contains a fixer option it will prompt in the CLI to run the fix command.
+
+This behavior can be adjusted using the following parameters from git-hooks.php config file:
+```php
+    /*
+    |--------------------------------------------------------------------------
+    | Automatically fix errors
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to configure the git hooks to
+    | automatically run the fixer without any CLI prompt.
+    |
+    */
+    'automatically_fix_errors' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Automatically re-run analyzer after autofix
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to configure the git hooks to
+    | automatically re-run the analyzer command after autofix.
+    | The git hooks will not fail in case the re-run is succesful.
+    |
+    */
+    'rerun_analyzer_after_autofix' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Stop at first analyzer failure
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to configure the git hooks to
+    | stop (or not) at the first analyzer failure encountered.
+    |
+    */
+    'stop_at_first_analyzer_failure' => true,
+```
+
+There are also several debug options which can be adjusted using the following parameters from git-hooks.php config file:
+
+```php
+    /*
+    |--------------------------------------------------------------------------
+    | Output errors
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you output any errors encountered
+    | during execution directly for easy debug.
+    |
+    */
+    'output_errors' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Debug commands
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to configure the git hooks to
+    | display the commands that are executed (usually for debug purpose).
+    |
+    */
+    'debug_commands' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Debug output
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you display the output of each
+    | command during execution directly for easy debug.
+    |
+    */
+    'debug_output' => false,
+```
+### Laravel Sail support
+
+If you are using Laravel Sail and maybe not lokal PHP is installed, you can adjust the following parameters in the git-hooks.php config file:
+
+```php
+    'use_sail' => env('GITHOOKS_USE_SAIL', false),
+```
+This will force the local git hooks to use the `sail` command to execute the hooks.
+
+### Docker support
+
+By default commands are executed locally, however this behavior can be adjusted for each hook using the parameters `run_in_docker` and `docker_container`:
+
+```php
+    'run_in_docker' => env('LARAVEL_PINT_RUN_IN_DOCKER', true),
+    'docker_container' => env('LARAVEL_PINT_DOCKER_CONTAINER', 'app'),
 ```
 
 ### Creating Custom Git Hooks
@@ -275,6 +376,10 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
+
+- [Cristian Radu](https://github.com/indy2kro)
+
+Original authors:
 
 - [Igor Moraes](https://github.com/igorsgm)
 - [Pavel Buchnev](https://github.com/butschster)

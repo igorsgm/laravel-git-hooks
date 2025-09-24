@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 
 use Closure;
@@ -8,26 +10,20 @@ use Igorsgm\GitHooks\Git\ChangedFiles;
 
 class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
-    /**
-     * @var string
-     */
-    protected $configParam;
+    protected string $configParam;
 
     /**
      * Name of the hook
-     *
-     * @var string
      */
-    protected $name = 'Laravel Pint';
+    protected string $name = 'Laravel Pint';
 
     /**
      * Analyze and fix committed PHP files using Laravel Pint
      *
      * @param  ChangedFiles  $files  The files that have been changed in the current commit.
      * @param  Closure  $next  A closure that represents the next middleware in the pipeline.
-     * @return mixed|null
      */
-    public function handle(ChangedFiles $files, Closure $next)
+    public function handle(ChangedFiles $files, Closure $next): mixed
     {
         $this->configParam = $this->configParam();
 
@@ -43,7 +39,7 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
      */
     public function analyzerCommand(): string
     {
-        return trim(sprintf('%s --test %s', $this->getAnalyzerExecutable(), $this->configParam));
+        return mb_trim(sprintf('%s --test %s', $this->getAnalyzerExecutable(), $this->configParam));
     }
 
     /**
@@ -51,7 +47,7 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
      */
     public function fixerCommand(): string
     {
-        return trim(sprintf('%s %s', $this->getFixerExecutable(), $this->configParam));
+        return mb_trim(sprintf('%s %s', $this->getFixerExecutable(), $this->configParam));
     }
 
     /**
@@ -63,12 +59,14 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
     {
         $pintConfigFile = config('git-hooks.code_analyzers.laravel_pint.config');
 
-        if (! empty($pintConfigFile) && $this->validateConfigPath($pintConfigFile)) {
-            return '--config '.trim($pintConfigFile, '/');
+        if (!empty($pintConfigFile)) {
+            $this->validateConfigPath($pintConfigFile);
+
+            return '--config '.mb_trim((string) $pintConfigFile, '/');
         }
 
         $pintPreset = config('git-hooks.code_analyzers.laravel_pint.preset');
 
-        return empty($pintPreset) ? '' : '--preset '.trim($pintPreset, '/');
+        return empty($pintPreset) ? '' : '--preset '.mb_trim((string) $pintPreset, '/');
     }
 }

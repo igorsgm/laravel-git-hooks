@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands;
 
 use Igorsgm\GitHooks\Contracts\HookCommand;
@@ -19,12 +21,11 @@ class CommitMessage extends Command implements HookCommand
 
     /**
      * The console command description.
+     *
+     * @var string
      */
     protected $description = 'Run hook commit-msg';
 
-    /**
-     * {@inheritDoc}
-     */
     public function getHook(): string
     {
         return 'commit-msg';

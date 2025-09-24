@@ -1,49 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Git;
 
-class ChangedFile
+use Stringable;
+
+class ChangedFile implements Stringable
 {
-    const A = 1; // added
+    public const A = 1; // added
 
-    const M = 2; // modified
+    public const M = 2; // modified
 
-    const D = 4; // deleted
+    public const D = 4; // deleted
 
-    const R = 8; // renamed
+    public const R = 8; // renamed
 
-    const C = 16; // copied
+    public const C = 16; // copied
 
-    const U = 32; // updated but unmerged
+    public const U = 32; // updated but unmerged
 
-    const N = 64; // untracked
+    public const N = 64; // untracked
 
-    const PATTERN = '/^\s?(?<X>[A|M|D|R|C|U|\?]{1,2}| )(?<Y>[A|M|D|R|C|U|\?]{1,2}| )\s(?<file>\S+)(\s->\S+)?$/';
+    public const PATTERN = '/^\s?(?<X>[A|M|D|R|C|U|\?]{1,2}| )(?<Y>[A|M|D|R|C|U|\?]{1,2}| )\s(?<file>\S+)(\s\->\S+)?$/';
 
-    /**
-     * @var string
-     */
-    protected $line;
+    protected string $line;
 
-    /**
-     * @var string
-     */
-    protected $file;
+    protected string $file;
+
+    protected int $X = 0;
+
+    protected int $Y = 0;
 
     /**
-     * @var int
+     * @var array<string, int>
      */
-    protected $X = 0;
-
-    /**
-     * @var int
-     */
-    protected $Y = 0;
-
-    /**
-     * @var array
-     */
-    protected $bitMap = [
+    protected array $bitMap = [
         'A' => self::A,
         'M' => self::M,
         'D' => self::D,
@@ -53,11 +45,11 @@ class ChangedFile
         '?' => self::N,
     ];
 
-    public function __construct(string $line)
+    public function __construct(bool|string $line)
     {
-        $this->line = $line;
+        $this->line = (string) $line;
 
-        preg_match(static::PATTERN, $line, $matches);
+        preg_match(self::PATTERN, $this->line, $matches);
 
         if (isset($matches['X'])) {
             $this->X = $this->bitMap[$matches['X']] ?? 0;
@@ -70,12 +62,17 @@ class ChangedFile
         $this->file = $matches['file'] ?? '';
     }
 
+    public function __toString(): string
+    {
+        return $this->line;
+    }
+
     /**
      * Check if file in commit
      */
     public function isInCommit(): bool
     {
-        return $this->X > 0 && $this->X ^ static::N;
+        return $this->X > 0 && $this->X ^ self::N;
     }
 
     /**
@@ -93,34 +90,26 @@ class ChangedFile
 
     public function isAdded(): bool
     {
-        return $this->X & static::A || $this->Y & static::A;
+        return $this->X & self::A || $this->Y & self::A;
     }
 
     public function isModified(): bool
     {
-        return $this->X & static::M || $this->Y & static::M;
+        return $this->X & self::M || $this->Y & self::M;
     }
 
     public function isDeleted(): bool
     {
-        return $this->X & static::D || $this->Y & static::D;
+        return $this->X & self::D || $this->Y & self::D;
     }
 
     public function isUntracked(): bool
     {
-        return $this->X & static::N || $this->Y & static::N;
+        return $this->X & self::N || $this->Y & self::N;
     }
 
     public function isCopied(): bool
     {
-        return $this->X & static::C || $this->Y & static::C;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->line;
+        return $this->X & self::C || $this->Y & self::C;
     }
 }

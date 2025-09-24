@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Console\Commands\Hooks\EnlightnPreCommitHook;
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFiles;
@@ -12,7 +14,7 @@ uses(GitHelper::class);
 beforeEach(function () {
     $this->gitInit();
     $this->initializeTempDirectory(base_path('temp'));
-});
+})->skip('Enligthn package is not actively maintained anymore.');
 
 test('Skips Enlightn check if there are no files added to commit', function () {
     $changedFiles = Mockery::mock(ChangedFiles::class)
@@ -20,11 +22,9 @@ test('Skips Enlightn check if there are no files added to commit', function () {
         ->andReturn(collect())
         ->getMock();
 
-    $next = function ($files) {
-        return 'passed';
-    };
+    $next = fn ($files) => 'passed';
 
-    $hook = new EnlightnPreCommitHook();
+    $hook = new EnlightnPreCommitHook;
     $result = $hook->handle($changedFiles, $next);
     expect($result)->toBe('passed');
 });
@@ -37,9 +37,7 @@ test('Fails commit when Enlightn is not passing', function ($listOfChangedFiles)
     GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
     GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfChangedFiles);
 
-    Artisan::command('enlightn', function () {
-        return 1;
-    });
+    Artisan::command('enlightn', fn () => 1);
 
     // Get all registered commands
     $commands = Artisan::all();
@@ -48,7 +46,7 @@ test('Fails commit when Enlightn is not passing', function ($listOfChangedFiles)
     $command = $commands['git-hooks:pre-commit'];
 
     $input = new ArrayInput([]);
-    $output = new BufferedOutput();
+    $output = new BufferedOutput;
 
     $exitCode = $command->run($input, $output);
     $outputText = $output->fetch();
@@ -66,9 +64,7 @@ test('Commit passes when Enlightn check is OK', function ($listOfChangedFiles) {
     GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
     GitHooks::shouldReceive('getListOfChangedFiles')->andReturn($listOfChangedFiles);
 
-    Artisan::command('enlightn', function () {
-        return 0;
-    });
+    Artisan::command('enlightn', fn () => 0);
 
     $this->artisan('git-hooks:pre-commit')->assertSuccessful();
 })->with('listOfChangedFiles');

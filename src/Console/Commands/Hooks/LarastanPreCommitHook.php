@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 
 use Closure;
@@ -8,30 +10,25 @@ use Igorsgm\GitHooks\Git\ChangedFiles;
 
 class LarastanPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
-    /**
-     * @var string
-     */
-    protected $configParam;
+    protected string $configParam;
 
     /**
      * Name of the hook
-     *
-     * @var string
      */
-    protected $name = 'Larastan';
+    protected string $name = 'Larastan';
 
     /**
      * Analyzes committed files using Larastan
      *
      * @param  ChangedFiles  $files  The list of committed files to analyze.
      * @param  Closure  $next  The next hook in the chain to execute.
-     * @return mixed|null
      */
-    public function handle(ChangedFiles $files, Closure $next)
+    public function handle(ChangedFiles $files, Closure $next): mixed
     {
         $this->configParam = $this->configParam();
 
-        return $this->setAnalyzerExecutable(config('git-hooks.code_analyzers.larastan.path'))
+        return $this->setFileExtensions(config('git-hooks.code_analyzers.larastan.file_extensions'))
+            ->setAnalyzerExecutable(config('git-hooks.code_analyzers.larastan.path'))
             ->setRunInDocker(config('git-hooks.code_analyzers.larastan.run_in_docker'))
             ->setDockerContainer(config('git-hooks.code_analyzers.larastan.docker_container'))
             ->handleCommittedFiles($files, $next);
@@ -43,15 +40,15 @@ class LarastanPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      */
     public function analyzerCommand(): string
     {
-        $additionalParams = config('git-hooks.code_analyzers.larastan.additional_params');
+        $additionalParams = (string) config('git-hooks.code_analyzers.larastan.additional_params');
 
-        if (! empty($additionalParams)) {
+        if (!empty($additionalParams)) {
             // Removing configuration/c/xdebug parameters from additional parameters to avoid conflicts
             // because they are already set in the command by default.
-            $additionalParams = preg_replace('/\s*--(configuration|c|xdebug)\b(=\S*)?\s*/', '', $additionalParams);
+            $additionalParams = (string) preg_replace('/\s*--(configuration|c|xdebug)\b(=\S*)?\s*/', '', (string) $additionalParams);
         }
 
-        return trim(
+        return mb_trim(
             sprintf('%s analyse %s --xdebug %s', $this->getAnalyzerExecutable(), $this->configParam, $additionalParams)
         );
     }
@@ -71,7 +68,7 @@ class LarastanPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      */
     protected function configParam(): string
     {
-        $phpStanConfigFile = rtrim(config('git-hooks.code_analyzers.larastan.config'), '/');
+        $phpStanConfigFile = mb_rtrim((string) config('git-hooks.code_analyzers.larastan.config'), '/');
         $this->validateConfigPath($phpStanConfigFile);
 
         return empty($phpStanConfigFile) ? '' : '--configuration='.$phpStanConfigFile;

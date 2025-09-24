@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Git\ChangedFile;
 
 test('Gets file meta', function (string $file, bool $isAdded, bool $isModified, bool $isDeleted, bool $isUntracked, bool $inCommit, bool $isStaged) {

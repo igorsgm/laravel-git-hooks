@@ -1,8 +1,9 @@
 build:
+  image: default-jammy
   environment:
+    node: v20
     php:
-      version: 8.1
-    node: "v16.20.0"
+      version: 8.3.3
   nodes:
     analysis:
       project_setup:

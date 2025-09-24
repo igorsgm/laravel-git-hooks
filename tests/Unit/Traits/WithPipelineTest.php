@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Console\Commands\PreCommit;
 use Igorsgm\GitHooks\Tests\Fixtures\PreCommitFixtureHook;
 use Symfony\Component\Console\Output\OutputInterface;
 
 test('Starts and Finishes Pipe Task with decorated output', function () {
-    $command = new PreCommit();
-    $hook = new PreCommitFixtureHook();
+    $command = new PreCommit;
+    $hook = new PreCommitFixtureHook;
     $outputMock = $this->createMock(OutputInterface::class);
 
     $outputMock->expects($this->once())

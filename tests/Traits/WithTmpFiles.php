@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Tests\Traits;
 
 use Illuminate\Support\Facades\File;
@@ -8,7 +10,7 @@ trait WithTmpFiles
 {
     private $tempDirectoryPath;
 
-    public function initializeTempDirectory(?string $path = '', bool $force = false)
+    public function initializeTempDirectory(?string $path = '', bool $force = false): void
     {
         if ($path) {
             $this->setTempDirectoryPath($path);
@@ -20,9 +22,19 @@ trait WithTmpFiles
             $this->deleteTempDirectory();
         }
 
-        if (! is_dir($tempDirectoryPath)) {
+        if (!is_dir($tempDirectoryPath)) {
             File::makeDirectory($tempDirectoryPath, 0755, true);
         }
+    }
+
+    public function getTempDirectoryPath(): string
+    {
+        return $this->tempDirectoryPath ?: __DIR__.DIRECTORY_SEPARATOR.'temp';
+    }
+
+    public function setTempDirectoryPath(string $directoryName): void
+    {
+        $this->tempDirectoryPath = $directoryName;
     }
 
     protected function deleteTempDirectory()
@@ -35,16 +47,6 @@ trait WithTmpFiles
     protected function getTempFilePath(string $filename): string
     {
         return $this->getTempDirectoryPath().DIRECTORY_SEPARATOR.$filename;
-    }
-
-    public function getTempDirectoryPath(): string
-    {
-        return $this->tempDirectoryPath ?: __DIR__.DIRECTORY_SEPARATOR.'temp';
-    }
-
-    public function setTempDirectoryPath(string $directoryName): void
-    {
-        $this->tempDirectoryPath = $directoryName;
     }
 
     protected function makeTempFile(string $filename, string $content): string

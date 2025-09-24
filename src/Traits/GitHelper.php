@@ -1,42 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Traits;
 
+use Exception;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 trait GitHelper
 {
     use ProcessHelper;
 
-    /**
-     * @return string
-     */
-    public function getListOfChangedFiles()
+    public function getListOfChangedFiles(): string
     {
         return $this->runCommandAndGetOutput('git status --short');
     }
 
-    /**
-     * @return string
-     */
-    public function getLastCommitFromLog()
+    public function getLastCommitFromLog(): string
     {
         return $this->runCommandAndGetOutput('git log -1 HEAD');
-    }
-
-    /**
-     * @param  string|array  $commands
-     * @return string
-     */
-    private function runCommandAndGetOutput($commands)
-    {
-        $process = $this->runCommands($commands);
-
-        if (! $process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
-        return $process->getOutput();
     }
 
     /**
@@ -44,7 +26,13 @@ trait GitHelper
      */
     public function getCommitMessageContentFromFile(string $filePath): string
     {
-        return file_get_contents($filePath);
+        $content = file_get_contents($filePath);
+
+        if ($content === false) {
+            throw new Exception('Fail to read file: '.$filePath);
+        }
+
+        return $content;
     }
 
     /**
@@ -57,10 +45,8 @@ trait GitHelper
 
     /**
      * @read https://stackoverflow.com/questions/30733415/how-to-determine-if-git-merge-is-in-process#answer-30781568
-     *
-     * @return bool
      */
-    public function isMergeInProgress()
+    public function isMergeInProgress(): bool
     {
         $command = $this->runCommands('git merge HEAD', [
             'silent' => true,
@@ -68,5 +54,19 @@ trait GitHelper
 
         // If a merge is in progress, the process returns code 128
         return $command->getExitCode() === 128;
+    }
+
+    /**
+     * @param  string|array<int, string>  $commands
+     */
+    private function runCommandAndGetOutput(string|array $commands): string
+    {
+        $process = $this->runCommands($commands);
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        return $process->getOutput();
     }
 }

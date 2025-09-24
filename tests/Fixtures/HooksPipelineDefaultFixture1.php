@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Tests\Fixtures;
 
 use Igorsgm\GitHooks\Contracts\Hook;
+use Illuminate\Console\Command;
 
 class HooksPipelineDefaultFixture1 implements Hook
 {
@@ -19,5 +22,10 @@ class HooksPipelineDefaultFixture1 implements Hook
         $message .= ' '.$this->getName();
 
         return $next($message);
+    }
+
+    public function setCommand(Command $command): void
+    {
+        // nothing to do
     }
 }

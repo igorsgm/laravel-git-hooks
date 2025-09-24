@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 dataset('lastCommitLogText', [
     'Default Git Log' => sprintf('commit %s
 Author: Igor Moraes <igor.sgm@gmail.com>
@@ -27,6 +29,13 @@ dataset('listOfChangedFiles', [
 dataset('listOfFixablePhpFiles', [
     'List of Fixable Files' => implode(PHP_EOL, [
         'AM temp/ClassWithFixableIssues.php',
+        'AM temp/fixable-blade-file.blade.php',
+    ]),
+]);
+
+dataset('listOfRectorPhpFiles', [
+    'List of Rector Files' => implode(PHP_EOL, [
+        'AM temp/ClassWithRectorIssues.php',
         'AM temp/fixable-blade-file.blade.php',
     ]),
 ]);

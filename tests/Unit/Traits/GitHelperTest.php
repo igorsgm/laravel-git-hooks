@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Traits\GitHelper;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -84,7 +86,7 @@ test('isMergeInProgress returns true when a merge is in progress', function () {
 
     $noOutputSuffix = ' > '.(PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null 2>&1');
     foreach ($commandsToGenerateFakeMerge as $command) {
-        if (strpos($command, 'git') === 0) {
+        if (str_starts_with($command, 'git')) {
             $command .= $noOutputSuffix;
         }
         shell_exec($command);

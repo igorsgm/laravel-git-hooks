@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 
 use Closure;
@@ -8,26 +10,17 @@ use Igorsgm\GitHooks\Git\ChangedFiles;
 
 class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
-    /**
-     * @var string
-     */
-    protected $configParam;
+    protected string $configParam;
 
-    /**
-     * Name of the hook
-     *
-     * @var string
-     */
-    protected $name = 'Blade Formatter';
+    protected string $name = 'Blade Formatter';
 
     /**
      * Analyze and fix committed blade.php files using blade-formatter npm package
      *
      * @param  ChangedFiles  $files  The files that have been changed in the current commit.
      * @param  Closure  $next  A closure that represents the next middleware in the pipeline.
-     * @return mixed|null
      */
-    public function handle(ChangedFiles $files, Closure $next)
+    public function handle(ChangedFiles $files, Closure $next): mixed
     {
         $this->configParam = $this->configParam();
 
@@ -43,7 +36,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function analyzerCommand(): string
     {
-        return trim(sprintf('%s -c %s', $this->getAnalyzerExecutable(), $this->configParam));
+        return mb_trim(sprintf('%s -c %s', $this->getAnalyzerExecutable(), $this->configParam));
     }
 
     /**
@@ -51,7 +44,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function fixerCommand(): string
     {
-        return trim(sprintf('%s --write %s', $this->getFixerExecutable(), $this->configParam));
+        return mb_trim(sprintf('%s --write %s', $this->getFixerExecutable(), $this->configParam));
     }
 
     /**
@@ -63,7 +56,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function configParam(): string
     {
-        $bladeFormatterConfig = rtrim(config('git-hooks.code_analyzers.blade_formatter.config'), '/');
+        $bladeFormatterConfig = mb_rtrim((string) config('git-hooks.code_analyzers.blade_formatter.config'), '/');
         $this->validateConfigPath($bladeFormatterConfig);
 
         return empty($bladeFormatterConfig) ? '' : '--config='.$bladeFormatterConfig;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Contracts\MessageHook;
 use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Igorsgm\GitHooks\Facades\GitHooks;
@@ -44,8 +46,8 @@ it('Returns 1 on HookFailException', function ($listOfChangedFiles) {
     //    );
     $postCommitHook1 = Mockery::mock(MessageHook::class);
     $postCommitHook1->expects('handle')
-        ->andReturnUsing(function (CommitMessage $commitMessage, Closure $closure) {
-            throw new HookFailException();
+        ->andReturnUsing(function (CommitMessage $commitMessage, Closure $closure): never {
+            throw new HookFailException;
         });
 
     $this->config->set('git-hooks.prepare-commit-msg', [
