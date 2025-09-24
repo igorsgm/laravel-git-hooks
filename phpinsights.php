@@ -10,6 +10,7 @@ use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenTraits;
 use NunoMaduro\PhpInsights\Domain\Metrics\Architecture\Classes;
 use NunoMaduro\PhpInsights\Domain\Metrics\Code\Code;
 use NunoMaduro\PhpInsights\Domain\Metrics\Style\Style;
+use PHP_CodeSniffer\Standards\Generic\Sniffs\Formatting\SpaceAfterNotSniff;
 use PhpCsFixer\Fixer\Alias\ArrayPushFixer;
 use PhpCsFixer\Fixer\Alias\BacktickToShellExecFixer;
 use PhpCsFixer\Fixer\Alias\MbStrFunctionsFixer;
@@ -139,6 +140,7 @@ return [
         NewWithParenthesesFixer::class, // Disabled as per pint.json
         NotOperatorWithSuccessorSpaceFixer::class, // Disabled as per pint.json
         DisallowYodaComparisonSniff::class, // Allow normal comparisons
+        SpaceAfterNotSniff::class, // Don't require space after NOT operator - Pint handles this
     ],
 
     'config' => [

@@ -59,12 +59,14 @@ trait WithPipeline
 
             $taskTitle = $this->getHookTaskTitle($hook);
             $loadingText = 'loading...';
-            $this->output->write("{$taskTitle}: <comment>{$loadingText}</comment>");
+            $this->output->write(
+                "{$taskTitle}: <comment>{$loadingText}</comment>"
+            );
         };
     }
 
     /**
-     * Finish the console task of the Hook which just executed, with success or failure
+     * Finish the console task of the Hook which just executed
      */
     protected function finishHookConsoleTask(): Closure
     {
@@ -73,7 +75,8 @@ trait WithPipeline
                 return;
             }
 
-            if ($this->output->isDecorated()) { // Determines if we can use escape sequences
+            // Check if we can use escape sequences
+            if ($this->output->isDecorated()) {
                 // Move the cursor to the beginning of the line
                 $this->output->write("\x0D");
 
