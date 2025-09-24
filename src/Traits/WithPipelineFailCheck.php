@@ -12,7 +12,7 @@ trait WithPipelineFailCheck
     {
         $tmpFile = $this->getPipelineFailedTempFile();
         if (touch($tmpFile) === false) {
-            throw new HookFailException;
+            throw new HookFailException();
         }
     }
 
@@ -34,6 +34,9 @@ trait WithPipelineFailCheck
 
     protected function getPipelineFailedTempFile(): string
     {
-        return sys_get_temp_dir().DIRECTORY_SEPARATOR.'githooks-pipeline-fail-'.getmypid();
+        $tempDir = sys_get_temp_dir();
+        $pid = getmypid();
+
+        return "{$tempDir}/githooks-pipeline-fail-{$pid}";
     }
 }

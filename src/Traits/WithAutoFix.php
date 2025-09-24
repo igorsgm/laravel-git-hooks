@@ -16,26 +16,11 @@ trait WithAutoFix
 
     public function suggestAutoFixOrExit(): bool
     {
-        $hasFixerCommand = !empty($this->fixerCommand());
-
-        if ($hasFixerCommand) {
-            if (config('git-hooks.automatically_fix_errors')) {
-                $this->command->getOutput()->writeln(
-                    sprintf('<bg=green;fg=white> AUTOFIX </> <fg=green> %s Running Autofix</>', $this->getName())
-                );
-                if ($this->autoFixFiles()) {
-                    return true;
-                }
-            } elseif ($this->shouldAttemptAutofix() && $this->autoFixFiles()) {
-                return true;
-            }
+        if ($this->tryAutoFix()) {
+            return true;
         }
 
-        $this->markPipelineFailed();
-
-        if (config('git-hooks.stop_at_first_analyzer_failure')) {
-            throw new HookFailException;
-        }
+        $this->handleAnalyzerFailure();
 
         return false;
     }
@@ -76,6 +61,47 @@ trait WithAutoFix
         if (config('git-hooks.output_errors') && !config('git-hooks.debug_output')) {
             $this->command->newLine();
             $this->command->getOutput()->write($process->getOutput());
+        }
+    }
+
+    private function tryAutoFix(): bool
+    {
+        if (!$this->canAutoFix()) {
+            return false;
+        }
+
+        if (config('git-hooks.automatically_fix_errors')) {
+            return $this->performAutomaticFix();
+        }
+
+        return $this->performInteractiveFix();
+    }
+
+    private function canAutoFix(): bool
+    {
+        return !empty($this->fixerCommand());
+    }
+
+    private function performAutomaticFix(): bool
+    {
+        $this->command->getOutput()->writeln(
+            sprintf('<bg=green;fg=white> AUTOFIX </> <fg=green> %s Running Autofix</>', $this->getName())
+        );
+
+        return $this->autoFixFiles();
+    }
+
+    private function performInteractiveFix(): bool
+    {
+        return $this->shouldAttemptAutofix() && $this->autoFixFiles();
+    }
+
+    private function handleAnalyzerFailure(): void
+    {
+        $this->markPipelineFailed();
+
+        if (config('git-hooks.stop_at_first_analyzer_failure')) {
+            throw new HookFailException();
         }
     }
 

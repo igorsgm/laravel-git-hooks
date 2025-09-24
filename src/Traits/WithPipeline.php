@@ -80,14 +80,14 @@ trait WithPipeline
                 // Erase the line
                 $this->output->write("\x1B[2K");
             } else {
-                $this->output->writeln(''); // Make sure we first close the previous line
+                // Make sure we first close the previous line
+                $this->output->writeln('');
             }
 
             $taskTitle = $this->getHookTaskTitle($this->hookExecuting);
 
-            $this->output->writeln(
-                "{$taskTitle}: ".($success ? '<info>✔</info>' : '<error>failed</error>')
-            );
+            $status = $success ? '<info>✔</info>' : '<error>failed</error>';
+            $this->output->writeln("{$taskTitle}: {$status}");
 
             $this->hookExecuting = null;
         };
