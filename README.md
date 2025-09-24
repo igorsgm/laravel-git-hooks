@@ -404,7 +404,7 @@ composer test
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
 
-# Original authors:
+## Original authors
 
 - [Igor Moraes](https://github.com/igorsgm)
 - [Pavel Buchnev](https://github.com/butschster)
