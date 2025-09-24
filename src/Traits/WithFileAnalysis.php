@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igorsgm\GitHooks\Traits;
 
 use Igorsgm\GitHooks\Git\ChangedFile;
