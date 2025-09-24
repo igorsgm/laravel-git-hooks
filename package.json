@@ -1,8 +1,8 @@
 {
   "devDependencies": {
-    "blade-formatter": "^1.42.0",
-    "eslint": "^9.15.0",
-    "eslint-plugin-import": "^2.31.0",
+    "blade-formatter": "^1.42.3",
+    "eslint": "^9.31.0",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
     "prettier": "2.8.8"

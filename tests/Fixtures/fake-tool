@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+// Generic fake tool
+$basename = pathinfo(__FILE__, PATHINFO_FILENAME);
+
+$tool = preg_replace('/^fake-/', '', $basename);
+    
+$modeFile = __DIR__ . "/.{$tool}_mode";
+
+if (!file_exists($modeFile)) {
+    fwrite(STDOUT, "{$tool} Failed\n");
+    exit(1);
+}
+
+fwrite(STDOUT, "{$tool} Passed\n");
+exit(0);
