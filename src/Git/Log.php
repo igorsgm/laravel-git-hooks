@@ -6,8 +6,9 @@ namespace Igorsgm\GitHooks\Git;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Stringable;
 
-class Log implements \Stringable
+class Log implements Stringable
 {
     private ?string $hash = null;
 
@@ -34,39 +35,9 @@ class Log implements \Stringable
         }
     }
 
-    /**
-     * Parse current log into variables
-     *
-     * @param  array<int, string>  $lines
-     */
-    private function parse(array $lines): void
+    public function __toString(): string
     {
-        $handlers = collect([
-            'commit' => function ($line): void {
-                preg_match('/(?<hash>[a-z0-9]{40})/', $line, $matches);
-                $this->hash = $matches['hash'] ?? null;
-            },
-            'Author' => function ($line): void {
-                $this->author = substr($line, strlen('Author:') + 1);
-            },
-            'Date' => function ($line): void {
-                $this->date = Carbon::parse(substr($line, strlen('Date:') + 3));
-            },
-            'Merge' => function ($line): void {
-                $merge = substr($line, strlen('Merge:') + 1);
-                $this->merge = explode(' ', $merge);
-            },
-        ]);
-
-        foreach ($lines as $line) {
-            $handler = $handlers->first(fn ($handler, $prefix) => Str::startsWith($line, $prefix));
-
-            if ($handler !== null) {
-                $handler($line);
-            } elseif (! empty($line)) {
-                $this->message .= substr($line, 4)."\n";
-            }
-        }
+        return $this->getHash() ?? '';
     }
 
     /**
@@ -111,13 +82,43 @@ class Log implements \Stringable
         return $this->message;
     }
 
-    public function __toString(): string
-    {
-        return $this->getHash() ?? '';
-    }
-
     public function getLog(): string
     {
         return $this->log;
+    }
+
+    /**
+     * Parse current log into variables
+     *
+     * @param  array<int, string>  $lines
+     */
+    private function parse(array $lines): void
+    {
+        $handlers = collect([
+            'commit' => function ($line): void {
+                preg_match('/(?<hash>[a-z0-9]{40})/', $line, $matches);
+                $this->hash = $matches['hash'] ?? null;
+            },
+            'Author' => function ($line): void {
+                $this->author = mb_substr($line, mb_strlen('Author:') + 1);
+            },
+            'Date' => function ($line): void {
+                $this->date = Carbon::parse(mb_substr($line, mb_strlen('Date:') + 3));
+            },
+            'Merge' => function ($line): void {
+                $merge = mb_substr($line, mb_strlen('Merge:') + 1);
+                $this->merge = explode(' ', $merge);
+            },
+        ]);
+
+        foreach ($lines as $line) {
+            $handler = $handlers->first(fn ($handler, $prefix) => Str::startsWith($line, $prefix));
+
+            if ($handler !== null) {
+                $handler($line);
+            } elseif (!empty($line)) {
+                $this->message .= mb_substr($line, 4)."\n";
+            }
+        }
     }
 }

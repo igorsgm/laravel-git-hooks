@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Traits\GitHelper;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 

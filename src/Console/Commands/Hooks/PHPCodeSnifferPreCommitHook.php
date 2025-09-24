@@ -40,7 +40,7 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function analyzerCommand(): string
     {
-        return trim(sprintf('%s %s', $this->getAnalyzerExecutable(), $this->configParam));
+        return mb_trim(sprintf('%s %s', $this->getAnalyzerExecutable(), $this->configParam));
     }
 
     /**
@@ -48,7 +48,7 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function fixerCommand(): string
     {
-        return trim(sprintf('%s %s', $this->getFixerExecutable(), $this->configParam));
+        return mb_trim(sprintf('%s %s', $this->getFixerExecutable(), $this->configParam));
     }
 
     /**
@@ -60,7 +60,7 @@ class PHPCodeSnifferPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function configParam(): string
     {
-        $phpCSStandard = rtrim((string) config('git-hooks.code_analyzers.php_code_sniffer.config'), '/');
+        $phpCSStandard = mb_rtrim((string) config('git-hooks.code_analyzers.php_code_sniffer.config'), '/');
         $this->validateConfigPath($phpCSStandard);
 
         return empty($phpCSStandard) ? '' : '--standard='.$phpCSStandard;

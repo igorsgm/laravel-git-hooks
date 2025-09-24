@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Console\Commands\PreCommit;
 use Igorsgm\GitHooks\Tests\Fixtures\PreCommitFixtureHook;
 use Symfony\Component\Console\Output\OutputInterface;

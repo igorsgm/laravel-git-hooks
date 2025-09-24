@@ -36,7 +36,7 @@ trait WithDockerSupport
 
     public function dockerCommand(string $command): string
     {
-        if (! $this->runInDocker || empty($this->dockerContainer)) {
+        if (!$this->runInDocker || empty($this->dockerContainer)) {
             return $command;
         }
 

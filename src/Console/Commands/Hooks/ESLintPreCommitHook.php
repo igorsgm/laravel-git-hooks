@@ -39,7 +39,7 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
      */
     public function analyzerCommand(): string
     {
-        return trim(implode(' ', [
+        return mb_trim(implode(' ', [
             $this->getAnalyzerExecutable(),
             $this->configParam,
             $this->additionalParams(),
@@ -51,7 +51,7 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
      */
     public function fixerCommand(): string
     {
-        return trim(
+        return mb_trim(
             sprintf('%s --fix %s %s', $this->getFixerExecutable(), $this->configParam, $this->additionalParams())
         );
     }
@@ -63,7 +63,7 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
      */
     protected function configParam(): string
     {
-        $eslintConfig = rtrim((string) config('git-hooks.code_analyzers.eslint.config'), '/');
+        $eslintConfig = mb_rtrim((string) config('git-hooks.code_analyzers.eslint.config'), '/');
         $this->validateConfigPath($eslintConfig);
 
         return empty($eslintConfig) ? '' : '--config='.$eslintConfig;
@@ -77,7 +77,7 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
     {
         $additionalParams = (string) config('git-hooks.code_analyzers.eslint.additional_params');
 
-        if (! empty($additionalParams)) {
+        if (!empty($additionalParams)) {
             $additionalParams = (string) preg_replace('/\s+\.(?:(\s)|$)/', '$1', (string) $additionalParams);
             $additionalParams = (string) preg_replace('/\s*--(config|c)\b(=\S*)?\s*/', '', (string) $additionalParams);
         }

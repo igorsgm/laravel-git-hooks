@@ -48,7 +48,7 @@ class HooksPipeline extends Pipeline
                     return $pipe($passable, $stack);
                 }
 
-                if (! is_object($pipe)) {
+                if (!is_object($pipe)) {
                     $hookParameters = (array) config('git-hooks.'.$this->hook.'.'.$pipe);
 
                     // If the pipe is a string we will parse the string and resolve the class out
@@ -104,7 +104,7 @@ class HooksPipeline extends Pipeline
     /**
      * Handle the given exception.
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function handleException(mixed $passable, Throwable $e): mixed
     {

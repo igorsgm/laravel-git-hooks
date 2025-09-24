@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\HooksPipeline;
 use Illuminate\Container\Container;
 
@@ -7,7 +9,7 @@ test('Data is sent through Pipes', function ($hook, ?array $parameters = null) {
     $parameters ??= [];
     $container = new Container;
 
-    $hookConfig = ! empty($parameters) ? [$hook => $parameters] : [$hook];
+    $hookConfig = !empty($parameters) ? [$hook => $parameters] : [$hook];
     $this->config->set('git-hooks.pre-commit', $hookConfig);
 
     $pipeline = new HooksPipeline($container, 'pre-commit');

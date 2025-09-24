@@ -39,15 +39,6 @@ trait WithFileAnalysis
         return $this;
     }
 
-    /**
-     * @param  Collection<int, ChangedFile>  $files
-     * @return array<int, string>
-     */
-    protected function getAnalyzableFilePaths(Collection $files): array
-    {
-        return $files->filter(fn ($file) => $this->canFileBeAnalyzed($file))->map(fn ($file) => $file->getFilePath())->toArray();
-    }
-
     public function canFileBeAnalyzed(ChangedFile $file): bool
     {
         $fileExtensions = $this->getFileExtensions();
@@ -57,6 +48,15 @@ trait WithFileAnalysis
         }
 
         return is_string($fileExtensions) && preg_match($fileExtensions, $file->getFilePath());
+    }
+
+    /**
+     * @param  Collection<int, ChangedFile>  $files
+     * @return array<int, string>
+     */
+    protected function getAnalyzableFilePaths(Collection $files): array
+    {
+        return $files->filter(fn ($file) => $this->canFileBeAnalyzed($file))->map(fn ($file) => $file->getFilePath())->toArray();
     }
 
     /**
@@ -77,7 +77,7 @@ trait WithFileAnalysis
             $this->outputDebugCommandIfEnabled($process);
         }
 
-        if (! $process->isSuccessful()) {
+        if (!$process->isSuccessful()) {
             $this->handleAnalysisFailure($filePath, $process);
         }
     }
@@ -93,7 +93,7 @@ trait WithFileAnalysis
         );
         $this->filesBadlyFormattedPaths[] = $filePath;
 
-        if (config('git-hooks.output_errors') && ! config('git-hooks.debug_output')) {
+        if (config('git-hooks.output_errors') && !config('git-hooks.debug_output')) {
             $this->command->newLine();
             $this->command->getOutput()->write($process->getOutput());
         }

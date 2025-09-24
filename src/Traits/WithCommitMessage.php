@@ -69,7 +69,7 @@ trait WithCommitMessage
     {
         $file = $this->argument('file');
 
-        if (! is_string($file)) {
+        if (!is_string($file)) {
             throw new HookFailException('Invalid file argument provided');
         }
 

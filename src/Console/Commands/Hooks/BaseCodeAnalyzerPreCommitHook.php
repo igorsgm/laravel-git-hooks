@@ -75,6 +75,16 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
     }
 
     /**
+     * Get the analyzer command to be executed.
+     */
+    abstract public function analyzerCommand(): string;
+
+    /**
+     * Get the fixer command to be executed.
+     */
+    abstract public function fixerCommand(): string;
+
+    /**
      * Handles the committed files and checks if they are properly formatted.
      *
      * @throws HookFailException If the hook fails to analyze the committed files.
@@ -105,7 +115,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
      */
     public function getOutput(): ?OutputStyle
     {
-        if (! config('git-hooks.debug_output')) {
+        if (!config('git-hooks.debug_output')) {
             return null;
         }
 
@@ -160,14 +170,14 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
     }
 
     /**
-     * Get the analyzer command to be executed.
+     * Get the file extensions that can be analyzed.
+     *
+     * @return array<int, string>|string
      */
-    abstract public function analyzerCommand(): string;
-
-    /**
-     * Get the fixer command to be executed.
-     */
-    abstract public function fixerCommand(): string;
+    public function getFileExtensions(): array|string
+    {
+        return $this->fileExtensions;
+    }
 
     /**
      * Analyzes an array of ChangedFile objects and checks whether each file can be analyzed,
@@ -185,7 +195,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
 
             /** @var ChangedFile $file */
             foreach ($chunk as $file) {
-                if (! $this->canFileBeAnalyzed($file)) {
+                if (!$this->canFileBeAnalyzed($file)) {
                     continue;
                 }
 
@@ -212,7 +222,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
 
             $isProperlyFormatted = $process->isSuccessful();
 
-            if (! $isProperlyFormatted) {
+            if (!$isProperlyFormatted) {
                 if (empty($this->filesBadlyFormattedPaths)) {
                     $this->command->newLine();
                 }
@@ -222,7 +232,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
                 );
                 $this->filesBadlyFormattedPaths[] = $filePath;
 
-                if (config('git-hooks.output_errors') && ! config('git-hooks.debug_output')) {
+                if (config('git-hooks.output_errors') && !config('git-hooks.debug_output')) {
                     $this->command->newLine();
                     $this->command->getOutput()->write($process->getOutput());
                 }
@@ -274,7 +284,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
      */
     protected function validateAnalyzerInstallation(): self
     {
-        if (! config('git-hooks.validate_paths') || file_exists($this->analyzerExecutable)) {
+        if (!config('git-hooks.validate_paths') || file_exists($this->analyzerExecutable)) {
             return $this;
         }
 
@@ -297,7 +307,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
      */
     protected function validateConfigPath(string $path): self
     {
-        if (! config('git-hooks.validate_paths') || file_exists($path)) {
+        if (!config('git-hooks.validate_paths') || file_exists($path)) {
             return $this;
         }
 
@@ -311,15 +321,5 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
         $this->command->newLine();
 
         throw new HookFailException;
-    }
-
-    /**
-     * Get the file extensions that can be analyzed.
-     *
-     * @return array<int, string>|string
-     */
-    public function getFileExtensions(): array|string
-    {
-        return $this->fileExtensions;
     }
 }

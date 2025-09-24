@@ -39,7 +39,7 @@ class RectorPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
      */
     public function analyzerCommand(): string
     {
-        return trim(sprintf('%s process --dry-run %s %s', $this->getAnalyzerExecutable(), $this->configParam, $this->additionalParams()));
+        return mb_trim(sprintf('%s process --dry-run %s %s', $this->getAnalyzerExecutable(), $this->configParam, $this->additionalParams()));
     }
 
     /**
@@ -47,7 +47,7 @@ class RectorPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
      */
     public function fixerCommand(): string
     {
-        return trim(sprintf('%s process %s %s', $this->getAnalyzerExecutable(), $this->configParam, $this->additionalParams()));
+        return mb_trim(sprintf('%s process %s %s', $this->getAnalyzerExecutable(), $this->configParam, $this->additionalParams()));
     }
 
     /**
@@ -59,7 +59,7 @@ class RectorPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
     {
         $rectorConfigFile = (string) config('git-hooks.code_analyzers.rector.config');
 
-        if (! empty($rectorConfigFile)) {
+        if (!empty($rectorConfigFile)) {
             $this->validateConfigPath($rectorConfigFile);
 
             return '--config='.$rectorConfigFile;

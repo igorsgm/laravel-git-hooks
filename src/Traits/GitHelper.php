@@ -63,7 +63,7 @@ trait GitHelper
     {
         $process = $this->runCommands($commands);
 
-        if (! $process->isSuccessful()) {
+        if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
 

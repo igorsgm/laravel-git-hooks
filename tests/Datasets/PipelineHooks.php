@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Tests\Fixtures\HooksPipelineDefaultFixture1;
 use Igorsgm\GitHooks\Tests\Fixtures\HooksPipelineInvokableFixture3;
 use Igorsgm\GitHooks\Tests\Fixtures\HooksPipelineWithParamsFixture2;

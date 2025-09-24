@@ -39,7 +39,7 @@ class PHPCSFixerPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements C
      */
     public function analyzerCommand(): string
     {
-        return trim(sprintf('%s check %s', $this->getAnalyzerExecutable(), $this->configParam));
+        return mb_trim(sprintf('%s check %s', $this->getAnalyzerExecutable(), $this->configParam));
     }
 
     /**
@@ -47,7 +47,7 @@ class PHPCSFixerPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements C
      */
     public function fixerCommand(): string
     {
-        return trim(sprintf('%s fix %s', $this->getAnalyzerExecutable(), $this->configParam));
+        return mb_trim(sprintf('%s fix %s', $this->getAnalyzerExecutable(), $this->configParam));
     }
 
     /**
@@ -59,7 +59,7 @@ class PHPCSFixerPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements C
     {
         $configFile = (string) config('git-hooks.code_analyzers.php_cs_fixer.config');
 
-        if (! empty($configFile)) {
+        if (!empty($configFile)) {
             $this->validateConfigPath($configFile);
 
             return '--config='.$configFile;

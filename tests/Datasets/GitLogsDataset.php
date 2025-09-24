@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 dataset('lastCommitLogText', [
     'Default Git Log' => sprintf('commit %s
 Author: Igor Moraes <igor.sgm@gmail.com>

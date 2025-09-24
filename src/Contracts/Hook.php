@@ -7,7 +7,7 @@ namespace Igorsgm\GitHooks\Contracts;
 use Illuminate\Console\Command;
 
 /**
- * @property \Illuminate\Console\Command $command
+ * @property Command $command
  */
 interface Hook
 {

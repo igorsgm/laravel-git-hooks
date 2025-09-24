@@ -20,13 +20,13 @@ class GitHooksServiceProvider extends ServiceProvider
 
             // Registering package commands.
             $this->commands([
-                \Igorsgm\GitHooks\Console\Commands\RegisterHooks::class,
-                \Igorsgm\GitHooks\Console\Commands\CommitMessage::class,
-                \Igorsgm\GitHooks\Console\Commands\PreCommit::class,
-                \Igorsgm\GitHooks\Console\Commands\PrepareCommitMessage::class,
-                \Igorsgm\GitHooks\Console\Commands\PostCommit::class,
-                \Igorsgm\GitHooks\Console\Commands\PrePush::class,
-                \Igorsgm\GitHooks\Console\Commands\MakeHook::class,
+                Console\Commands\RegisterHooks::class,
+                Console\Commands\CommitMessage::class,
+                Console\Commands\PreCommit::class,
+                Console\Commands\PrepareCommitMessage::class,
+                Console\Commands\PostCommit::class,
+                Console\Commands\PrePush::class,
+                Console\Commands\MakeHook::class,
             ]);
         }
     }

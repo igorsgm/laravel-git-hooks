@@ -39,7 +39,7 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
      */
     public function analyzerCommand(): string
     {
-        return trim(sprintf('%s --test %s', $this->getAnalyzerExecutable(), $this->configParam));
+        return mb_trim(sprintf('%s --test %s', $this->getAnalyzerExecutable(), $this->configParam));
     }
 
     /**
@@ -47,7 +47,7 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
      */
     public function fixerCommand(): string
     {
-        return trim(sprintf('%s %s', $this->getFixerExecutable(), $this->configParam));
+        return mb_trim(sprintf('%s %s', $this->getFixerExecutable(), $this->configParam));
     }
 
     /**
@@ -59,14 +59,14 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
     {
         $pintConfigFile = config('git-hooks.code_analyzers.laravel_pint.config');
 
-        if (! empty($pintConfigFile)) {
+        if (!empty($pintConfigFile)) {
             $this->validateConfigPath($pintConfigFile);
 
-            return '--config '.trim((string) $pintConfigFile, '/');
+            return '--config '.mb_trim((string) $pintConfigFile, '/');
         }
 
         $pintPreset = config('git-hooks.code_analyzers.laravel_pint.preset');
 
-        return empty($pintPreset) ? '' : '--preset '.trim((string) $pintPreset, '/');
+        return empty($pintPreset) ? '' : '--preset '.mb_trim((string) $pintPreset, '/');
     }
 }

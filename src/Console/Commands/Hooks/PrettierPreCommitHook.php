@@ -39,7 +39,7 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      */
     public function analyzerCommand(): string
     {
-        return trim(
+        return mb_trim(
             sprintf('%s --check %s %s', $this->getAnalyzerExecutable(), $this->configParam, $this->additionalParams())
         );
     }
@@ -49,7 +49,7 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      */
     public function fixerCommand(): string
     {
-        return trim(
+        return mb_trim(
             sprintf('%s --write %s %s', $this->getFixerExecutable(), $this->configParam, $this->additionalParams())
         );
     }
@@ -61,7 +61,7 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      */
     protected function configParam(): string
     {
-        $prettierConfig = rtrim((string) config('git-hooks.code_analyzers.prettier.config'), '/');
+        $prettierConfig = mb_rtrim((string) config('git-hooks.code_analyzers.prettier.config'), '/');
         $this->validateConfigPath($prettierConfig);
 
         return empty($prettierConfig) ? '' : '--config='.$prettierConfig;
@@ -75,7 +75,7 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
     {
         $additionalParams = (string) config('git-hooks.code_analyzers.prettier.additional_params');
 
-        if (! empty($additionalParams)) {
+        if (!empty($additionalParams)) {
             $additionalParams = (string) preg_replace('/\s+\.(?:(\s)|$)/', '$1', (string) $additionalParams);
             $additionalParams = (string) preg_replace('/\s*--(config|find-config-path|write|check)\b(=\S*)?\s*/', '', (string) $additionalParams);
         }

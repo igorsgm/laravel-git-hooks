@@ -39,7 +39,7 @@ class PhpInsightsPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements 
      */
     public function analyzerCommand(): string
     {
-        return trim(sprintf('%s analyse %s --no-interaction %s', $this->getAnalyzerExecutable(), $this->configParam, $this->additionalParams()));
+        return mb_trim(sprintf('%s analyse %s --no-interaction %s', $this->getAnalyzerExecutable(), $this->configParam, $this->additionalParams()));
     }
 
     /**
@@ -47,7 +47,7 @@ class PhpInsightsPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements 
      */
     public function fixerCommand(): string
     {
-        return trim(sprintf('%s analyse %s --no-interaction --fix %s', $this->getAnalyzerExecutable(), $this->configParam, $this->additionalParams()));
+        return mb_trim(sprintf('%s analyse %s --no-interaction --fix %s', $this->getAnalyzerExecutable(), $this->configParam, $this->additionalParams()));
     }
 
     /**
@@ -59,7 +59,7 @@ class PhpInsightsPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements 
     {
         $phpInsightsConfigFile = (string) config('git-hooks.code_analyzers.phpinsights.config');
 
-        if (! empty($phpInsightsConfigFile)) {
+        if (!empty($phpInsightsConfigFile)) {
             $this->validateConfigPath($phpInsightsConfigFile);
 
             return '--config-path='.$phpInsightsConfigFile;

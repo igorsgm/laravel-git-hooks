@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageFixtureHook1;
 use Igorsgm\GitHooks\Tests\Fixtures\CommitMessageFixtureHook2;

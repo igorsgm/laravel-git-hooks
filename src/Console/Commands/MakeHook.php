@@ -42,13 +42,13 @@ class MakeHook extends GeneratorCommand
      *
      * @return bool|null
      *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws FileNotFoundException
      */
     public function handle()
     {
         $supportedHooks = GitHooks::getSupportedHooks();
 
-        if (! in_array($this->argument('hookType'), $supportedHooks)) {
+        if (!in_array($this->argument('hookType'), $supportedHooks)) {
             $this->getOutput()->writeln(sprintf(
                 '<bg=red;fg=white> ERROR </> Invalid hook type. Valid types are: <comment>%s</comment>',
                 implode(', ', $supportedHooks)
@@ -85,13 +85,13 @@ class MakeHook extends GeneratorCommand
     {
         $hookType = $this->argument('hookType');
 
-        if (! is_string($hookType) || empty($hookType)) {
+        if (!is_string($hookType) || empty($hookType)) {
             throw new FileNotFoundException('Invalid hook type provided');
         }
 
         $relativePath = '/stubs/'.$hookType.'-console.stub';
 
-        return file_exists($customPath = $this->laravel->basePath(trim($relativePath, '/')))
+        return file_exists($customPath = $this->laravel->basePath(mb_trim($relativePath, '/')))
             ? $customPath
             : __DIR__.$relativePath;
     }
@@ -142,8 +142,8 @@ class MakeHook extends GeneratorCommand
         $supportedHooks = implode(', ', GitHooks::getSupportedHooks());
 
         return [
-            'name' => 'What should the '.strtolower($this->type).' be named?',
-            'hookType' => 'What type of the '.strtolower($this->type)."? Possible values: ({$supportedHooks})",
+            'name' => 'What should the '.mb_strtolower($this->type).' be named?',
+            'hookType' => 'What type of the '.mb_strtolower($this->type)."? Possible values: ({$supportedHooks})",
         ];
     }
 }

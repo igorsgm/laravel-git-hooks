@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Console\Commands\Hooks\ESLintPreCommitHook;
 use Igorsgm\GitHooks\Facades\GitHooks;
 

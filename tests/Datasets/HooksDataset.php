@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Contracts\PostCommitHook;
 use Igorsgm\GitHooks\Contracts\PreCommitHook;
 use Igorsgm\GitHooks\Contracts\PrePushHook;

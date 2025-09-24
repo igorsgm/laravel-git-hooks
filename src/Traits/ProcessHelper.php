@@ -25,7 +25,7 @@ trait ProcessHelper
         /** @phpstan-ignore-next-line */
         $output = method_exists($this, 'getOutput') ? $this->getOutput() : null;
 
-        if ($output && ! $output->isDecorated()) {
+        if ($output && !$output->isDecorated()) {
             $commands = $this->transformCommands($commands, fn ($value) => $value.' --no-ansi');
         }
 
@@ -50,7 +50,7 @@ trait ProcessHelper
             }
         }
 
-        $process->run(! $showOutput ? null : function (string $line) use ($output): void {
+        $process->run(!$showOutput ? null : function (string $line) use ($output): void {
             /** @phpstan-ignore-next-line */
             if ($output !== null) {
                 $output->write('    '.$line);
@@ -80,7 +80,7 @@ trait ProcessHelper
      */
     public function buildNoOutputCommand(string $command = ''): string
     {
-        return trim($command).' > '.(PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null 2>&1');
+        return mb_trim($command).' > '.(PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null 2>&1');
     }
 
     public function setCwd(string $cwd): self

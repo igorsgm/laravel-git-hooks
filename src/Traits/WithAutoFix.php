@@ -16,7 +16,7 @@ trait WithAutoFix
 
     public function suggestAutoFixOrExit(): bool
     {
-        $hasFixerCommand = ! empty($this->fixerCommand());
+        $hasFixerCommand = !empty($this->fixerCommand());
 
         if ($hasFixerCommand) {
             if (config('git-hooks.automatically_fix_errors')) {
@@ -38,6 +38,45 @@ trait WithAutoFix
         }
 
         return false;
+    }
+
+    protected function outputDebugCommandIfEnabled(mixed $process): void
+    {
+        if (config('git-hooks.debug_commands')) {
+            $this->command->newLine();
+            $this->command->getOutput()->write(PHP_EOL.' <bg=yellow;fg=white> DEBUG </> Executed command: '.$process->getCommandLine().PHP_EOL);
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $params
+     */
+    protected function rerunAnalyzer(string $filePath, array $params): mixed
+    {
+        $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
+        $process = $this->runCommands($command, $params);
+
+        if (config('git-hooks.debug_commands')) {
+            $this->outputDebugCommandIfEnabled($process);
+        }
+
+        return $process;
+    }
+
+    protected function handleFixFailure(string $filePath, mixed $process): void
+    {
+        if (empty($this->filesBadlyFormattedPaths)) {
+            $this->command->newLine();
+        }
+
+        $this->command->getOutput()->writeln(
+            sprintf('<fg=red> %s Autofix Failed:</> %s', $this->getName(), $filePath)
+        );
+
+        if (config('git-hooks.output_errors') && !config('git-hooks.debug_output')) {
+            $this->command->newLine();
+            $this->command->getOutput()->write($process->getOutput());
+        }
     }
 
     private function shouldAttemptAutofix(): bool
@@ -87,44 +126,5 @@ trait WithAutoFix
         $this->handleFixFailure($filePath, $process);
 
         return false;
-    }
-
-    protected function outputDebugCommandIfEnabled(mixed $process): void
-    {
-        if (config('git-hooks.debug_commands')) {
-            $this->command->newLine();
-            $this->command->getOutput()->write(PHP_EOL.' <bg=yellow;fg=white> DEBUG </> Executed command: '.$process->getCommandLine().PHP_EOL);
-        }
-    }
-
-    /**
-     * @param  array<string, mixed>  $params
-     */
-    protected function rerunAnalyzer(string $filePath, array $params): mixed
-    {
-        $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
-        $process = $this->runCommands($command, $params);
-
-        if (config('git-hooks.debug_commands')) {
-            $this->outputDebugCommandIfEnabled($process);
-        }
-
-        return $process;
-    }
-
-    protected function handleFixFailure(string $filePath, mixed $process): void
-    {
-        if (empty($this->filesBadlyFormattedPaths)) {
-            $this->command->newLine();
-        }
-
-        $this->command->getOutput()->writeln(
-            sprintf('<fg=red> %s Autofix Failed:</> %s', $this->getName(), $filePath)
-        );
-
-        if (config('git-hooks.output_errors') && ! config('git-hooks.debug_output')) {
-            $this->command->newLine();
-            $this->command->getOutput()->write($process->getOutput());
-        }
     }
 }

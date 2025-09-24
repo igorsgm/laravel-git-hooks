@@ -36,7 +36,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function analyzerCommand(): string
     {
-        return trim(sprintf('%s -c %s', $this->getAnalyzerExecutable(), $this->configParam));
+        return mb_trim(sprintf('%s -c %s', $this->getAnalyzerExecutable(), $this->configParam));
     }
 
     /**
@@ -44,7 +44,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function fixerCommand(): string
     {
-        return trim(sprintf('%s --write %s', $this->getFixerExecutable(), $this->configParam));
+        return mb_trim(sprintf('%s --write %s', $this->getFixerExecutable(), $this->configParam));
     }
 
     /**
@@ -56,7 +56,7 @@ class BladeFormatterPreCommitHook extends BaseCodeAnalyzerPreCommitHook implemen
      */
     public function configParam(): string
     {
-        $bladeFormatterConfig = rtrim((string) config('git-hooks.code_analyzers.blade_formatter.config'), '/');
+        $bladeFormatterConfig = mb_rtrim((string) config('git-hooks.code_analyzers.blade_formatter.config'), '/');
         $this->validateConfigPath($bladeFormatterConfig);
 
         return empty($bladeFormatterConfig) ? '' : '--config='.$bladeFormatterConfig;

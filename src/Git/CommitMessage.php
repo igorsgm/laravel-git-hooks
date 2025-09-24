@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Igorsgm\GitHooks\Git;
 
-class CommitMessage implements \Stringable
+use Stringable;
+
+class CommitMessage implements Stringable
 {
     protected string $message;
 

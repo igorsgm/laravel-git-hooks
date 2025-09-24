@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Igorsgm\GitHooks\Git;
 
-class ChangedFile implements \Stringable
+use Stringable;
+
+class ChangedFile implements Stringable
 {
     public const A = 1; // added
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igorsgm\GitHooks\Git\Log;
 
 test('Get Log', function (string $logText) {

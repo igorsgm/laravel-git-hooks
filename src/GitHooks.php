@@ -40,7 +40,7 @@ class GitHooks
     {
         $configGitHooks = config('git-hooks');
 
-        return array_filter($this->getSupportedHooks(), fn ($hook) => ! empty($configGitHooks[$hook]));
+        return array_filter($this->getSupportedHooks(), fn ($hook) => !empty($configGitHooks[$hook]));
     }
 
     /**
@@ -50,7 +50,7 @@ class GitHooks
      */
     public function install(string $hookName): void
     {
-        if (! is_dir($this->getGitHooksDir())) {
+        if (!is_dir($this->getGitHooksDir())) {
             throw new Exception('Git not initialized in this project.');
         }
 
