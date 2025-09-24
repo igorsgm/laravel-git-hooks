@@ -56,7 +56,10 @@ trait WithFileAnalysis
      */
     protected function getAnalyzableFilePaths(Collection $files): array
     {
-        return $files->filter(fn ($file) => $this->canFileBeAnalyzed($file))->map(fn ($file) => $file->getFilePath())->toArray();
+        return $files
+            ->filter(fn ($file) => $this->canFileBeAnalyzed($file))
+            ->map(fn ($file) => $file->getFilePath())
+            ->toArray();
     }
 
     /**
@@ -82,8 +85,10 @@ trait WithFileAnalysis
         }
     }
 
-    protected function handleAnalysisFailure(string $filePath, mixed $process): void
-    {
+    protected function handleAnalysisFailure(
+        string $filePath,
+        mixed $process
+    ): void {
         if (empty($this->filesBadlyFormattedPaths)) {
             $this->command->newLine();
         }
@@ -93,7 +98,10 @@ trait WithFileAnalysis
         );
         $this->filesBadlyFormattedPaths[] = $filePath;
 
-        if (config('git-hooks.output_errors') && !config('git-hooks.debug_output')) {
+        $outputErrors = config('git-hooks.output_errors');
+        $debugOutput = config('git-hooks.debug_output');
+
+        if ($outputErrors && !$debugOutput) {
             $this->command->newLine();
             $this->command->getOutput()->write($process->getOutput());
         }

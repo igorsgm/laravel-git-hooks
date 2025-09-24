@@ -54,7 +54,7 @@ trait WithPipeline
         return function (Hook $hook): void {
             $this->hookExecuting = $hook;
 
-            // Binding the Command instance to the Hook, so it can be used inside the Hook
+            // Bind Command instance to Hook for internal use
             $hook->setCommand($this);
 
             $taskTitle = $this->getHookTaskTitle($hook);

@@ -40,6 +40,9 @@ trait WithDockerSupport
             return $command;
         }
 
-        return 'docker exec '.escapeshellarg($this->dockerContainer).' sh -c '.escapeshellarg($command);
+        $container = escapeshellarg($this->dockerContainer);
+        $escapedCommand = escapeshellarg($command);
+
+        return "docker exec {$container} sh -c {$escapedCommand}";
     }
 }

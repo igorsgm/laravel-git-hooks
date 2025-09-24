@@ -11,10 +11,13 @@ use NunoMaduro\PhpInsights\Domain\Metrics\Architecture\Classes;
 use NunoMaduro\PhpInsights\Domain\Metrics\Code\Code;
 use NunoMaduro\PhpInsights\Domain\Metrics\Style\Style;
 use PHP_CodeSniffer\Standards\Generic\Sniffs\Formatting\SpaceAfterNotSniff;
+use PHP_CodeSniffer\Standards\PEAR\Sniffs\WhiteSpace\ScopeClosingBraceSniff;
 use PhpCsFixer\Fixer\Alias\ArrayPushFixer;
 use PhpCsFixer\Fixer\Alias\BacktickToShellExecFixer;
 use PhpCsFixer\Fixer\Alias\MbStrFunctionsFixer;
+use PhpCsFixer\Fixer\Basic\BracesFixer;
 use PhpCsFixer\Fixer\CastNotation\ModernizeTypesCastingFixer;
+use PhpCsFixer\Fixer\ClassNotation\ClassDefinitionFixer;
 use PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer;
 use PhpCsFixer\Fixer\ClassNotation\OrderedInterfacesFixer;
 use PhpCsFixer\Fixer\ClassNotation\OrderedTraitsFixer;
@@ -30,8 +33,11 @@ use PhpCsFixer\Fixer\Operator\NewWithParenthesesFixer;
 use PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer;
 use PhpCsFixer\Fixer\Strict\DeclareStrictTypesFixer;
 use PhpCsFixer\Fixer\Strict\StrictComparisonFixer;
+use SlevomatCodingStandard\Sniffs\Classes\SuperfluousExceptionNamingSniff;
+use SlevomatCodingStandard\Sniffs\Commenting\DocCommentSpacingSniff;
 use SlevomatCodingStandard\Sniffs\Commenting\UselessFunctionDocCommentSniff;
 use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowEmptySniff;
+use SlevomatCodingStandard\Sniffs\Functions\FunctionLengthSniff;
 use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowYodaComparisonSniff;
 use SlevomatCodingStandard\Sniffs\Namespaces\AlphabeticallySortedUsesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
@@ -92,6 +98,7 @@ return [
         'src/Console/Commands/',
         'src/HooksPipeline.php',
         'src/Git/Log.php',
+        'src/Traits/ProcessHelper.php',
         'tests/Files/*WithFixableIssues.php',
         'tests/TestCase.php',
     ],
@@ -127,25 +134,33 @@ return [
 
     'remove' => [
         AlphabeticallySortedUsesSniff::class,
+        BracesFixer::class, // Let Pint handle brace formatting
+        ClassDefinitionFixer::class, // Let Pint handle class definitions
         DeclareStrictTypesSniff::class, // We use DeclareStrictTypesFixer from PHP-CS-Fixer instead
         DisallowEmptySniff::class, // Allow using empty() function
         DisallowMixedTypeHintSniff::class,
+        DisallowYodaComparisonSniff::class, // Allow normal comparisons
+        DocCommentSpacingSniff::class, // Let Pint handle PHPDoc spacing
         ForbiddenDefineFunctions::class,
         ForbiddenNormalClasses::class,
         ForbiddenTraits::class,
+        NewWithParenthesesFixer::class, // Disabled as per pint.json
+        NotOperatorWithSuccessorSpaceFixer::class, // Disabled as per pint.json
         ParameterTypeHintSniff::class,
         PropertyTypeHintSniff::class,
         ReturnTypeHintSniff::class,
-        UselessFunctionDocCommentSniff::class,
-        NewWithParenthesesFixer::class, // Disabled as per pint.json
-        NotOperatorWithSuccessorSpaceFixer::class, // Disabled as per pint.json
-        DisallowYodaComparisonSniff::class, // Allow normal comparisons
+        ScopeClosingBraceSniff::class, // Let Pint handle closing brace style
         SpaceAfterNotSniff::class, // Don't require space after NOT operator - Pint handles this
+        SuperfluousExceptionNamingSniff::class, // Allow Exception suffix for exception classes
+        UselessFunctionDocCommentSniff::class,
     ],
 
     'config' => [
         ForbiddenPrivateMethods::class => [
             'title' => 'The usage of private methods is not idiomatic in Laravel.',
+        ],
+        FunctionLengthSniff::class => [
+            'maxLinesLength' => 25, // Allow functions up to 25 lines
         ],
         OrderedClassElementsFixer::class => [
             'order' => [
