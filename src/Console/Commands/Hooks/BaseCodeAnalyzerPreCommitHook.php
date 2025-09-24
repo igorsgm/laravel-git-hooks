@@ -11,15 +11,20 @@ use Igorsgm\GitHooks\Facades\GitHooks;
 use Igorsgm\GitHooks\Git\ChangedFile;
 use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Traits\ProcessHelper;
+use Igorsgm\GitHooks\Traits\WithAutoFix;
+use Igorsgm\GitHooks\Traits\WithDockerSupport;
+use Igorsgm\GitHooks\Traits\WithFileAnalysis;
 use Igorsgm\GitHooks\Traits\WithPipelineFailCheck;
 use Illuminate\Console\Command;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
-use Symfony\Component\Console\Terminal;
 
 abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
     use ProcessHelper;
+    use WithAutoFix;
+    use WithDockerSupport;
+    use WithFileAnalysis;
     use WithPipelineFailCheck;
 
     /**
@@ -56,16 +61,6 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
      * @var array<int, string>
      */
     protected array $filesBadlyFormattedPaths = [];
-
-    /**
-     * Run tool in docker
-     */
-    protected bool $runInDocker = false;
-
-    /**
-     * Docker container on which to run
-     */
-    protected string $dockerContainer = '';
 
     /**
      * Chunk size used for analyze
@@ -164,29 +159,15 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
         return $this->fixerExecutable;
     }
 
-    public function setRunInDocker(bool $runInDocker): self
-    {
-        $this->runInDocker = (bool) $runInDocker;
+    /**
+     * Get the analyzer command to be executed.
+     */
+    abstract public function analyzerCommand(): string;
 
-        return $this;
-    }
-
-    public function getRunInDocker(): bool
-    {
-        return $this->runInDocker;
-    }
-
-    public function setDockerContainer(string $dockerContainer): self
-    {
-        $this->dockerContainer = $dockerContainer;
-
-        return $this;
-    }
-
-    public function getDockerContainer(): string
-    {
-        return $this->dockerContainer;
-    }
+    /**
+     * Get the fixer command to be executed.
+     */
+    abstract public function fixerCommand(): string;
 
     /**
      * Analyzes an array of ChangedFile objects and checks whether each file can be analyzed,
@@ -333,102 +314,12 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
     }
 
     /**
-     * Suggests attempting to automatically fix the incorrectly formatted files or exit.
-     * If any files cannot be fixed, throws a HookFailException to cancel the commit.
+     * Get the file extensions that can be analyzed.
      *
-     * @throws HookFailException
+     * @return array<int, string>|string
      */
-    protected function suggestAutoFixOrExit(): bool
+    public function getFileExtensions(): array|string
     {
-        $hasFixerCommand = ! empty($this->fixerCommand());
-
-        if ($hasFixerCommand) {
-            if (config('git-hooks.automatically_fix_errors')) {
-                $this->command->getOutput()->writeln(
-                    sprintf('<bg=green;fg=white> AUTOFIX </> <fg=green> %s Running Autofix</>', $this->getName())
-                );
-                if ($this->autoFixFiles()) {
-                    return true;
-                }
-            } else {
-                if (Terminal::hasSttyAvailable() &&
-                    $this->command->confirm('Would you like to attempt to correct files automagically?') &&
-                    $this->autoFixFiles()
-                ) {
-                    return true;
-                }
-            }
-        }
-
-        $this->markPipelineFailed();
-
-        if (config('git-hooks.stop_at_first_analyzer_failure')) {
-            throw new HookFailException;
-        }
-
-        return false;
-    }
-
-    /**
-     * Automatically fixes any files in the `$filesBadlyFormattedPaths` array using the
-     * configured fixer command. For each fixed file, adds it to Git and removes its path
-     * from the `$filesBadlyFormattedPaths` array.
-     *
-     * @throws HookFailException if any files cannot be fixed.
-     */
-    private function autoFixFiles(): bool
-    {
-        $params = [
-            'show-output' => config('git-hooks.debug_output'),
-        ];
-
-        foreach ($this->filesBadlyFormattedPaths as $key => $filePath) {
-            $fixerCommand = $this->dockerCommand($this->fixerCommand().' '.$filePath);
-            $process = $this->runCommands($fixerCommand, $params);
-
-            if (config('git-hooks.debug_commands')) {
-                $this->command->newLine();
-                $this->command->getOutput()->write(PHP_EOL.' <bg=yellow;fg=white> DEBUG </> Executed command: '.$process->getCommandLine().PHP_EOL);
-            }
-
-            if (config('git-hooks.rerun_analyzer_after_autofix')) {
-                $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
-                $process = $this->runCommands($command, $params);
-
-                if (config('git-hooks.debug_commands')) {
-                    $this->command->newLine();
-                    $this->command->getOutput()->write(PHP_EOL.' <bg=yellow;fg=white> DEBUG </> Executed command: '.$process->getCommandLine().PHP_EOL);
-                }
-            }
-
-            $wasProperlyFixed = $process->isSuccessful();
-
-            if ($wasProperlyFixed) {
-                $this->runCommands('git add '.$filePath);
-                unset($this->filesBadlyFormattedPaths[$key]);
-
-                continue;
-            }
-
-            $this->command->getOutput()->writeln(
-                sprintf('<fg=red> %s Autofix Failed:</> %s', $this->getName(), $filePath)
-            );
-
-            if (config('git-hooks.output_errors') && ! config('git-hooks.debug_output')) {
-                $this->command->newLine();
-                $this->command->getOutput()->write($process->getOutput());
-            }
-        }
-
-        return empty($this->filesBadlyFormattedPaths);
-    }
-
-    private function dockerCommand(string $command): string
-    {
-        if (! $this->runInDocker || empty($this->dockerContainer)) {
-            return $command;
-        }
-
-        return 'docker exec '.escapeshellarg($this->dockerContainer).' sh -c '.escapeshellarg($command);
+        return $this->fileExtensions;
     }
 }
