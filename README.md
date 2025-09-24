@@ -85,26 +85,29 @@ The package includes powerful auto-fix functionality that can automatically reso
 This behavior can be adjusted using the following parameters from git-hooks.php config file:
 ```php
     // config/git-hooks.php
+return [
+    ...
     'automatically_fix_errors' => false,
     'rerun_analyzer_after_autofix' => false,
     'stop_at_first_analyzer_failure' => true,
+];
 ```
 
 ## 3️⃣ Advanced Usage
 
 ### 🐳 Laravel Sail support
 
-If you are using Laravel Sail and maybe not lokal PHP is installed, you can adjust the following parameters in the git-hooks.php config file:
-
+If you are using Laravel Sail and maybe not local PHP is installed, you can adjust the following parameters in the `git-hooks.php` config file.
+This will force the local git hooks to use the `sail` command to execute the hooks:
 ```php
     // config/git-hooks.php
     'use_sail' => env('GITHOOKS_USE_SAIL', false),
 ```
-This will force the local git hooks to use the `sail` command to execute the hooks.
+
 
 ### 🐳 Docker support
 
-By default commands are executed locally, however this behavior can be adjusted for each hook using the parameters `run_in_docker` and `docker_container`:
+By default, commands are executed locally, however this behavior can be adjusted for each hook using the parameters `run_in_docker` and `docker_container`:
 
 ```php
     // config/git-hooks.php
@@ -119,11 +122,18 @@ It also provides additional configuration options for fine-tuning hook behavior.
 
 ```php
     // config/git-hooks.php
-    'output_errors' => false,
-    'debug_commands' => false,
-    'debug_output' => false,
+return [
+    ...
+    'artisan_path' => base_path('artisan'),
     'validate_paths' => env('GITHOOKS_VALIDATE_PATHS', true),
     'analyzer_chunk_size' => env('GITHOOKS_ANALYZER_CHUNK_SIZE', 100),
+
+    'output_errors' => env('GITHOOKS_OUTPUT_ERRORS', false),
+
+    'debug_commands' => env('GITHOOKS_DEBUG_COMMANDS', false),
+    'debug_output' => env('GITHOOKS_DEBUG_OUTPUT', false),
+    ...
+];
 ```
 
 ### 🛠️ Creating Custom Git Hooks
