@@ -3,16 +3,16 @@
 <p align="center">A powerful and easy-to-use package for managing Git hooks within your Laravel projects. Improve your code quality, reduce the time spent on code reviews, and catch potential bugs before they make it into your repository.</p>
 
 <p align="center">
-    <a href="https://packagist.org/packages/indy2kro/laravel-git-hooks">
-        <img src="https://img.shields.io/packagist/v/indy2kro/laravel-git-hooks.svg?style=flat-square" alt="Latest Version on Packagist">
+    <a href="https://packagist.org/packages/igorsgm/laravel-git-hooks">
+        <img src="https://img.shields.io/packagist/v/igorsgm/laravel-git-hooks.svg?style=flat-square" alt="Latest Version on Packagist">
     </a>
-    <a href="https://github.com/indy2kro/laravel-git-hooks/actions/workflows/main.yml/badge.svg">
-        <img src="https://img.shields.io/github/actions/workflow/status/indy2kro/laravel-git-hooks/main.yml?style=flat-square" alt="Build Status">
+    <a href="https://github.com/igorsgm/laravel-git-hooks/actions/workflows/main.yml/badge.svg">
+        <img src="https://img.shields.io/github/actions/workflow/status/igorsgm/laravel-git-hooks/main.yml?style=flat-square" alt="Build Status">
     </a>
-    <img src="https://img.shields.io/scrutinizer/coverage/g/indy2kro/laravel-git-hooks/master?style=flat-square" alt="Test Coverage">
-    <img src="https://img.shields.io/scrutinizer/quality/g/indy2kro/laravel-git-hooks/master?style=flat-square" alt="Code Quality">
-    <a href="https://packagist.org/packages/indy2kro/laravel-git-hooks">
-        <img src="https://img.shields.io/packagist/dt/indy2kro/laravel-git-hooks.svg?style=flat-square" alt="Total Downloads">
+    <img src="https://img.shields.io/scrutinizer/coverage/g/igorsgm/laravel-git-hooks/master?style=flat-square" alt="Test Coverage">
+    <img src="https://img.shields.io/scrutinizer/quality/g/igorsgm/laravel-git-hooks/master?style=flat-square" alt="Code Quality">
+    <a href="https://packagist.org/packages/igorsgm/laravel-git-hooks">
+        <img src="https://img.shields.io/packagist/dt/igorsgm/laravel-git-hooks.svg?style=flat-square" alt="Total Downloads">
     </a>
 </p>
 
@@ -32,13 +32,16 @@ This is a fork of <a href="https://github.com/igorsgm/laravel-git-hooks">igorsgm
 - **Create Custom Hooks:** Add and integrate custom hooks tailored to your specific project needs, ensuring better code quality and adherence to guidelines.
 - **Artisan Command for Hook Generation:** The package includes a convenient Artisan command that allows you to effortlessly generate new hooks of various types. Such as: `pre-commit`, `prepare-commit-msg`, `commit-msg`, `post-commit`, `pre-push`
 - **Code Quality:** The package is thoroughly tested, with >95% of code coverage, ensuring its reliability and stability in a wide range of Laravel projects.
-- **Docker support:** Each hook can be configured to either run locally or inside a docker container.
+- **Docker support:** Each hook can be configured to either run locally or inside a Docker container, with full Laravel Sail integration.
+- **Auto-fix Capabilities:** Automatically fix code issues without manual intervention, with configurable re-run after fixes.
 
 ## 1️⃣ Installation
 
+**Laravel Version Support:** This package supports Laravel 11 and Laravel 12. Laravel 10 support has been deprecated.
+
 - You can install the package via composer:
 ```bash
-composer require indy2kro/laravel-git-hooks --dev
+composer require igorsgm/laravel-git-hooks --dev
 ```
 
 - Publish the config file and customize it in the way you want:
@@ -62,7 +65,7 @@ To use the already created pre-commit hooks of this package, you can simply edit
     \Igorsgm\GitHooks\Console\Commands\Hooks\PHPCodeSnifferPreCommitHook::class, // PHPCS (with PHPCBF autofixer) 
     \Igorsgm\GitHooks\Console\Commands\Hooks\PHPCSFixerPreCommitHook::class, // PHP CS Fixer
     \Igorsgm\GitHooks\Console\Commands\Hooks\LarastanPreCommitHook::class, // Larastan
-    \Igorsgm\GitHooks\Console\Commands\Hooks\EnlightnPreCommitHook::class, // Enlightn
+    // \Igorsgm\GitHooks\Console\Commands\Hooks\EnlightnPreCommitHook::class, // Enlightn
     \Igorsgm\GitHooks\Console\Commands\Hooks\ESLintPreCommitHook::class, // ESLint
     \Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook::class, // Prettier
     \Igorsgm\GitHooks\Console\Commands\Hooks\PhpInsightsPreCommitHook::class, // PhpInsights
@@ -163,6 +166,35 @@ By default commands are executed locally, however this behavior can be adjusted 
 ```php
     'run_in_docker' => env('LARAVEL_PINT_RUN_IN_DOCKER', true),
     'docker_container' => env('LARAVEL_PINT_DOCKER_CONTAINER', 'app'),
+```
+
+### Advanced Configuration Options
+
+The package provides additional configuration options for fine-tuning hook behavior:
+
+```php
+    /*
+    |--------------------------------------------------------------------------
+    | Validate paths
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to validate paths before executing
+    | hooks, ensuring that files exist before attempting to process them.
+    |
+    */
+    'validate_paths' => env('GITHOOKS_VALIDATE_PATHS', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Analyzer chunk size
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option allows you to configure the chunk size for
+    | processing files in batches. This can improve performance for repositories
+    | with many files.
+    |
+    */
+    'analyzer_chunk_size' => env('GITHOOKS_ANALYZER_CHUNK_SIZE', 100),
 ```
 
 ### Creating Custom Git Hooks
@@ -371,18 +403,19 @@ composer test
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
+
+# Original authors:
+
+- [Igor Moraes](https://github.com/igorsgm)
+- [Pavel Buchnev](https://github.com/butschster)
+
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-## Credits
+### Credits
 
 - [Cristian Radu](https://github.com/indy2kro)
-
-Original authors:
-
-- [Igor Moraes](https://github.com/igorsgm)
-- [Pavel Buchnev](https://github.com/butschster)
 
 ## License
 
