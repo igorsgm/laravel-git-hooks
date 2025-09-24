@@ -280,7 +280,7 @@ return [
     | Validate paths
     |--------------------------------------------------------------------------
     |
-    | This configuration option allows you enable (or not) validation
+    | This configuration option allows you to enable (or not) validation
     | of paths. This can be useful when binary files are not part of the
     | project directly.
     |
@@ -306,6 +306,8 @@ return [
     |
     | This configuration option allows you to configure the git hooks to
     | automatically run the fixer without any CLI prompt.
+    | When enabled, fixable issues (code style, formatting) will be
+    | automatically resolved during the pre-commit process.
     |
     */
     'automatically_fix_errors' => env('GITHOOKS_AUTOMATICALLY_FIX_ERRORS', false),
@@ -317,7 +319,8 @@ return [
     |
     | This configuration option allows you to configure the git hooks to
     | automatically re-run the analyzer command after autofix.
-    | The git hooks will not fail in case the re-run is succesful.
+    | The git hooks will not fail in case the re-run is successful.
+    | This ensures that auto-fixed code passes all quality checks.
     |
     */
     'rerun_analyzer_after_autofix' => env('GITHOOKS_RERUN_ANALYZER_AFTER_AUTOFIX', false),
@@ -329,6 +332,7 @@ return [
     |
     | This configuration option allows you to configure the git hooks to
     | stop (or not) at the first analyzer failure encountered.
+    | Set to false to run all configured hooks even if some fail.
     |
     */
     'stop_at_first_analyzer_failure' => env('GITHOOKS_STOP_AT_FIRST_ANALYZER_FAILURE', true),

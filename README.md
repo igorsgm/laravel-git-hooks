@@ -71,131 +71,62 @@ To use the already created pre-commit hooks of this package, you can simply edit
 ],
 ```
 
-By default the pre-commit hooks will stop at first failure and will not continue with the remaining tools.
+### 🔧 Auto-fix Capabilities
 
+By default the pre-commit hooks will stop at first failure and will not continue with the remaining tools.
 If the tool contains a fixer option it will prompt in the CLI to run the fix command.
+
+The package includes powerful auto-fix functionality that can automatically resolve code style and formatting issues:
+
+- **Interactive Fixing:** By default, when an issue is detected, you'll be prompted to run the fix command
+- **Automatic Fixing:** Enable `automatically_fix_errors` to fix issues without prompts
+- **Smart Re-running:** Enable `rerun_analyzer_after_autofix` to automatically verify fixes succeeded
 
 This behavior can be adjusted using the following parameters from git-hooks.php config file:
 ```php
-    /*
-    |--------------------------------------------------------------------------
-    | Automatically fix errors
-    |--------------------------------------------------------------------------
-    |
-    | This configuration option allows you to configure the git hooks to
-    | automatically run the fixer without any CLI prompt.
-    |
-    */
+    // config/git-hooks.php
     'automatically_fix_errors' => false,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Automatically re-run analyzer after autofix
-    |--------------------------------------------------------------------------
-    |
-    | This configuration option allows you to configure the git hooks to
-    | automatically re-run the analyzer command after autofix.
-    | The git hooks will not fail in case the re-run is succesful.
-    |
-    */
     'rerun_analyzer_after_autofix' => false,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Stop at first analyzer failure
-    |--------------------------------------------------------------------------
-    |
-    | This configuration option allows you to configure the git hooks to
-    | stop (or not) at the first analyzer failure encountered.
-    |
-    */
     'stop_at_first_analyzer_failure' => true,
 ```
 
-There are also several debug options which can be adjusted using the following parameters from git-hooks.php config file:
+## 3️⃣ Advanced Usage
 
-```php
-    /*
-    |--------------------------------------------------------------------------
-    | Output errors
-    |--------------------------------------------------------------------------
-    |
-    | This configuration option allows you output any errors encountered
-    | during execution directly for easy debug.
-    |
-    */
-    'output_errors' => false,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Debug commands
-    |--------------------------------------------------------------------------
-    |
-    | This configuration option allows you to configure the git hooks to
-    | display the commands that are executed (usually for debug purpose).
-    |
-    */
-    'debug_commands' => false,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Debug output
-    |--------------------------------------------------------------------------
-    |
-    | This configuration option allows you display the output of each
-    | command during execution directly for easy debug.
-    |
-    */
-    'debug_output' => false,
-```
-### Laravel Sail support
+### 🐳 Laravel Sail support
 
 If you are using Laravel Sail and maybe not lokal PHP is installed, you can adjust the following parameters in the git-hooks.php config file:
 
 ```php
+    // config/git-hooks.php
     'use_sail' => env('GITHOOKS_USE_SAIL', false),
 ```
 This will force the local git hooks to use the `sail` command to execute the hooks.
 
-### Docker support
+### 🐳 Docker support
 
 By default commands are executed locally, however this behavior can be adjusted for each hook using the parameters `run_in_docker` and `docker_container`:
 
 ```php
+    // config/git-hooks.php
     'run_in_docker' => env('LARAVEL_PINT_RUN_IN_DOCKER', true),
     'docker_container' => env('LARAVEL_PINT_DOCKER_CONTAINER', 'app'),
 ```
 
-### Advanced Configuration Options
+### 🔧🪲 Advanced Configuration Options & Debug Mode
 
-The package provides additional configuration options for fine-tuning hook behavior:
+The git-hooks.php config file offers several debug options that can be adjusted using the following parameters.
+It also provides additional configuration options for fine-tuning hook behavior.
 
 ```php
-    /*
-    |--------------------------------------------------------------------------
-    | Validate paths
-    |--------------------------------------------------------------------------
-    |
-    | This configuration option allows you to validate paths before executing
-    | hooks, ensuring that files exist before attempting to process them.
-    |
-    */
+    // config/git-hooks.php
+    'output_errors' => false,
+    'debug_commands' => false,
+    'debug_output' => false,
     'validate_paths' => env('GITHOOKS_VALIDATE_PATHS', true),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Analyzer chunk size
-    |--------------------------------------------------------------------------
-    |
-    | This configuration option allows you to configure the chunk size for
-    | processing files in batches. This can improve performance for repositories
-    | with many files.
-    |
-    */
     'analyzer_chunk_size' => env('GITHOOKS_ANALYZER_CHUNK_SIZE', 100),
 ```
 
-### Creating Custom Git Hooks
+### 🛠️ Creating Custom Git Hooks
 1) If you need to create a custom Git hook for your project, Laravel Git Hooks makes it easy with the `git-hooks:make` Artisan command. To create a new custom hook, simply run the following command:
     ```bash
     php artisan git-hooks:make
@@ -214,7 +145,7 @@ The package provides additional configuration options for fine-tuning hook behav
 php artisan git-hooks:register
 ```
 
-## 3️⃣ Handling Git Hooks
+## 4️⃣ Handling Git Hooks
 ### Pre-commit Hook
 > The pre-commit hook is run first, before you even type in a commit message. It's used to inspect the snapshot that's
 > about to be committed, to see if you've forgotten something, to make sure tests run, or to examine whatever you need to
@@ -391,7 +322,7 @@ return [
 
 The class structure of the `pre-push` hooks is the same as the `post-commit` hook shown right above, but implementing `\Igorsgm\GitHooks\Contracts\PrePushHook` interface.
 
-## Testing
+## 🧪 Testing
 
 ``` bash
 composer test
