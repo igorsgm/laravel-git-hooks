@@ -24,12 +24,12 @@
 
 ## ✨ Features
 
-- **Pre-configured Hooks:** Laravel Git Hooks comes with pre-configured pre-commit hooks for popular tools, such as Laravel Pint, PHPCS, ESLint, Prettier, Larastan, Enlightn, Rector, PHP Insights and Blade Formatter, making it easy to enforce coding standards and style guidelines right away.
+- **Pre-configured Hooks:** Laravel Git Hooks comes with pre-configured pre-commit hooks for popular tools, such as Laravel Pint, PHPCS, ESLint, Prettier, Larastan, Enlightn, Rector, PHP Insights, and Blade Formatter, making it easy to enforce coding standards and style guidelines right away.
 - **Manage Git Hooks:** Easily manage your Git hooks in your Laravel projects with a streamlined and organized approach.
 - **Edit Commit Messages:** Gain control over your commit messages by customizing them to meet your project requirements and maintain a clean Git history.
 - **Create Custom Hooks:** Add and integrate custom hooks tailored to your specific project needs, ensuring better code quality and adherence to guidelines.
-- **Artisan Command for Hook Generation:** The package includes a convenient Artisan command that allows you to effortlessly generate new hooks of various types. Such as: `pre-commit`, `prepare-commit-msg`, `commit-msg`, `post-commit`, `pre-push`
-- **Code Quality:** The package is thoroughly tested, with >95% of code coverage, ensuring its reliability and stability in a wide range of Laravel projects.
+- **Artisan Command for Hook Generation:** The package includes a convenient Artisan command that allows you to effortlessly generate new hooks of various types, such as: `pre-commit`, `prepare-commit-msg`, `commit-msg`, `post-commit`, and `pre-push`.
+- **Code Quality:** The package is thoroughly tested with >95% code coverage, ensuring its reliability and stability in a wide range of Laravel projects.
 - **Docker support:** Each hook can be configured to either run locally or inside a Docker container, with full Laravel Sail integration.
 - **Auto-fix Capabilities:** Automatically fix code issues without manual intervention, with configurable re-run after fixes.
 
@@ -42,12 +42,12 @@
 composer require igorsgm/laravel-git-hooks --dev
 ```
 
-- Publish the config file and customize it in the way you want:
+- Publish the config file and customize it as needed:
 ```bash
 php artisan vendor:publish --tag=laravel-git-hooks
 ```
 
-- Now whenever you make a change in your `config/git-hooks.php` file, please register your git hooks by running the artisan command:
+- Now, whenever you make a change to your `config/git-hooks.php` file, register your Git hooks by running the Artisan command:
 ```bash
 php artisan git-hooks:register
 ```
@@ -55,8 +55,8 @@ php artisan git-hooks:register
 Once you've configured and registered the hooks, you're all set!
 
 ## 2️⃣ General Usage
-### Usage of the configured pre-commit hooks
-To use the already created pre-commit hooks of this package, you can simply edit the `pre-commit` section of git-hooks.php config file. Here's an example of how to configure them:
+### Usage of the configured Pre-commit Hooks
+To use the pre-configured pre-commit hooks provided by this package, simply edit the `pre-commit` section of the `git-hooks.php` config file. Here's an example of how to configure them:
 ```php
 'pre-commit' => [
     \Igorsgm\GitHooks\Console\Commands\Hooks\PintPreCommitHook::class, // Laravel Pint
@@ -73,8 +73,8 @@ To use the already created pre-commit hooks of this package, you can simply edit
 
 ### 🔧 Auto-fix Capabilities
 
-By default the pre-commit hooks will stop at first failure and will not continue with the remaining tools.
-If the tool contains a fixer option it will prompt in the CLI to run the fix command.
+By default, the pre-commit hooks will stop at the first failure and will not continue with the remaining tools.
+If the tool contains a fixer option, it will prompt in the CLI to run the fix command.
 
 The package includes powerful auto-fix functionality that can automatically resolve code style and formatting issues:
 
@@ -82,7 +82,7 @@ The package includes powerful auto-fix functionality that can automatically reso
 - **Automatic Fixing:** Enable `automatically_fix_errors` to fix issues without prompts
 - **Smart Re-running:** Enable `rerun_analyzer_after_autofix` to automatically verify fixes succeeded
 
-This behavior can be adjusted using the following parameters from git-hooks.php config file:
+This behavior can be adjusted using the following parameters from the `git-hooks.php` config file:
 ```php
     // config/git-hooks.php
 return [
@@ -95,9 +95,9 @@ return [
 
 ## 3️⃣ Advanced Usage
 
-### 🐳 Laravel Sail support
+### 🐳 Laravel Sail Support
 
-If you are using Laravel Sail and maybe not local PHP is installed, you can adjust the following parameters in the `git-hooks.php` config file.
+If you are using Laravel Sail and local PHP is not installed, you can adjust the following parameters in the `git-hooks.php` config file.
 This will force the local git hooks to use the `sail` command to execute the hooks:
 ```php
     // config/git-hooks.php
@@ -105,9 +105,9 @@ This will force the local git hooks to use the `sail` command to execute the hoo
 ```
 
 
-### 🐳 Docker support
+### 🐳 Docker Support
 
-By default, commands are executed locally, however this behavior can be adjusted for each hook using the parameters `run_in_docker` and `docker_container`:
+By default, commands are executed locally; however, this behavior can be adjusted for each hook using the parameters `run_in_docker` and `docker_container`:
 
 ```php
     // config/git-hooks.php
@@ -117,8 +117,8 @@ By default, commands are executed locally, however this behavior can be adjusted
 
 ### 🔧🪲 Advanced Configuration Options & Debug Mode
 
-The git-hooks.php config file offers several debug options that can be adjusted using the following parameters.
-It also provides additional configuration options for fine-tuning hook behavior.
+The `git-hooks.php` config file offers several debug options that can be adjusted using the following parameters.
+It also provides additional configuration options for fine-tuning hook behavior:
 
 ```php
     // config/git-hooks.php
@@ -143,14 +143,14 @@ return [
     ```
     This command will prompt you to choose the type of hook you want to create (e.g., `pre-commit`, `post-commit`, etc.) and to provide a name for the hook. Once you've provided the required information, the command will generate a new hook class in the `app/Console/GitHooks` directory.
 2) To start using your custom hook, open the generated file and implement the `handle()` method with your desired logic.
-3) Add your custom hook to the appropriate array in the git-hooks.php config file:
+3) Add your custom hook to the appropriate array in the `git-hooks.php` config file:
 ```php
 'pre-commit' => [
     // Other pre-commit hooks...
     \App\Console\GitHooks\MyCustomPreCommitHook::class,
 ],
 ```
-4) Finally register your custom hook by running the artisan command:
+4) Finally, register your custom hook by running the Artisan command:
 ```bash
 php artisan git-hooks:register
 ```
@@ -249,8 +249,8 @@ class MyPrepareCommitMessageHook implements \Igorsgm\GitHooks\Contracts\MessageH
 ```
 
 ### Commit-msg Hook
-> The commit-msg hook takes one parameter, which again is the path to a temporary file that contains the commit message
-> written by the developer. If this script exits non-zero, Git aborts the commit process, so you can use
+> The commit-msg hook takes one parameter, which is the path to a temporary file that contains the commit message
+> written by the developer. If this script exits non-zero, Git aborts the commit process, so you can use it to validate the commit message format.
 
 
 ```php
@@ -283,12 +283,12 @@ return [
 ```
 
 ```php
-// App/Console/GitHooks/MyPrepareCommitMessageHook.php
+// App/Console/GitHooks/MyPostCommitHook.php
 
 namespace App\Console\GitHooks;
 
 use Closure;
-use Igorsgm\GitHooks\Git\CommitMessage;
+use Igorsgm\GitHooks\Git\Log;
 use Igorsgm\GitHooks\Contracts\PostCommitHook;
 
 class MyPostCommitHook implements \Igorsgm\GitHooks\Contracts\PostCommitHook
@@ -316,7 +316,7 @@ class MyPostCommitHook implements \Igorsgm\GitHooks\Contracts\PostCommitHook
 
 ### Pre-push Hook
 > The pre-push hook runs during git push, after the remote refs have been updated but before any objects have been
-transferred. It receives the name and location of the remote as parameters, and a list of to-be-updated refs through
+> transferred. It receives the name and location of the remote as parameters, and a list of to-be-updated refs through
 stdin. You can use it to validate a set of ref updates before a push occurs (a non-zero exit code will abort the push).
 
 ```php
@@ -330,7 +330,7 @@ return [
 ];
 ```
 
-The class structure of the `pre-push` hooks is the same as the `post-commit` hook shown right above, but implementing `\Igorsgm\GitHooks\Contracts\PrePushHook` interface.
+The class structure of the `pre-push` hooks is the same as the `post-commit` hook shown above, but implementing `\Igorsgm\GitHooks\Contracts\PrePushHook` interface.
 
 ## 🧪 Testing
 
@@ -340,10 +340,10 @@ composer test
 
 ## Changelog
 
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 
-## Original authors
+## Original Authors
 
 - [Igor Moraes](https://github.com/igorsgm)
 - [Pavel Buchnev](https://github.com/butschster)
