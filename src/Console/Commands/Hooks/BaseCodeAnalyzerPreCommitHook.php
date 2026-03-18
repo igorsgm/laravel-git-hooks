@@ -71,7 +71,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
     {
         $this->setCwd(base_path());
 
-        $this->chunkSize = config('git-hooks.analyzer_chunk_size', $this->chunkSize);
+        $this->chunkSize = config('git-hooks.analyzer_chunk_size');
     }
 
     /**
