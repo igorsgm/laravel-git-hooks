@@ -36,10 +36,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24.x'
           cache: npm
@@ -93,7 +93,7 @@ jobs:
           esac
 
       - name: Cache Composer downloads
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-php${{ matrix.php }}-laravel${{ matrix.laravel }}-testbench${{ steps.matrix-versions.outputs.testbench_key }}-pest${{ steps.matrix-versions.outputs.pest_key }}-plugin${{ steps.matrix-versions.outputs.plugin_key }}-${{ hashFiles('composer.json') }}
