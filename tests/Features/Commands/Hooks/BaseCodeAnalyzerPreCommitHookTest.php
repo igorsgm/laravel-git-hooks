@@ -7,7 +7,6 @@ use Igorsgm\GitHooks\Git\ChangedFiles;
 use Igorsgm\GitHooks\Tests\Fixtures\ConcreteBaseCodeAnalyzerFixture;
 
 beforeEach(function () {
-    $this->gitInit();
     $this->initializeTempDirectory(base_path('temp'));
 });
 

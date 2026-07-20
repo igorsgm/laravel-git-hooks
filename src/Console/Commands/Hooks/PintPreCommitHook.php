@@ -7,6 +7,7 @@ namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 use Closure;
 use Igorsgm\GitHooks\Contracts\CodeAnalyzerPreCommitHook;
 use Igorsgm\GitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Support\Config;
 
 class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
@@ -57,16 +58,16 @@ class PintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAna
      */
     protected function configParam(): string
     {
-        $pintConfigFile = config('git-hooks.code_analyzers.laravel_pint.config');
+        $pintConfigFile = Config::string('git-hooks.code_analyzers.laravel_pint.config');
 
         if (!empty($pintConfigFile)) {
             $this->validateConfigPath($pintConfigFile);
 
-            return '--config '.mb_trim((string) $pintConfigFile, '/');
+            return '--config '.mb_trim($pintConfigFile, '/');
         }
 
-        $pintPreset = config('git-hooks.code_analyzers.laravel_pint.preset');
+        $pintPreset = Config::string('git-hooks.code_analyzers.laravel_pint.preset');
 
-        return empty($pintPreset) ? '' : '--preset '.mb_trim((string) $pintPreset, '/');
+        return empty($pintPreset) ? '' : '--preset '.mb_trim($pintPreset, '/');
     }
 }

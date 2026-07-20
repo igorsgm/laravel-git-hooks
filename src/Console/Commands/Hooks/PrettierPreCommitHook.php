@@ -7,6 +7,7 @@ namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 use Closure;
 use Igorsgm\GitHooks\Contracts\CodeAnalyzerPreCommitHook;
 use Igorsgm\GitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Support\Config;
 
 class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
@@ -61,7 +62,7 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      */
     protected function configParam(): string
     {
-        $prettierConfig = mb_rtrim((string) config('git-hooks.code_analyzers.prettier.config'), '/');
+        $prettierConfig = mb_rtrim(Config::string('git-hooks.code_analyzers.prettier.config'), '/');
         $this->validateConfigPath($prettierConfig);
 
         return empty($prettierConfig) ? '' : '--config='.$prettierConfig;
@@ -71,9 +72,9 @@ class PrettierPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements Cod
      * Retrieves additional parameters for the Prettier code analyzer from the configuration file,
      * filters out pre-defined parameters to avoid conflicts, and returns them as a string.
      */
-    protected function additionalParams(): ?string
+    protected function additionalParams(): string
     {
-        $additionalParams = (string) config('git-hooks.code_analyzers.prettier.additional_params');
+        $additionalParams = Config::string('git-hooks.code_analyzers.prettier.additional_params');
 
         if (!empty($additionalParams)) {
             $additionalParams = (string) preg_replace('/\s+\.(?:(\s)|$)/', '$1', (string) $additionalParams);

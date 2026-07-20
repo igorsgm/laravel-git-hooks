@@ -1,6 +1,1 @@
-function test()
-
-{
-  return false;
-
-}
+const quux = "corge";

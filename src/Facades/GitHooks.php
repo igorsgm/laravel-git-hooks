@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Facade;
  *
  * @method static array<string> getSupportedHooks()
  * @method static array<string> getAvailableHooks()
- * @method static void install()
- * @method static ?string getHookStub()
+ * @method static void install(string $hookName)
+ * @method static string getHookStub()
  * @method static string getGitHooksDir()
  * @method static string getListOfChangedFiles()
  * @method static string getLastCommitFromLog()

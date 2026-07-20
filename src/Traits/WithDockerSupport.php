@@ -10,7 +10,7 @@ trait WithDockerSupport
 
     protected string $dockerContainer = '';
 
-    public function setRunInDocker(bool $runInDocker): self
+    public function setRunInDocker(mixed $runInDocker): self
     {
         $this->runInDocker = (bool) $runInDocker;
 
@@ -22,9 +22,9 @@ trait WithDockerSupport
         return $this->runInDocker;
     }
 
-    public function setDockerContainer(string $dockerContainer): self
+    public function setDockerContainer(mixed $dockerContainer): self
     {
-        $this->dockerContainer = $dockerContainer;
+        $this->dockerContainer = is_string($dockerContainer) ? $dockerContainer : '';
 
         return $this;
     }

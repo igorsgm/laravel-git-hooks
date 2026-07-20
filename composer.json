@@ -30,18 +30,20 @@
         "illuminate/support": "^11.0|^12.0|^13.0"
     },
     "require-dev": {
+        "ergebnis/composer-normalize": "^2.50",
         "friendsofphp/php-cs-fixer": "^3.0",
         "larastan/larastan": "^2.0|^3.0",
         "laravel/pint": "^1.2",
         "mockery/mockery": "^1.6.1",
-        "nunomaduro/phpinsights": "^2.13",
         "orchestra/testbench": "^v8.0|^v9.0|^v10.0|^v11.0",
         "pestphp/pest": "^2.0|^3.0",
         "pestphp/pest-plugin-laravel": "^2.0|^3.0",
-        "rector/rector": "^1.0|^2.0|^3.0",
-        "squizlabs/php_codesniffer": "^3.11.0"
+        "rector/rector": "^1.0|^2.0|^3.0"
     },
     "autoload": {
+        "files": [
+            "src/Support/functions.php"
+        ],
         "psr-4": {
             "Igorsgm\\GitHooks\\": "src"
         }
@@ -53,13 +55,27 @@
     },
     "scripts": {
         "test": "vendor/bin/pest",
-        "test-coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage"
+        "test:acceptance": "vendor/bin/pest --configuration phpunit-acceptance.xml",
+        "test:acceptance:php": "vendor/bin/pest --configuration phpunit-acceptance.xml --testsuite acceptance-php",
+        "test:acceptance:node": "vendor/bin/pest --configuration phpunit-acceptance.xml --testsuite acceptance-node",
+        "test:acceptance:cleanup": "php -r \"require 'vendor/autoload.php'; Igorsgm\\\\GitHooks\\\\Tests\\\\Acceptance\\\\ToolSandbox::cleanupAll(); echo 'Acceptance sandbox cleaned up.\\n';\"",
+        "lint": "vendor/bin/pint --test src config",
+        "lint:fix": "vendor/bin/pint src config",
+        "analyze": "vendor/bin/phpstan --memory-limit=2G",
+        "rector:check": "vendor/bin/rector process --dry-run",
+        "rector:fix": "vendor/bin/rector process",
+        "test-coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage",
+        "qa": [
+            "@lint",
+            "@analyze",
+            "@test"
+        ]
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "ergebnis/composer-normalize": true
         }
     },
     "extra": {

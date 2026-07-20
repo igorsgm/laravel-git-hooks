@@ -8,17 +8,15 @@ use Igorsgm\GitHooks\Facades\GitHooks;
 beforeEach(function () {
     $this->gitInit();
     $this->initializeTempDirectory(base_path('temp'));
+    $this->config->set('git-hooks.validate_paths', false);
 });
 
 test('Skips Rector check when there is none php files added to commit', function ($rectorConfiguration) {
     $this->config->set('git-hooks.code_analyzers.rector', $rectorConfiguration);
-    $this->config->set('git-hooks.pre-commit', [
-        RectorPreCommitHook::class,
-    ]);
+    $this->config->set('git-hooks.code_analyzers.rector.path', $this->fakePassBin());
+    $this->config->set('git-hooks.pre-commit', [RectorPreCommitHook::class]);
 
-    $this->makeTempFile('sample.js',
-        file_get_contents(__DIR__.'/../../../Fixtures/sample.js')
-    );
+    $this->makeTempFile('sample.js', file_get_contents(__DIR__.'/../../../Fixtures/sample.js'));
 
     GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
     GitHooks::shouldReceive('getListOfChangedFiles')->andReturn('AM src/sample.js');
@@ -29,9 +27,8 @@ test('Skips Rector check when there is none php files added to commit', function
 test('Fails commit when Rector is not passing',
     function ($rectorConfiguration, $listOfRectorPhpFiles) {
         $this->config->set('git-hooks.code_analyzers.rector', $rectorConfiguration);
-        $this->config->set('git-hooks.pre-commit', [
-            RectorPreCommitHook::class,
-        ]);
+        $this->config->set('git-hooks.code_analyzers.rector.path', $this->fakeFixBin());
+        $this->config->set('git-hooks.pre-commit', [RectorPreCommitHook::class]);
 
         $this->makeTempFile('ClassWithRectorIssues.php',
             file_get_contents(__DIR__.'/../../../Fixtures/ClassWithRectorIssues.php')
@@ -47,11 +44,10 @@ test('Fails commit when Rector is not passing',
             ->assertExitCode(1);
     })->with('rectorConfiguration', 'listOfRectorPhpFiles');
 
-test('Commit passes when Rector is passing', function ($rectorConfiguration, $listOfRectorPhpFiles) {
+test('Commit passes when Rector fixes the files', function ($rectorConfiguration, $listOfRectorPhpFiles) {
     $this->config->set('git-hooks.code_analyzers.rector', $rectorConfiguration);
-    $this->config->set('git-hooks.pre-commit', [
-        RectorPreCommitHook::class,
-    ]);
+    $this->config->set('git-hooks.code_analyzers.rector.path', $this->fakeFixBin());
+    $this->config->set('git-hooks.pre-commit', [RectorPreCommitHook::class]);
 
     $this->makeTempFile('ClassWithRectorIssues.php',
         file_get_contents(__DIR__.'/../../../Fixtures/ClassWithRectorIssues.php')
@@ -63,9 +59,7 @@ test('Commit passes when Rector is passing', function ($rectorConfiguration, $li
     $this->artisan('git-hooks:pre-commit')
         ->expectsOutputToContain('Rector Failed')
         ->expectsOutputToContain('COMMIT FAILED')
-        ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'yes');
-
-    $this->artisan('git-hooks:pre-commit')
-        ->doesntExpectOutputToContain('Rector Failed')
+        ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'yes')
         ->assertSuccessful();
 })->with('rectorConfiguration', 'listOfRectorPhpFiles');
+

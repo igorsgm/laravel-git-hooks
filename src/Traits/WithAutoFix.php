@@ -6,6 +6,7 @@ namespace Igorsgm\GitHooks\Traits;
 
 use Igorsgm\GitHooks\Exceptions\HookFailException;
 use Symfony\Component\Console\Terminal;
+use Symfony\Component\Process\Process;
 
 trait WithAutoFix
 {
@@ -25,7 +26,7 @@ trait WithAutoFix
         return false;
     }
 
-    protected function outputDebugCommandIfEnabled(mixed $process): void
+    protected function outputDebugCommandIfEnabled(Process $process): void
     {
         if (config('git-hooks.debug_commands')) {
             $this->command->newLine();
@@ -36,9 +37,10 @@ trait WithAutoFix
     /**
      * @param  array<string, mixed>  $params
      */
-    protected function rerunAnalyzer(string $filePath, array $params): mixed
+    protected function rerunAnalyzer(string $filePath, array $params): Process
     {
-        $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
+        $escapedFilePath = implode(' ', array_map(escapeshellarg(...), explode(' ', $filePath)));
+        $command = $this->dockerCommand($this->analyzerCommand().' '.$escapedFilePath);
         $process = $this->runCommands($command, $params);
 
         if (config('git-hooks.debug_commands')) {
@@ -48,7 +50,7 @@ trait WithAutoFix
         return $process;
     }
 
-    protected function handleFixFailure(string $filePath, mixed $process): void
+    protected function handleFixFailure(string $filePath, Process $process): void
     {
         if (empty($this->filesBadlyFormattedPaths)) {
             $this->command->newLine();
@@ -134,7 +136,8 @@ trait WithAutoFix
      */
     private function attemptToFixFile(string $filePath, array $params): bool
     {
-        $fixerCommand = $this->dockerCommand($this->fixerCommand().' '.$filePath);
+        $escapedFilePath = implode(' ', array_map(escapeshellarg(...), explode(' ', $filePath)));
+        $fixerCommand = $this->dockerCommand($this->fixerCommand().' '.$escapedFilePath);
         $process = $this->runCommands($fixerCommand, $params);
 
         $this->outputDebugCommandIfEnabled($process);
@@ -144,7 +147,7 @@ trait WithAutoFix
         }
 
         if ($process->isSuccessful()) {
-            $this->runCommands('git add '.$filePath);
+            $this->runCommands('git add '.$escapedFilePath);
 
             return true;
         }

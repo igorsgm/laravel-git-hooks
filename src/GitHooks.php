@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Igorsgm\GitHooks;
 
 use Exception;
+use Igorsgm\GitHooks\Support\Config;
 use Igorsgm\GitHooks\Traits\GitHelper;
 
 class GitHooks
@@ -38,7 +39,7 @@ class GitHooks
      */
     public function getAvailableHooks(): array
     {
-        $configGitHooks = config('git-hooks');
+        $configGitHooks = (array) config('git-hooks');
 
         return array_filter($this->getSupportedHooks(), fn ($hook) => !empty($configGitHooks[$hook]));
     }
@@ -72,19 +73,19 @@ class GitHooks
         } else {
             $hookScript = str_replace(
                 ['{php|sail}', '{artisanPath}'],
-                ['php', config('git-hooks.artisan_path')],
+                ['php', Config::string('git-hooks.artisan_path')],
                 $hookScript
             );
         }
 
         file_put_contents($hookPath, $hookScript);
-        chmod($hookPath, 0777);
+        chmod($hookPath, 0755);
     }
 
     /**
      * Returns the content of the git hook stub.
      */
-    public function getHookStub(): ?string
+    public function getHookStub(): string
     {
         $hookStubPath = __DIR__.str_replace('/', DIRECTORY_SEPARATOR, '/Console/Commands/stubs/hook');
 

@@ -29,7 +29,7 @@ trait GitHelper
         $content = file_get_contents($filePath);
 
         if ($content === false) {
-            throw new Exception('Fail to read file: '.$filePath);
+            throw new Exception('Failed to read file: '.$filePath);
         }
 
         return $content;
@@ -40,7 +40,9 @@ trait GitHelper
      */
     public function updateCommitMessageContentInFile(string $path, string $message): void
     {
-        file_put_contents($path, $message);
+        if (file_put_contents($path, $message) === false) {
+            throw new Exception('Failed to write commit message to file: '.$path);
+        }
     }
 
     /**

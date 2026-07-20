@@ -3,6 +3,7 @@
   <testsuites>
     <testsuite name="Test Suite">
       <directory suffix="Test.php">./tests</directory>
+      <exclude>./tests/Acceptance</exclude>
     </testsuite>
   </testsuites>
   <source>

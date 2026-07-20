@@ -71,7 +71,8 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
     {
         $this->setCwd(base_path());
 
-        $this->chunkSize = config('git-hooks.analyzer_chunk_size', $this->chunkSize);
+        $raw = config('git-hooks.analyzer_chunk_size', $this->chunkSize);
+        $this->chunkSize = is_int($raw) ? $raw : $this->chunkSize;
     }
 
     /**
@@ -98,7 +99,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
         }
 
         $this->validateAnalyzerInstallation()
-            ->analizeCommittedFiles($commitFiles);
+            ->analyzeCommittedFiles($commitFiles);
 
         if (empty($this->filesBadlyFormattedPaths)) {
             return $next($files);
@@ -136,18 +137,22 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
     }
 
     /**
-     * @param  array<int, string>|string  $fileExtensions
+     * @param  array<int, string>|string|mixed  $fileExtensions
      */
-    public function setFileExtensions(array|string $fileExtensions): self
+    public function setFileExtensions(mixed $fileExtensions): self
     {
-        $this->fileExtensions = $fileExtensions;
+        if (is_array($fileExtensions)) {
+            $this->fileExtensions = array_values(array_map(fn ($v): string => is_string($v) ? $v : '', $fileExtensions));
+        } else {
+            $this->fileExtensions = is_string($fileExtensions) ? $fileExtensions : '';
+        }
 
         return $this;
     }
 
-    public function setAnalyzerExecutable(string $executablePath, bool $isSameAsFixer = false): self
+    public function setAnalyzerExecutable(mixed $executablePath, bool $isSameAsFixer = false): self
     {
-        $this->analyzerExecutable = $executablePath;
+        $this->analyzerExecutable = is_string($executablePath) ? $executablePath : '';
 
         return $isSameAsFixer ? $this->setFixerExecutable($executablePath) : $this;
     }
@@ -157,9 +162,9 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
         return $this->analyzerExecutable;
     }
 
-    public function setFixerExecutable(string $executablePath): self
+    public function setFixerExecutable(mixed $executablePath): self
     {
-        $this->fixerExecutable = $executablePath;
+        $this->fixerExecutable = is_string($executablePath) ? $executablePath : '';
 
         return $this;
     }
@@ -187,7 +192,7 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
      * @param  Collection<int, ChangedFile>  $commitFiles  The files to analyze.
      * @return $this
      */
-    protected function analizeCommittedFiles(Collection $commitFiles): self
+    protected function analyzeCommittedFiles(Collection $commitFiles): self
     {
         /** @var Collection<int, ChangedFile> $chunk */
         foreach ($commitFiles->chunk($this->chunkSize) as $chunk) {
@@ -206,8 +211,9 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
                 continue;
             }
 
+            $escapedFilePaths = implode(' ', array_map(escapeshellarg(...), $filePaths));
             $filePath = implode(' ', $filePaths);
-            $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
+            $command = $this->dockerCommand($this->analyzerCommand().' '.$escapedFilePaths);
 
             $params = [
                 'show-output' => config('git-hooks.debug_output'),
@@ -305,8 +311,10 @@ abstract class BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHoo
      *
      * @throws HookFailException If the configuration file does not exist.
      */
-    protected function validateConfigPath(string $path): self
+    protected function validateConfigPath(mixed $path): self
     {
+        $path = is_string($path) ? $path : '';
+
         if (!config('git-hooks.validate_paths') || file_exists($path)) {
             return $this;
         }

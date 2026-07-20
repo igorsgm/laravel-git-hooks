@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Igorsgm\GitHooks;
 
+use BadMethodCallException;
 use Closure;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Pipeline\Pipeline;
+use InvalidArgumentException;
+use RuntimeException;
 use Throwable;
 
 class HooksPipeline extends Pipeline
@@ -49,6 +52,13 @@ class HooksPipeline extends Pipeline
                 }
 
                 if (!is_object($pipe)) {
+                    if (!is_string($pipe)) {
+                        throw new InvalidArgumentException(sprintf(
+                            'A hook pipe must be a class name string or object, %s given.',
+                            gettype($pipe)
+                        ));
+                    }
+
                     $hookParameters = (array) config('git-hooks.'.$this->hook.'.'.$pipe);
 
                     // If the pipe is a string we will parse the string and resolve the class out
@@ -56,23 +66,32 @@ class HooksPipeline extends Pipeline
                     // execute the pipe function giving in the parameters that are required.
                     $pipe = $this->getContainer()->make($pipe, ['parameters' => $hookParameters]);
 
+                    if (!is_object($pipe)) {
+                        throw new RuntimeException('Container::make() did not return an object.');
+                    }
+
                     $this->handlePipeEnd(true);
 
                     if ($this->pipeStartCallback) {
                         call_user_func_array($this->pipeStartCallback, [$pipe]);
                     }
-
-                    $parameters = [$passable, $stack];
-                } else {
-                    // If the pipe is already an object we'll just make a callable and pass it to
-                    // the pipe as-is. There is no need to do any extra parsing and formatting
-                    // since the object we're given was already a fully instantiated object.
-                    $parameters = [$passable, $stack];
                 }
 
-                $carry = method_exists($pipe, $this->method)
-                            ? $pipe->{$this->method}(...$parameters)
-                            : $pipe(...$parameters);
+                $parameters = [$passable, $stack];
+
+                if (method_exists($pipe, $this->method)) {
+                    $carry = $pipe->{$this->method}(...$parameters);
+                } else {
+                    if (!is_callable($pipe)) {
+                        throw new BadMethodCallException(sprintf(
+                            'Hook pipe [%s] does not implement method [%s] and is not invokable.',
+                            $pipe::class,
+                            $this->method
+                        ));
+                    }
+
+                    $carry = $pipe(...$parameters);
+                }
 
                 return $this->handleCarry($carry);
             } catch (Throwable $e) {

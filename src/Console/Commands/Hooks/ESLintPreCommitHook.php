@@ -7,6 +7,7 @@ namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 use Closure;
 use Igorsgm\GitHooks\Contracts\CodeAnalyzerPreCommitHook;
 use Igorsgm\GitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Support\Config;
 
 class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
@@ -63,7 +64,7 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
      */
     protected function configParam(): string
     {
-        $eslintConfig = mb_rtrim((string) config('git-hooks.code_analyzers.eslint.config'), '/');
+        $eslintConfig = mb_rtrim(Config::string('git-hooks.code_analyzers.eslint.config'), '/');
         $this->validateConfigPath($eslintConfig);
 
         return empty($eslintConfig) ? '' : '--config='.$eslintConfig;
@@ -73,9 +74,9 @@ class ESLintPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
      * Retrieves additional parameters for the ESLint code analyzer from the configuration file,
      * filters out pre-defined parameters to avoid conflicts, and returns them as a string.
      */
-    protected function additionalParams(): ?string
+    protected function additionalParams(): string
     {
-        $additionalParams = (string) config('git-hooks.code_analyzers.eslint.additional_params');
+        $additionalParams = Config::string('git-hooks.code_analyzers.eslint.additional_params');
 
         if (!empty($additionalParams)) {
             $additionalParams = (string) preg_replace('/\s+\.(?:(\s)|$)/', '$1', (string) $additionalParams);

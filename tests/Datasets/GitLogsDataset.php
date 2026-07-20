@@ -27,17 +27,11 @@ dataset('listOfChangedFiles', [
 ]);
 
 dataset('listOfFixablePhpFiles', [
-    'List of Fixable Files' => implode(PHP_EOL, [
-        'AM temp/ClassWithFixableIssues.php',
-        'AM temp/fixable-blade-file.blade.php',
-    ]),
+    'List of Fixable Files' => 'AM temp/ClassWithFixableIssues.php',
 ]);
 
 dataset('listOfRectorPhpFiles', [
-    'List of Rector Files' => implode(PHP_EOL, [
-        'AM temp/ClassWithRectorIssues.php',
-        'AM temp/fixable-blade-file.blade.php',
-    ]),
+    'List of Rector Files' => 'AM temp/ClassWithRectorIssues.php',
 ]);
 
 dataset('listOfFixableJSFiles', [

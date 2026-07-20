@@ -7,6 +7,7 @@ namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 use Closure;
 use Igorsgm\GitHooks\Contracts\CodeAnalyzerPreCommitHook;
 use Igorsgm\GitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Support\Config;
 
 class PhpInsightsPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
@@ -57,7 +58,7 @@ class PhpInsightsPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements 
      */
     protected function configParam(): string
     {
-        $phpInsightsConfigFile = (string) config('git-hooks.code_analyzers.phpinsights.config');
+        $phpInsightsConfigFile = Config::string('git-hooks.code_analyzers.phpinsights.config');
 
         if (!empty($phpInsightsConfigFile)) {
             $this->validateConfigPath($phpInsightsConfigFile);
@@ -69,11 +70,20 @@ class PhpInsightsPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements 
     }
 
     /**
-     * Retrieves additional parameters for the phpinsights from the configuration file
+     * Retrieves additional parameters for phpinsights from the configuration file,
+     * filtering out pre-defined parameters to avoid conflicts.
      */
-    protected function additionalParams(): ?string
+    protected function additionalParams(): string
     {
-        $additionalParams = (string) config('git-hooks.code_analyzers.phpinsights.additional_params');
+        $additionalParams = Config::string('git-hooks.code_analyzers.phpinsights.additional_params');
+
+        if (!empty($additionalParams)) {
+            $additionalParams = (string) preg_replace(
+                '/\s*--(config-path|fix|no-interaction)\b(=\S*)?\s*/',
+                '',
+                $additionalParams
+            );
+        }
 
         return $additionalParams;
     }

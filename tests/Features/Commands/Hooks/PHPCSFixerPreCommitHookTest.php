@@ -8,17 +8,15 @@ use Igorsgm\GitHooks\Facades\GitHooks;
 beforeEach(function () {
     $this->gitInit();
     $this->initializeTempDirectory(base_path('temp'));
+    $this->config->set('git-hooks.validate_paths', false);
 });
 
 test('Skips PHP CS Fixer check when there is none php files added to commit', function ($phpCSFixerConfiguration) {
     $this->config->set('git-hooks.code_analyzers.php_cs_fixer', $phpCSFixerConfiguration);
-    $this->config->set('git-hooks.pre-commit', [
-        PHPCSFixerPreCommitHook::class,
-    ]);
+    $this->config->set('git-hooks.code_analyzers.php_cs_fixer.path', $this->fakePassBin());
+    $this->config->set('git-hooks.pre-commit', [PHPCSFixerPreCommitHook::class]);
 
-    $this->makeTempFile('sample.js',
-        file_get_contents(__DIR__.'/../../../Fixtures/sample.js')
-    );
+    $this->makeTempFile('sample.js', file_get_contents(__DIR__.'/../../../Fixtures/sample.js'));
 
     GitHooks::shouldReceive('isMergeInProgress')->andReturn(false);
     GitHooks::shouldReceive('getListOfChangedFiles')->andReturn('AM src/sample.js');
@@ -29,9 +27,8 @@ test('Skips PHP CS Fixer check when there is none php files added to commit', fu
 test('Fails commit when PHP CS Fixer is not passing and user does not autofix the files',
     function ($phpCSFixerConfiguration, $listOfFixablePhpFiles) {
         $this->config->set('git-hooks.code_analyzers.php_cs_fixer', $phpCSFixerConfiguration);
-        $this->config->set('git-hooks.pre-commit', [
-            PHPCSFixerPreCommitHook::class,
-        ]);
+        $this->config->set('git-hooks.code_analyzers.php_cs_fixer.path', $this->fakeFixBin());
+        $this->config->set('git-hooks.pre-commit', [PHPCSFixerPreCommitHook::class]);
 
         $this->makeTempFile('ClassWithFixableIssues.php',
             file_get_contents(__DIR__.'/../../../Fixtures/ClassWithFixableIssues.php')
@@ -49,9 +46,8 @@ test('Fails commit when PHP CS Fixer is not passing and user does not autofix th
 
 test('Commit passes when PHP CS Fixer fixes the files', function ($phpCSFixerConfiguration, $listOfFixablePhpFiles) {
     $this->config->set('git-hooks.code_analyzers.php_cs_fixer', $phpCSFixerConfiguration);
-    $this->config->set('git-hooks.pre-commit', [
-        PHPCSFixerPreCommitHook::class,
-    ]);
+    $this->config->set('git-hooks.code_analyzers.php_cs_fixer.path', $this->fakeFixBin());
+    $this->config->set('git-hooks.pre-commit', [PHPCSFixerPreCommitHook::class]);
 
     $this->makeTempFile('ClassWithFixableIssues.php',
         file_get_contents(__DIR__.'/../../../Fixtures/ClassWithFixableIssues.php')
@@ -63,9 +59,7 @@ test('Commit passes when PHP CS Fixer fixes the files', function ($phpCSFixerCon
     $this->artisan('git-hooks:pre-commit')
         ->expectsOutputToContain('PHP_CS_Fixer Failed')
         ->expectsOutputToContain('COMMIT FAILED')
-        ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'yes');
-
-    $this->artisan('git-hooks:pre-commit')
-        ->doesntExpectOutputToContain('PHP_CS_Fixer Failed')
+        ->expectsConfirmation('Would you like to attempt to correct files automagically?', 'yes')
         ->assertSuccessful();
 })->with('phpcsFixerConfiguration', 'listOfFixablePhpFiles');
+

@@ -72,7 +72,7 @@ class ChangedFile implements Stringable
      */
     public function isInCommit(): bool
     {
-        return $this->X > 0 && $this->X ^ self::N;
+        return $this->X > 0 && ($this->X & self::N) === 0;
     }
 
     /**

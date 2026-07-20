@@ -6,6 +6,7 @@ namespace Igorsgm\GitHooks\Traits;
 
 use Igorsgm\GitHooks\Git\ChangedFile;
 use Illuminate\Support\Collection;
+use Symfony\Component\Process\Process;
 
 trait WithFileAnalysis
 {
@@ -23,7 +24,7 @@ trait WithFileAnalysis
      */
     abstract public function getFileExtensions(): array|string;
 
-    public function analizeCommittedFiles(Collection $commitFiles): self
+    public function analyzeCommittedFiles(Collection $commitFiles): self
     {
         /** @var Collection<int, ChangedFile> $chunk */
         foreach ($commitFiles->chunk($this->chunkSize) as $chunk) {
@@ -56,10 +57,14 @@ trait WithFileAnalysis
      */
     protected function getAnalyzableFilePaths(Collection $files): array
     {
-        return $files
+        /** @var array<int, string> $result */
+        $result = $files
             ->filter(fn ($file) => $this->canFileBeAnalyzed($file))
             ->map(fn ($file) => $file->getFilePath())
+            ->values()
             ->toArray();
+
+        return $result;
     }
 
     /**
@@ -68,7 +73,8 @@ trait WithFileAnalysis
     protected function analyzeFiles(array $filePaths): void
     {
         $filePath = implode(' ', $filePaths);
-        $command = $this->dockerCommand($this->analyzerCommand().' '.$filePath);
+        $escapedFilePath = implode(' ', array_map(escapeshellarg(...), $filePaths));
+        $command = $this->dockerCommand($this->analyzerCommand().' '.$escapedFilePath);
 
         $params = [
             'show-output' => config('git-hooks.debug_output'),
@@ -87,7 +93,7 @@ trait WithFileAnalysis
 
     protected function handleAnalysisFailure(
         string $filePath,
-        mixed $process
+        Process $process
     ): void {
         if (empty($this->filesBadlyFormattedPaths)) {
             $this->command->newLine();

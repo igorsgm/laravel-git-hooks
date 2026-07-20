@@ -7,6 +7,7 @@ namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 use Closure;
 use Igorsgm\GitHooks\Contracts\CodeAnalyzerPreCommitHook;
 use Igorsgm\GitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Support\Config;
 
 class PHPCSFixerPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
@@ -57,7 +58,7 @@ class PHPCSFixerPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements C
      */
     public function configParam(): string
     {
-        $configFile = (string) config('git-hooks.code_analyzers.php_cs_fixer.config');
+        $configFile = Config::string('git-hooks.code_analyzers.php_cs_fixer.config');
 
         if (!empty($configFile)) {
             $this->validateConfigPath($configFile);

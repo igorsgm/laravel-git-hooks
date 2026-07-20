@@ -7,9 +7,6 @@ namespace Igorsgm\GitHooks\Traits;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
-/**
- * @codeCoverageIgnore
- */
 trait ProcessHelper
 {
     private string $cwd;
@@ -24,7 +21,7 @@ trait ProcessHelper
     {
         /** @phpstan-ignore-next-line */
         $output = method_exists($this, 'getOutput') ? $this->getOutput() : null;
-
+        /** @var \Illuminate\Console\OutputStyle|null $output */
         if ($output && !$output->isDecorated()) {
             $commands = $this->transformCommands($commands, fn ($value) => $value.' --no-ansi');
         }
@@ -33,12 +30,19 @@ trait ProcessHelper
             $commands = $this->transformCommands($commands, fn ($value) => $this->buildNoOutputCommand($value));
         }
 
+        /** @var string|null $cwd */
+        $cwd = data_get($params, 'cwd', $this->cwd ?? null);
+        /** @var array<string, string>|null $env */
+        $env = data_get($params, 'env');
+        /** @var float|null $timeout */
+        $timeout = data_get($params, 'timeout');
+
         $process = Process::fromShellCommandline(
             implode(' && ', (array) $commands),
-            data_get($params, 'cwd', $this->cwd ?? null),
-            data_get($params, 'env'),
+            $cwd,
+            $env,
             data_get($params, 'input'),
-            data_get($params, 'timeout')
+            $timeout
         );
 
         $showOutput = (data_get($params, 'tty') === true || data_get($params, 'show-output') === true) && $output;
@@ -62,17 +66,18 @@ trait ProcessHelper
 
     /**
      * @param  string|array<int, string>  $commands
+     * @param  callable(string): string  $callback
      * @return array<int, string>
      */
     public function transformCommands(string|array $commands, callable $callback): array
     {
-        return array_map(function ($value) use ($callback) {
+        return array_values(array_map(function (string $value) use ($callback): string {
             if (str_starts_with($value, 'chmod')) {
                 return $value;
             }
 
-            return $callback($value);
-        }, (array) $commands);
+            return (string) $callback($value);
+        }, (array) $commands));
     }
 
     /**

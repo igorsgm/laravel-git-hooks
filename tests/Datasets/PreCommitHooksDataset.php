@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-use Igorsgm\GitHooks\Console\Commands\Hooks\BladeFormatterPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\LarastanPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PHPCodeSnifferPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PHPCSFixerPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PhpInsightsPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\PintPreCommitHook;
-use Igorsgm\GitHooks\Console\Commands\Hooks\PrettierPreCommitHook;
 use Igorsgm\GitHooks\Console\Commands\Hooks\RectorPreCommitHook;
+
+$projectRoot = dirname(__DIR__, 2);
 
 dataset('pintConfiguration', [
     'Config File' => [
         [
-            'path' => '../../../bin/pint',
+            'path' => $projectRoot.'/vendor/bin/pint',
             'config' => __DIR__.'/../Fixtures/pintFixture.json',
             'file_extensions' => '/\.php$/',
             'run_in_docker' => false,
@@ -23,7 +23,7 @@ dataset('pintConfiguration', [
     ],
     'Preset' => [
         [
-            'path' => '../../../bin/pint',
+            'path' => $projectRoot.'/vendor/bin/pint',
             'preset' => 'psr12',
             'file_extensions' => '/\.php$/',
             'run_in_docker' => false,
@@ -35,8 +35,8 @@ dataset('pintConfiguration', [
 dataset('phpcsConfiguration', [
     'phpcs.xml file' => [
         [
-            'phpcs_path' => '../../../bin/phpcs',
-            'phpcbf_path' => '../../../bin/phpcbf',
+            'phpcs_path' => $projectRoot.'/vendor/bin/phpcs',
+            'phpcbf_path' => $projectRoot.'/vendor/bin/phpcbf',
             'config' => __DIR__.'/../Fixtures/phpcsFixture.xml',
             'file_extensions' => '/\.php$/',
             'run_in_docker' => false,
@@ -48,7 +48,7 @@ dataset('phpcsConfiguration', [
 dataset('phpcsFixerConfiguration', [
     '.php-cs-fixer.php file' => [
         [
-            'path' => '../../../bin/php-cs-fixer',
+            'path' => $projectRoot.'/vendor/bin/php-cs-fixer',
             'config' => __DIR__.'/../Fixtures/phpcsFixerFixture.php',
             'file_extensions' => '/\.php$/',
             'run_in_docker' => false,
@@ -60,7 +60,7 @@ dataset('phpcsFixerConfiguration', [
 dataset('phpinsightsConfiguration', [
     'phpinsights.php file' => [
         [
-            'path' => '../../../bin/phpinsights',
+            'path' => $projectRoot.'/vendor/bin/phpinsights',
             'config' => __DIR__.'/../Fixtures/phpinsightsFixture.php',
             'additional_params' => '',
             'file_extensions' => '/\.php$/',
@@ -73,7 +73,7 @@ dataset('phpinsightsConfiguration', [
 dataset('rectorConfiguration', [
     'rector.php file' => [
         [
-            'path' => '../../../bin/rector',
+            'path' => $projectRoot.'/vendor/bin/rector',
             'config' => __DIR__.'/../Fixtures/rectorFixture.php',
             'additional_params' => '',
             'file_extensions' => '/\.php$/',
@@ -83,51 +83,13 @@ dataset('rectorConfiguration', [
     ],
 ]);
 
-dataset('bladeFormatterConfiguration', [
-    '.bladeformatterrc.json file' => [
-        [
-            'path' => '../../../../node_modules/.bin/blade-formatter',
-            'config' => __DIR__.'/../Fixtures/bladeFormatterFixture.json',
-            'file_extensions' => '/\.blade\.php$/',
-            'run_in_docker' => false,
-            'docker_container' => '',
-        ],
-    ],
-]);
-
 dataset('larastanConfiguration', [
     'phpstan.neon file & additional params' => [
         [
-            'path' => '../../../bin/phpstan',
+            'path' => $projectRoot.'/vendor/bin/phpstan',
             'config' => __DIR__.'/../Fixtures/phpstanFixture.neon',
-            'additional_params' => '--xdebug',
+            'additional_params' => '',
             'file_extensions' => '/\.php$/',
-            'run_in_docker' => false,
-            'docker_container' => '',
-        ],
-    ],
-]);
-
-dataset('prettierConfiguration', [
-    '.prettierrc.json file & additional params' => [
-        [
-            'path' => '../../../../node_modules/.bin/prettier',
-            'config' => __DIR__.'/../Fixtures/.prettierrcFixture.json',
-            'additional_params' => '--config --find-config-path',
-            'file_extensions' => '/\.(jsx?|tsx?|vue)$/',
-            'run_in_docker' => false,
-            'docker_container' => '',
-        ],
-    ],
-]);
-
-dataset('eslintConfiguration', [
-    '.eslintrc.js file & additional params' => [
-        [
-            'path' => '../../../../node_modules/.bin/eslint',
-            'config' => __DIR__.'/../Fixtures/.eslintrcFixture.js',
-            'additional_params' => '--config',
-            'file_extensions' => '/\.(jsx?|tsx?|vue)$/',
             'run_in_docker' => false,
             'docker_container' => '',
         ],
@@ -161,20 +123,10 @@ dataset('codeAnalyzersList', [
         $nonExistentPath,
         PHPCSFixerPreCommitHook::class,
     ],
-    'Blade Formatter' => [
-        'blade_formatter',
-        $nonExistentPath,
-        BladeFormatterPreCommitHook::class,
-    ],
     'Larastan' => [
         'larastan',
         $nonExistentPath,
         LarastanPreCommitHook::class,
-    ],
-    'Prettier' => [
-        'prettier',
-        $nonExistentPath,
-        PrettierPreCommitHook::class,
     ],
     'PHP Insights' => [
         'phpinsights',

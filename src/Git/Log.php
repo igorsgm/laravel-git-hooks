@@ -95,17 +95,17 @@ class Log implements Stringable
     private function parse(array $lines): void
     {
         $handlers = collect([
-            'commit' => function ($line): void {
+            'commit' => function (string $line): void {
                 preg_match('/(?<hash>[a-z0-9]{40})/', $line, $matches);
                 $this->hash = $matches['hash'] ?? null;
             },
-            'Author' => function ($line): void {
+            'Author' => function (string $line): void {
                 $this->author = mb_substr($line, mb_strlen('Author:') + 1);
             },
-            'Date' => function ($line): void {
+            'Date' => function (string $line): void {
                 $this->date = Carbon::parse(mb_substr($line, mb_strlen('Date:') + 3));
             },
-            'Merge' => function ($line): void {
+            'Merge' => function (string $line): void {
                 $merge = mb_substr($line, mb_strlen('Merge:') + 1);
                 $this->merge = explode(' ', $merge);
             },

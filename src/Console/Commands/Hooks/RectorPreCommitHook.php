@@ -7,6 +7,7 @@ namespace Igorsgm\GitHooks\Console\Commands\Hooks;
 use Closure;
 use Igorsgm\GitHooks\Contracts\CodeAnalyzerPreCommitHook;
 use Igorsgm\GitHooks\Git\ChangedFiles;
+use Igorsgm\GitHooks\Support\Config;
 
 class RectorPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeAnalyzerPreCommitHook
 {
@@ -57,7 +58,7 @@ class RectorPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
      */
     protected function configParam(): string
     {
-        $rectorConfigFile = (string) config('git-hooks.code_analyzers.rector.config');
+        $rectorConfigFile = Config::string('git-hooks.code_analyzers.rector.config');
 
         if (!empty($rectorConfigFile)) {
             $this->validateConfigPath($rectorConfigFile);
@@ -69,11 +70,20 @@ class RectorPreCommitHook extends BaseCodeAnalyzerPreCommitHook implements CodeA
     }
 
     /**
-     * Retrieves additional parameters for the Rector code analyzer from the configuration file
+     * Retrieves additional parameters for the Rector code analyzer from the configuration file,
+     * filtering out pre-defined parameters to avoid conflicts.
      */
-    protected function additionalParams(): ?string
+    protected function additionalParams(): string
     {
-        $additionalParams = (string) config('git-hooks.code_analyzers.rector.additional_params');
+        $additionalParams = Config::string('git-hooks.code_analyzers.rector.additional_params');
+
+        if (!empty($additionalParams)) {
+            $additionalParams = (string) preg_replace(
+                '/\s*--(config|c|dry-run)\b(=\S*)?\s*/',
+                '',
+                $additionalParams
+            );
+        }
 
         return $additionalParams;
     }

@@ -10,6 +10,14 @@ beforeEach(function () {
     $this->initializeGitAsTempDirectory();
 });
 
+afterEach(function () {
+    $null = PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null';
+    shell_exec("git merge --abort > $null 2>&1");
+    shell_exec("git checkout HEAD > $null 2>&1");
+    shell_exec("git branch -D main test-branch > $null 2>&1");
+    $this->deleteTempDirectory();
+});
+
 test('Gets list of changed files', function () {
     chdir(__DIR__);
 
@@ -99,4 +107,11 @@ test('isMergeInProgress returns false when a merge is not in progress', function
     chdir(base_path());
     shell_exec('git merge --abort');
     expect($this->isMergeInProgress())->toBeFalse();
+});
+
+test('getCommitMessageContentFromFile throws Exception when file does not exist', function () {
+    $nonExistentPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'non-existent-git-commit-message-'.uniqid().'.txt';
+
+    expect(fn () => $this->getCommitMessageContentFromFile($nonExistentPath))
+        ->toThrow(Exception::class);
 });

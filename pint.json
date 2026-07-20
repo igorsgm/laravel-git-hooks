@@ -1,10 +1,12 @@
 {
   "preset": "laravel",
   "notPath": [
-    "tests/TestCase.php"
-  ],
-  "notName": [
-    "*WithFixableIssues.php"
+    "tests/TestCase.php",
+    "tests/temp",
+    "temp",
+    "tests/Fixtures/temp",
+    "tests/Fixtures/ClassWithFixableIssues.php",
+    "tests/Fixtures/ClassWithRectorIssues.php"
   ],
   "rules": {
     "array_push": true,

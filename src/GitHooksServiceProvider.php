@@ -37,7 +37,7 @@ class GitHooksServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/git-hooks.php', 'laravel-git-hooks');
+        $this->mergeConfigFrom(__DIR__.'/../config/git-hooks.php', 'git-hooks');
 
         $this->app->singleton('laravel-git-hooks', fn () => new GitHooks());
     }
